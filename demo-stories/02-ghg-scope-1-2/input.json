@@ -1,0 +1,10 @@
+﻿{
+  "ghg_report": {
+    "reporting_year": 2025,
+    "scope1_tco2e": 100.0,
+    "scope2_tco2e": 50.0,
+    "methodology_ref": "ref:methodology/v1",
+    "emission_factor_refs": ["ref:ef/grid/v2"],
+    "evidence_refs": ["ref:evidence/ghg/2025-01"]
+  }
+}

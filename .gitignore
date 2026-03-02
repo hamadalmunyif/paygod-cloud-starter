@@ -1,0 +1,13 @@
+﻿# witness temp
+_witness_tmp/
+_witness_tmp_cloud/
+
+# run outputs (execution artifacts)
+runs/
+
+# local diff/normalize scratch
+_w1_*.norm.json
+_w2_*.norm.json
+_w1_*.norm.jsonl
+_w2_*.norm.jsonl
+_tmp_out/
