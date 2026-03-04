@@ -70,5 +70,11 @@ New-Item -ItemType Directory -Force -Path $runs | Out-Null
 $dst = Join-Path $runs $bd1
 New-Item -ItemType Directory -Force -Path $dst | Out-Null
 Copy-Item -Recurse -Force (Join-Path $out1 "*") $dst
-
+# strict-mode requires receipt.json (execution certificate)
+if ($Mode -eq "strict") {
+  $receipt = Join-Path $dst "receipt.json"
+  if (-not (Test-Path $receipt)) {
+    throw "WITNESS FAIL (strict): missing receipt.json in exported run: $dst"
+  }
+}
 Write-Host "OK: run exported to $dst"
