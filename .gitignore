@@ -11,3 +11,7 @@ _w2_*.norm.json
 _w1_*.norm.jsonl
 _w2_*.norm.jsonl
 _tmp_out/
+# local day reports / artifacts
+_day_report_*/
+runs/
+kernel/_witness_tmp/
