@@ -4,6 +4,15 @@ _witness_tmp_cloud/
 
 # run outputs (execution artifacts)
 runs/
+runs/*.zip
+
+# api logs
+api/logs/
+
+# general local runtime files
+*.log
+.env
+node_modules/
 
 # local diff/normalize scratch
 _w1_*.norm.json
@@ -11,7 +20,7 @@ _w2_*.norm.json
 _w1_*.norm.jsonl
 _w2_*.norm.jsonl
 _tmp_out/
+
 # local day reports / artifacts
 _day_report_*/
-runs/
 kernel/_witness_tmp/
