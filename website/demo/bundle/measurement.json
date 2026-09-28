@@ -1,0 +1,8 @@
+{
+  "fixture": "synthetic; not a real facility measurement",
+  "metric": "electricity_consumption",
+  "value": 420,
+  "unit": "kWh",
+  "period": "2026-09-27",
+  "source": "demo-meter-01"
+}

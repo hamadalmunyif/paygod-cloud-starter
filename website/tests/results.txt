@@ -1,0 +1,17 @@
+clean: VALID
+one-byte payload change: INVALID
+receipt decision substitution: INVALID
+missing locked ledger: INVALID
+clock downgrade: INVALID
+malformed control: INVALID
+malformed receipt: INVALID
+duplicate manifest file: INVALID
+Unicode parity and unsupported numeric profile: PASS
+Fallback SHA-256 against Node crypto: 11 vectors PASS
+Offline fallback end-to-end: PASS
+clean: valid
+payload: invalid
+receipt: invalid
+clock: invalid
+missing-ledger: invalid
+malformed: invalid

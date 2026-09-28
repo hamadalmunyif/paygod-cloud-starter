@@ -1,0 +1,44 @@
+{
+  "api_version": "paygod/v1",
+  "kind": "Receipt",
+  "generated_at": "2026-09-28T12:00:00Z",
+  "clock": {
+    "source": "env:PAYGOD_CLOCK",
+    "value": "2026-09-28T12:00:00Z"
+  },
+  "canonicalization": {
+    "json": "rfc8785"
+  },
+  "pack": {
+    "name": "demo-resource-review",
+    "version": "0.1.0",
+    "path": "demo/resource-review",
+    "digest_sha256": "2328d3379fa1e6b75b6349d703bb1d8286349e6ac85d758a2d6709348beeb08f"
+  },
+  "input": {
+    "canonical_hash": "06e3bd48c54d83c3c6f30bdc5605dc1c5af324331d584be5bdef9ad642efd373"
+  },
+  "bundle": {
+    "algorithm": "sha256",
+    "file_count": 2,
+    "bundle_digest": "f6e568c973d1829af456e973cf6c69ffed1ab85037d4a900249eb309ff742bf8",
+    "manifest_sha256": "7e9b0eb366b6de06c70590145e146811fc3fd16222612afb2c7bfff2b12c528e",
+    "files": [
+      {
+        "name": "ledger.jsonl",
+        "sha256": "4d2297c0c7a1c9d156b6bae2905aa8157d6b60dfc922f4c25de198f9f18c941b",
+        "bytes": 621
+      },
+      {
+        "name": "measurement.json",
+        "sha256": "f3cb178f5d8e51ffc79fa5de3beabe04d971e7b0bd2a98a5137332b2fd4f8712",
+        "bytes": 189
+      }
+    ]
+  },
+  "verdict": {
+    "value": "flag",
+    "rule_name": "review-consumption",
+    "reason": "420 kWh exceeds the illustrative 400 kWh review threshold."
+  }
+}

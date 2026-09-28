@@ -1,0 +1,10 @@
+{
+  "status": "valid",
+  "portable": true,
+  "verifier_version": "0.2.0",
+  "bundle_digest": "f6e568c973d1829af456e973cf6c69ffed1ab85037d4a900249eb309ff742bf8",
+  "manifest_sha256": "7e9b0eb366b6de06c70590145e146811fc3fd16222612afb2c7bfff2b12c528e",
+  "verified_files": 2,
+  "clock_binding": "injected",
+  "errors": []
+}
