@@ -1,6 +1,6 @@
 # PayGod landing page — review candidate
 
-A complete English, infrastructure-focused landing page with a real local evidence-verification demonstration. No deployment has been configured or performed. No production domain or DNS changes are included.
+A complete English, infrastructure-focused landing page with a real local evidence-verification demonstration. A separate Vercel review project is now connected to this branch's repository. Production publication and DNS changes remain pending owner review. See `DEPLOYMENT.md` for the current setup and deployment record.
 
 ## Run
 
@@ -56,8 +56,8 @@ The example pack digest is a synthetic identifier, not a published/verified exec
 
 ## Architecture and deployment
 
-Production deliverable: static HTML + CSS + browser JS, all in `dist/index.html`. No Vinext/React runtime is required. A temporary internal preview shell used during review is intentionally excluded from this branch. Keep the static source separate from kernel semantics. No workflows, live APIs, CNAME files, hosting bindings, secrets or automatic publishing are added.
+Production deliverable: static HTML + CSS + browser JS, all in `dist/index.html`. No Vinext/React runtime is required. A temporary internal preview shell used during review is intentionally excluded from this branch. Keep the static source separate from kernel semantics. No live APIs, CNAME files or secrets are included. `vercel.json` records the review build configuration and skips builds outside Vercel's Preview environment.
 
-Recommended future hosting: GitHub source → reviewed static build → Vercel project; retain GoDaddy registration and existing DNS provider. Deployments and domain changes remain subject to owner approval. Exact DNS values must be obtained from the chosen hosting project's domain configuration and compared to a real exported DNS zone before any write. See `REVIEW_AR.md`.
+Hosting path: GitHub source → static build → separate Vercel review project; retain GoDaddy registration and existing DNS provider. The owner authorized a separate preview. Production deployment and domain changes remain subject to final review. Exact DNS values must be obtained from the chosen hosting project's domain configuration and compared to the existing DNS records before any write. `REVIEW_AR.md` is the original September 28 review; `DEPLOYMENT.md` records subsequent setup.
 
 Preview has `noindex,nofollow`. Remove that only for the approved production release and add its canonical URL. Do not deploy the preview unchanged as an indexed final release.
