@@ -34,7 +34,15 @@ The HTML and response header request `noindex,nofollow`. This is an indexing pre
 
 - The first manual request selected this review branch and displayed **Create Preview Deployment**.
 - Vercel recorded deployment `6SnwCnrFvAiDK2LXRcBLgBh7Gi2n` as **Production**. The ignored build command returned 0 and canceled it before the build ran.
-- No successful deployment or working preview URL is claimed by that attempt. The next attempt uses the Git-connected review branch with these committed settings.
+- That first attempt did not produce a working site.
+- The Git-triggered deployment from commit `fd9899d6613b23aea5cbdc53f8a7962db0724b33` completed successfully on October 1: deployment `8bbmQeQiydQwfkSDV1z2c6j2M5jL`, environment **Preview**, status **Ready**, custom-domain assignment **Skipped**.
+- Verified preview: <https://paygod-evidence-preview-l18abi5px-paygod1.vercel.app/>
+- Deployment details: <https://vercel.com/paygod1/paygod-evidence-preview/8bbmQeQiydQwfkSDV1z2c6j2M5jL>
+- Browser checks on the deployed URL: clean bundle **VALID**; altered measurement **INVALID** (`Artifact · measurement.json`); altered receipt verdict **INVALID** (`Decision binding`). The UI was reset to the clean valid sample after verification.
+- A fresh local build reproduced the reviewed HTML exactly: SHA-256 `5740a3bcc0ad92431188691e395de5ce49101c326a38b7fc1b0466621b5d0d7f`. The preview-only ignore command was checked under Preview, Production, Development and empty environment values.
+- Deployed-page screenshots are saved in `review/paygod-vercel-preview-20261001.jpg` and `review/paygod-vercel-verifier-20261001.jpg`.
+
+Later documentation-only commits may trigger another Preview from the same unchanged website source. The verified URL above identifies the tested deployment specifically.
 
 ## Domain remains at GoDaddy
 
