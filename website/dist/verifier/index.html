@@ -1,0 +1,342 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="description" content="Inspect a PayGod demo evidence bundle locally, without a producer session or API."><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src data:; base-uri 'none'; form-action 'none'"><title>PayGod — Standalone evidence verifier</title><style>:root{--bg:#080d12;--panel:#101820;--line:#29343c;--text:#eff4f5;--muted:#a4b0b8;--cyan:#a4f4df;--amber:#e8be80;color-scheme:dark;font-family:Arial,Helvetica,sans-serif}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;background:var(--bg);color:var(--text);font-size:16px;line-height:1.65}a{color:inherit;text-decoration:none}button,input,textarea{font:inherit}button,a,label.file-button{-webkit-tap-highlight-color:transparent}button{cursor:pointer}a:focus-visible,button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--cyan);outline-offset:5px}.wrap{width:min(1280px,calc(100% - 96px));margin:auto}.mono,.eyebrow,code,.tag,.use-tag{font-family:'Courier New',monospace}.eyebrow{font-size:12px;letter-spacing:.12em;color:var(--cyan);font-weight:bold;margin:0 0 25px}.skip{position:absolute;top:-60px;left:10px;padding:10px;background:var(--cyan);color:#071711;z-index:10}.skip:focus{top:10px}header{height:92px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 48px;max-width:1600px;margin:auto}.brand{display:flex;align-items:center;gap:12px;font-size:26px;letter-spacing:-1px;font-weight:700}.brand svg{width:27px;height:34px;color:var(--cyan)}.wordmark-dot{color:var(--cyan);font-weight:400}nav{display:flex;gap:34px;font-size:14px;color:#bac5cc}nav a:hover,.text-link:hover{color:var(--cyan)}.nav-cta{font-size:14px;border:1px solid #43524f;padding:10px 17px;display:flex;gap:30px}.nav-cta span{color:var(--cyan)}.hero{display:grid;grid-template-columns:1.2fr 1fr;gap:80px;padding-top:94px;padding-bottom:85px}.tiny-square{display:inline-block;width:6px;height:6px;background:var(--cyan);margin-right:8px}h1{font-size:clamp(42px,4.8vw,72px);font-weight:500;line-height:1.06;letter-spacing:-.065em;margin:0 0 30px}h1 span{color:#9cabb5}h2{font-size:clamp(30px,3.3vw,47px);font-weight:500;line-height:1.14;letter-spacing:-.045em;margin:0}h3{font-size:20px;font-weight:500;line-height:1.3;margin:0 0 14px}.lede{font-size:18px;line-height:1.75;color:#b8c3cb;max-width:540px;margin:0 0 30px}.actions{display:flex;align-items:center;gap:25px;flex-wrap:wrap}.button{font-size:14px;font-weight:600;border:1px solid transparent;display:inline-flex;justify-content:center;align-items:center;gap:26px;padding:15px 20px;line-height:1.4}.primary{background:var(--cyan);color:#09231d}.primary:hover{background:#c5ffef}.secondary{border-color:#4a5b60;background:transparent;color:var(--text)}.text-link{font-size:14px;line-height:1.5;display:inline-flex;gap:12px;align-items:center}.hero-foot{font-size:11px;letter-spacing:.025em;margin:38px 0 0;color:#91a2ad}.hero-foot span{padding:0 10px;color:#536773}.hero-visual{position:relative;align-self:center;background:linear-gradient(150deg,#15262c66,transparent 60%);border:1px solid #34484f;padding:25px 28px 16px}.visual-top{font-size:11px;letter-spacing:.1em;border-bottom:1px solid var(--line);padding-bottom:15px;display:flex;justify-content:space-between;color:#b3c2ca}.visual-top span{color:var(--cyan)}.producer{margin:23px 0 0}.dim{font-size:10px;letter-spacing:.08em;color:#9eadb7}.signals{display:flex;gap:8px;margin:14px 0}.signals span{border:1px solid #35434b;padding:5px 12px;color:#bbc9d0;font-size:12px;flex:1;text-align:center}.kernel-block{display:flex;align-items:center;gap:17px;background:#18252d;border:1px solid #3c505b;padding:16px}.cross{font-size:33px;color:var(--cyan)}.kernel-block strong,.verifier-block strong{font-size:15px;font-weight:500;display:block}.kernel-block small,.verifier-block small{display:block;font-size:12px;color:#aebec7;margin-top:3px}.transit{height:55px;position:relative;display:flex;align-items:center;justify-content:center}.transit-line{width:1px;height:100%;background:#70b3a3;position:absolute;left:50%}.transit .mono{z-index:1;background:var(--bg);color:#8ca39f;font-size:9px;letter-spacing:.12em;padding:3px 12px;border:1px dashed #395550}.bundle-card{border:1px solid #5c9f8d;box-shadow:0 0 45px #47cba40b;background:#10231f;padding:17px}.bundle-heading{display:flex;align-items:center;gap:10px;border-bottom:1px solid #345449;padding-bottom:15px;margin-bottom:8px}.bundle-heading svg{width:23px;height:25px;color:var(--cyan)}.bundle-heading strong{font-size:14px;font-weight:500;flex:1}.tag{font-size:9px;color:var(--cyan);border:1px solid #3b665b;padding:2px 6px}.file-row{display:flex;justify-content:space-between;font-family:'Courier New',monospace;font-size:11px;margin-top:9px;gap:5px}.file-row span:last-child{color:#92aba3}.verifier-block{display:flex;align-items:center;gap:14px;padding:18px 0 0;margin-top:24px;border-top:1px solid #4a6c64}.verifier-block>.mono{margin-left:auto;font-size:13px;color:#6e8c85}.check-symbol{border:1px solid #608b7b;color:var(--cyan);width:32px;height:32px;display:grid;place-items:center}.visual-caption{font-size:11px;text-align:center;color:#8fa4ae;margin:18px 0 0}.process-strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;padding:23px 0;font-family:'Courier New',monospace;font-size:11px;color:#74838e}.process-strip b{font-size:12px;font-weight:400;color:#c7d1d7;margin-left:6px}.process-strip i{font-style:normal;color:#527a6d}.section{padding-top:105px;padding-bottom:105px}.problem{display:grid;grid-template-columns:1.2fr 1fr;gap:100px}.problem-copy p{margin:0 0 20px;color:var(--muted)}.statement{border-left:2px solid var(--cyan);padding-left:22px;margin-top:30px;color:#d9e4e8}.capabilities,.applications{background:#0d141a;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.section-head{display:flex;justify-content:space-between;align-items:end;gap:40px;margin-bottom:45px}.section-head>p{max-width:360px;color:var(--muted);margin:0}.cap-grid{display:grid;grid-template-columns:repeat(3,1fr);border-left:1px solid var(--line);border-top:1px solid var(--line)}.cap-grid article{padding:32px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.cap-index{font-size:11px;letter-spacing:.1em;color:#7f9d98;display:block;margin-bottom:32px}.cap-grid p{font-size:15px;color:var(--muted);min-height:100px;margin-bottom:27px}.cap-grid code{font-size:11px;color:#a6c9bf;border-top:1px solid var(--line);padding-top:16px;display:block}.scope-note{font-size:13px;color:#91a4af;line-height:1.8;margin:24px 0 0}.architecture-grid{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid var(--line)}.arch-column{padding:26px}.arch-column+.arch-column{border-left:1px solid var(--line)}.arch-label{font-size:11px;letter-spacing:.055em;color:#9bb0bb;margin:0 0 28px}.arch-node{display:flex;gap:12px;padding:20px 0;border-top:1px solid var(--line)}.arch-node>span{font-family:monospace;color:#769c8f;font-size:12px;margin-top:5px}.arch-node h3{font-size:17px;margin-bottom:5px}.arch-node p,.boundary-note p,.arch-note{font-size:13px;color:#9dabb5;margin:0}.arch-node.accent{border:1px solid #426b5e;background:#11241e;padding:20px 12px;margin:3px -7px 0}.middle{background:linear-gradient(180deg,#162720,#0c1615)}.arch-bundle{border:1px solid #568d78;padding:23px}.arch-bundle>.mono{font-size:10px;color:var(--cyan);letter-spacing:.08em}.arch-bundle h3{font-size:30px;margin:22px 0}.arch-bundle ul{list-style:none;padding:0;margin:0;font-size:13px;color:#b3c5bf}.arch-bundle li{padding:8px 0;border-top:1px solid #2b473d}.arch-note{margin-top:16px}.boundary-note{margin-top:14px;padding:17px;border:1px dashed #3e4e55}.boundary-note strong{font-size:14px;font-weight:400}.boundary-note p{margin-top:8px}.verification{background:#e9efed;color:#132722}.verification .eyebrow{color:#366052}.verification h2 span{color:#697d75}.verification .lede{color:#536a60;margin:25px 0}.verification-grid{display:grid;grid-template-columns:1fr 1fr;gap:110px}.verification-facts>div:first-child{padding-bottom:25px;border-bottom:1px solid #bdccc5}.verification-facts>div:nth-child(2){padding-top:25px}.fact-label{font-size:11px;font-family:monospace;color:#39624e;letter-spacing:.075em}.fact-label.amber{color:#775a2d}.verification-facts p{font-size:15px;margin-bottom:0;color:#40594c}.integrity-line{font-size:25px;letter-spacing:-.035em;margin-top:28px}.verification-facts .scope-note{font-size:12px;color:#576c61}.demo-shell{border:1px solid #3b4c55}.demo-toolbar{display:flex;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--line);background:#152028;align-items:center;font-size:11px}.muted{color:#95a5ad}.local-label{font-family:monospace;color:var(--cyan);font-size:10px;letter-spacing:.06em}.demo-grid{display:grid;grid-template-columns:1.15fr 1fr}.demo-input{padding:27px;border-right:1px solid var(--line)}.scenario .mono{font-size:10px;color:#859eab;letter-spacing:.08em}.scenario h3{margin-top:10px}.scenario p{font-size:14px;color:#a5b4bd;margin:0 0 24px}.scenario strong{color:#d7e4e8;font-weight:500}.scenario b{color:var(--amber);font-family:monospace}.demo-buttons{display:flex;gap:8px;flex-wrap:wrap}.small-button{font-size:12px;border:1px solid #43545d;color:#c4d1d9;background:#141f27;padding:8px 11px;display:inline-flex;align-items:center;justify-content:center}.small-button:hover,.small-button.active{background:#20382f;border-color:#7aa995;color:#daf6e9}.small-button:disabled{opacity:.4;cursor:default}.editor-label{font-size:10px;color:#92a7b2;display:flex;justify-content:space-between;gap:10px;margin:25px 0 9px}.editor-label span{color:#b2c6bc}textarea{resize:vertical;width:100%;height:225px;background:#080e13;color:#bacdc9;border:1px solid #35454e;font:12px/1.65 'Courier New',monospace;padding:15px;border-radius:0;tab-size:2}.help{font-size:12px;line-height:1.6;color:#8e9fa9;margin:10px 0 20px}.file-button{cursor:pointer;position:relative}.file-button input{position:absolute;width:1px;height:1px;opacity:0}.file-button:focus-within{outline:2px solid var(--cyan);outline-offset:3px}.demo-result{padding:27px;background:linear-gradient(145deg,#12211c88,transparent 65%)}.result-top{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:25px}.result-top>.mono{font-size:11px;color:#a2b2bb}.status{font:11px 'Courier New',monospace;padding:5px 10px;border:1px solid #51606c;white-space:nowrap}.status.valid{color:var(--cyan);border-color:#5b9c81;background:#132e22}.status.invalid{color:#ffb4a7;border-color:#a76557;background:#331b19}.demo-result h3{font-size:24px;letter-spacing:-.035em}.demo-result>p{font-size:14px;color:#a0b3ba}.check-row{display:flex;gap:11px;align-items:center;font-size:13px;padding:8px 0;border-bottom:1px solid #253934}.check-row span{color:var(--cyan)}.check-row.failed span{color:#ffafa0}.digest{margin:25px 0 18px}.digest .mono{font-size:10px;color:#839aa4;display:block;margin-bottom:7px}.digest code{font-size:11px;color:#bdcbc8;word-break:break-all;display:block}#error-detail{font-size:12px;color:#ffb4a7;white-space:pre-line;margin-top:14px}.demo-result .trust-note{font-size:12px;color:#b1bdbf;border-top:1px solid #33443e;margin:25px 0 0;padding-top:20px}.demo-under{display:flex;gap:45px;justify-content:space-between;align-items:center;margin-top:22px}.demo-under p{max-width:730px;font-size:12px;color:#8fa3ad;margin:0}.demo-under a{font-size:12px;white-space:nowrap}.use-list{border-top:1px solid #35434a}.use-list article{display:grid;grid-template-columns:35px 230px 1fr 200px;gap:24px;align-items:center;border-bottom:1px solid #35434a;padding:27px 0}.use-list .mono{font-size:12px;color:#658d82}.use-list h3{margin:0;font-size:19px}.use-list p{font-size:14px;color:var(--muted);max-width:480px;margin:0}.use-tag{font-size:10px;color:#95b8ac;text-align:right;letter-spacing:.04em}.final-cta{padding-top:110px;padding-bottom:105px;text-align:center}.final-cta h2{font-size:clamp(36px,4.5vw,66px)}.final-cta>p:not(.eyebrow){color:#a7b8be;margin:24px 0 30px}.final-cta .actions{justify-content:center}footer{border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:30px 0}footer p{font-size:12px;color:#8fa0ab}footer>.mono{font-size:10px;color:#81969f}
+@media(min-width:1500px){.hero{gap:110px}}@media(max-width:1100px){.wrap{width:calc(100% - 56px)}header{padding:0 28px}.hero{gap:35px}.hero h1{font-size:52px}.hero-visual{padding:20px}.hero-foot{font-size:9px}.hero-foot span{padding:0 3px}.process-strip{flex-wrap:wrap;justify-content:center;gap:14px}.problem{gap:50px}.use-list article{grid-template-columns:25px 190px 1fr}.use-tag{display:none}.cap-grid article{padding:25px}.verification-grid{gap:50px}.arch-column{padding:20px}.demo-under{align-items:start}.demo-under a{white-space:normal}}
+@media(max-width:760px){header{height:75px;padding:0 22px}header nav{display:none}.brand{font-size:23px}.nav-cta{padding:8px 11px;font-size:12px;gap:14px}.wrap{width:calc(100% - 44px)}.hero{grid-template-columns:1fr;padding-top:58px;padding-bottom:48px;gap:42px}.hero h1{font-size:clamp(40px,9vw,61px)}.eyebrow{font-size:11px;margin-bottom:22px}.lede{font-size:17px}.hero-foot{font-size:9px;line-height:2}.hero-visual{max-width:480px;width:100%;margin:auto}.hero .actions{gap:18px}.process-strip{justify-content:flex-start;row-gap:16px}.process-strip i{display:none}.process-strip>span{width:calc(33% - 10px);font-size:10px}.process-strip b{display:block;font-size:10px;margin-left:0}.section{padding-top:65px;padding-bottom:65px}.problem,.verification-grid{grid-template-columns:1fr;gap:32px}.section-head{display:block;margin-bottom:30px}.section-head>p,.section-head>a{margin-top:23px;max-width:none}.cap-grid{grid-template-columns:1fr}.cap-grid article{padding:27px}.cap-index{margin-bottom:20px}.cap-grid p{min-height:0;margin-bottom:22px}.architecture-grid{grid-template-columns:1fr}.arch-column+.arch-column{border-left:0;border-top:1px solid var(--line)}.arch-column{padding:25px}.arch-bundle h3 br{display:none}.arch-label{margin-bottom:20px}.demo-grid{grid-template-columns:1fr}.demo-input{padding:20px;border-right:0;border-bottom:1px solid var(--line)}.demo-result{padding:22px}.demo-toolbar{padding:14px 17px}.demo-toolbar .muted{display:none}.demo-under{display:block}.demo-under a{margin-top:15px}.demo-buttons .button{font-size:12px;padding:13px 14px}.demo-buttons .small-button{font-size:11px}.use-list article{grid-template-columns:20px 1fr;gap:12px;padding:25px 0}.use-list article p{grid-column:2}.use-list h3{font-size:20px}.final-cta{padding-top:70px;padding-bottom:70px}footer{flex-wrap:wrap;gap:14px;padding:25px 0}footer p{margin:0}footer>.mono{width:100%}.hero-visual .file-row{font-size:10px}.bundle-heading strong{font-size:12px}.local-label{font-size:9px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Evidence handoff and the self-contained recipient workspace. */
+[hidden]{display:none!important}
+summary{cursor:pointer;list-style-position:inside}
+summary:focus-visible{outline:2px solid var(--cyan);outline-offset:5px}
+.handoff-story{padding:64px 0 12px}
+.handoff-story-head{display:grid;grid-template-columns:1fr 1fr;gap:18px 80px;align-items:end}
+.handoff-story-head .eyebrow{grid-column:1/-1;margin:0}
+.handoff-story-head h2{font-size:clamp(28px,2.6vw,38px)}
+.handoff-story-head>p:last-child{color:var(--muted);max-width:490px;margin:0}
+.handoff-steps{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid #3c514c;margin-top:30px;background:#101b1a}
+.handoff-steps article{padding:28px}
+.handoff-steps article+article{border-left:1px solid #3c514c}
+.step-number{font-size:12px;letter-spacing:.06em;color:var(--cyan);display:block;margin-bottom:22px}
+.handoff-steps h3{font-size:23px}
+.handoff-steps p{color:var(--muted);margin:0 0 20px}
+.story-example{font-size:13px;color:#cae7dd}
+.bundle-pick{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:20px 0}
+.bundle-pick .help{margin:0;overflow-wrap:anywhere}
+.sample-controls{margin-bottom:16px}
+.evidence-summary{padding:24px;background:linear-gradient(130deg,#163029,#101d1b);border:1px solid #537e6c;margin:20px 0}
+.summary-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--cyan)}
+.declared-tag{font-family:'Courier New',monospace;font-size:11px;color:#bdc8b8;border:1px solid #4c6054;padding:3px 6px}
+.summary-metric{color:#afc6bd;font-size:14px;margin:25px 0 4px;overflow-wrap:anywhere}
+.measurement-value{font-size:44px;line-height:1.15;letter-spacing:-.04em;margin:0 0 25px;color:#e4fff2;overflow-wrap:anywhere}
+.summary-fields{margin:0}
+.summary-fields>div{display:grid;grid-template-columns:1fr 1.1fr;gap:14px;border-top:1px solid #355146;padding:10px 0;font-size:14px}
+.summary-fields dt{color:#aac0b6}
+.summary-fields dd{margin:0;color:#e0eee6;overflow-wrap:anywhere}
+#summary-decision{color:var(--amber);font-family:'Courier New',monospace;font-weight:bold}
+.evidence-summary .help{margin:14px 0 0;color:#acbdb6}
+.empty-bundle{padding:30px 24px;border:1px dashed #4d645e;background:#111d1a;margin:20px 0}
+.empty-bundle .mono{font-size:12px;color:#94b0a3}
+.empty-bundle h3{font-size:26px;margin:16px 0}
+.empty-bundle p{color:var(--muted);margin:0;font-size:16px}
+#summary-error{color:#ffb4a7;font-size:14px;overflow-wrap:anywhere}
+.technical-details{border-top:1px solid #3a4c47;margin:24px 0;padding-top:15px}
+.technical-details summary{font-size:14px;color:#c6d7cf}
+.technical-details summary>span{font-size:11px;color:#92aba0;display:block;margin:6px 0 0 16px;letter-spacing:.02em}
+.technical-details textarea{height:270px;font-size:13px}
+.technical-details .editor-label{font-size:12px}
+.trust-results{margin:25px 0}
+.trust-results>div{display:grid;grid-template-columns:1fr auto;gap:20px;padding:17px 0;border-bottom:1px solid #36483f;font-size:15px;align-items:start}
+.trust-results dt{max-width:280px;color:#c9d8d0}
+.trust-results dd{margin:0;text-align:right;color:#a5b7ae;white-space:nowrap}
+.trust-results dd.passed{color:var(--cyan)}
+.trust-results dd.failed{color:#ffb4a7}
+.trust-results dd.unverified{color:var(--amber)}
+.demo-input .small-button,.demo-result .small-button{font-size:14px;padding:10px 13px}
+.demo-result .trust-note,.demo-under p,.help{font-size:13px;line-height:1.7}
+.demo-result h3{line-height:1.25;font-size:26px}
+.result-top>.mono,.demo-toolbar,.local-label{font-size:12px}
+#transfer-state{color:var(--cyan)}
+.handoff-next{padding:30px;background:#16251f;border:1px solid #436759;display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:22px}
+.handoff-next .mono{font-size:12px;color:var(--cyan)}
+.handoff-next h3{font-size:25px;margin-top:15px}
+.handoff-next p{font-size:15px;color:#b1c4b9;margin:0;max-width:600px}
+.handoff-next .actions{align-content:center;gap:18px}
+.handoff-next .text-link{font-size:14px}
+.final-cta>p:not(.eyebrow){max-width:640px;margin:25px auto 30px}
+.pilot-points{display:flex;justify-content:center;gap:26px;flex-wrap:wrap;font-size:14px;color:#bad2c5;margin:0 0 32px}
+.standalone-label{font-size:12px;color:#a3bdaf;letter-spacing:.05em}
+.standalone-main{padding:55px 0 65px}
+.standalone-intro{display:grid;grid-template-columns:1.2fr 1fr;gap:20px 70px;align-items:start;margin-bottom:35px}
+.standalone-intro .eyebrow{grid-column:1/-1;margin:0}
+.standalone-intro h1{font-size:clamp(38px,4vw,55px);letter-spacing:-.05em;grid-row:2/4;margin:0}
+.standalone-intro .lede{font-size:17px;margin:0}
+.execution-note{border-left:2px solid #719f87;padding-left:18px}
+.execution-note .mono{font-size:12px;color:var(--cyan)}
+.execution-note p{font-size:14px;margin:8px 0 0;color:#a3b7ac}
+.standalone-notes{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:45px}
+.standalone-notes h2{font-size:26px}
+.standalone-notes p{font-size:15px;color:#a4b9ac}
+.offline-ready{border-left:2px solid var(--cyan);padding-left:16px}
+.notice{padding:18px;border:1px solid var(--amber)}
+@media(max-width:900px){
+ .handoff-story-head{gap:20px 35px}
+ .handoff-steps article{padding:22px}
+ .demo-grid{grid-template-columns:1fr}
+ .demo-input{border-right:0;border-bottom:1px solid var(--line)}
+ .handoff-next{grid-template-columns:1fr;gap:23px}
+ .standalone-intro{gap:20px 35px}
+}
+@media(max-width:760px){
+ .handoff-story{padding-top:45px}
+ .handoff-story-head,.handoff-steps,.standalone-intro,.standalone-notes{grid-template-columns:1fr}
+ .handoff-story-head{gap:20px}
+ .handoff-steps article+article{border-left:0;border-top:1px solid #3c514c}
+ .handoff-steps article{padding:24px}
+ .handoff-story-head h2 br{display:none}
+ .summary-fields>div{grid-template-columns:1fr 1fr;font-size:14px;gap:10px}
+ .evidence-summary{padding:20px}
+ .measurement-value{font-size:40px}
+ .demo-input .small-button,.demo-result .small-button{font-size:13px}
+ .demo-input .button{font-size:14px}
+ .trust-results>div{font-size:14px;gap:14px}
+ .trust-results dd{white-space:normal;min-width:85px}
+ .demo-toolbar{gap:10px;align-items:flex-start}
+ .demo-toolbar>.mono{max-width:56%;font-size:11px}
+ .local-label{font-size:10px;max-width:40%;text-align:right}
+ .handoff-next{padding:23px}
+ .standalone-label{font-size:10px;max-width:145px;text-align:right}
+ .standalone-main{padding-top:38px}
+ .standalone-intro h1{grid-row:auto;font-size:41px}
+ .standalone-intro{gap:22px}
+ .standalone-notes{gap:30px}
+ .pilot-points{display:grid;gap:12px;text-align:left;justify-content:center}
+ .hero-foot{font-size:11px}
+}
+</style></head><body data-workspace="recipient">
+<a class="skip" href="#main">Skip to verifier</a><header><span class="brand">PayGod <span class="wordmark-dot">/</span></span><span class="standalone-label mono">STANDALONE VERIFIER · DEMO</span></header>
+<main id="main" class="wrap standalone-main"><div class="standalone-intro"><p class="eyebrow">THE RECIPIENT'S WORKSPACE</p><h1>Bring the bundle.<br><span>Check the evidence.</span></h1><p class="lede">Inspect the files you received without a producer session or API. Choose a bundle to see which checks pass—and what remains unverified.</p><div class="execution-note"><span class="mono">LOCAL EXECUTION</span><p>This page starts empty. It does not fetch evidence, share state with the producer page or upload your files.</p></div></div>
+<div class="demo-shell">
+  <div class="demo-toolbar"><span class="mono">RECIPIENT WORKSPACE <span class="muted">/ demo profile v0.2</span></span><span class="local-label">PROCESSED ON THIS DEVICE</span></div>
+  <div class="demo-grid">
+    <div class="demo-input">
+      <div class="scenario"><span class="mono">RECEIVED EVIDENCE</span><h3>Open the package you received.</h3><p>The card shows what the files declare. Run verification to check their integrity and bindings.</p></div>
+      <div class="bundle-pick"><label for="upload" class="small-button file-button">Choose bundle file<input id="upload" type="file" accept=".json,application/json" aria-label="Choose bundle file"></label><span id="file-label" class="help">JSON file · up to 2 MB</span></div>
+      <div id="summary-empty" class="empty-bundle"><span class="mono">WAITING FOR EVIDENCE</span><h3>No bundle loaded.</h3><p>Choose a downloaded bundle or paste its JSON below. Nothing is sent to a server.</p></div>
+      <div id="bundle-summary" class="evidence-summary" hidden>
+        <div class="summary-top"><span class="mono">EVIDENCE CARD</span><span class="declared-tag">SELF-DECLARED CONTENT</span></div>
+        <p class="summary-metric" id="summary-metric"></p><p class="measurement-value" id="summary-measurement"></p>
+        <dl class="summary-fields"><div><dt>Recorded decision</dt><dd id="summary-decision"></dd></div><div><dt>Rule reference</dt><dd id="summary-rule"></dd></div><div><dt>Declared source</dt><dd id="summary-source"></dd></div><div><dt>Recorded time</dt><dd id="summary-time"></dd></div><div><dt>Package contents</dt><dd id="summary-files"></dd></div></dl>
+        <p class="help">This card reads the supplied files. It does not establish that the measurement happened or the source is authentic.</p>
+      </div>
+      <p id="summary-error" role="status"></p>
+      <div class="demo-buttons verify-actions"><button id="verify" class="button primary" disabled>Run verification</button><button id="download" class="small-button" disabled>Download this bundle</button></div>
+      <details class="technical-details" id="source-details"><summary>View or edit technical files <span id="edit-state">NO BUNDLE</span></summary><label for="bundle-editor" class="editor-label mono">BUNDLE TRANSPORT JSON</label><textarea id="bundle-editor" spellcheck="false" aria-describedby="demo-help" placeholder="Paste bundle JSON here"></textarea><p id="demo-help" class="help">UTF-8 file strings preserve artifact bytes. This demo transport is not a new kernel standard. Maximum total size: 2 MB.</p></details>
+      <p id="transfer-state" role="status" class="help"></p>
+    </div>
+    <div class="demo-result" aria-live="polite">
+      <div class="result-top"><span class="mono">WHAT CAN BE VERIFIED?</span><span id="status" class="status pending">NOT RUN</span></div>
+      <h3 id="result-title">Waiting for a bundle.</h3><p id="result-summary">Choose a bundle to begin the checks.</p>
+      <dl class="trust-results"><div><dt>File and record integrity</dt><dd id="integrity-result">Not checked</dd></div><div><dt>Receipt matches the decision record</dt><dd id="decision-result">Not checked</dd></div><div><dt>Issuer identity</dt><dd class="unverified">Not verified</dd></div><div><dt>Real-world observation</dt><dd class="unverified">Not verified</dd></div></dl>
+      <div id="error-detail" role="status"></div>
+      <details class="technical-details" id="check-details"><summary>Inspect technical checks <span id="check-count">0 checks</span></summary><div id="checks"></div><div class="digest"><span class="mono">MANIFEST COMMITMENT</span><code id="digest">Not calculated</code><p class="help">Digest of the declared file commitments. Individual file checks detect changes to the actual bytes.</p></div></details>
+      <button id="download-result" class="small-button" disabled>Download verification report</button>
+      <p class="trust-note">VALID means the supported consistency checks passed. A valid bundle can still contain a FLAG or DENY decision. It is not approval, authenticated provenance or proof of a real-world fact.</p>
+    </div>
+  </div>
+</div>
+
+<div class="standalone-notes"><div><h2>Take the verifier with you.</h2><p>The downloadable HTML contains the verifier and its interface. Open it in a desktop browser, disconnect from the network and import your bundle. Some mobile file preview apps do not run JavaScript.</p><a class="button secondary" href="../downloads/paygod-verifier.html" download>Download offline verifier</a></div><div><h2>Know the verification boundary.</h2><p>This is the same browser demo implementation, running as a separate artifact—not a third-party audit. It supports a safe-integer profile; full Python-verifier parity is not claimed. A self-consistent bundle does not establish issuer identity, source truth or regulatory acceptance.</p><a class="text-link" href="https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/f405fdf7cabebddda62196299e50b0598e3e663b/tools/verify_portable_evidence.py" target="_blank" rel="noopener">Inspect the pinned reference verifier</a></div></div>
+<noscript><p class="notice">JavaScript is required to verify a bundle. Open this file in a browser with JavaScript enabled.</p></noscript></main><footer class="wrap"><span class="brand">PayGod /</span><p>Portable evidence. Explicit verification boundaries.</p><span class="mono">BROWSER DEMO v0.2</span></footer><script>// SHA-256 fallback for a self-contained offline demonstration.
+// FIPS 180-4 compression, tested against Node crypto for multiple lengths/UTF-8.
+// Production uses Web Crypto when available. This fallback is not audited.
+function sha256Fallback(bytes){
+ const K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+ const H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+ const padded=new Uint8Array(Math.ceil((bytes.length+9)/64)*64);padded.set(bytes);padded[bytes.length]=128;
+ const view=new DataView(padded.buffer);view.setUint32(padded.length-8,Math.floor(bytes.length/0x20000000));view.setUint32(padded.length-4,(bytes.length*8)>>>0);
+ const rotr=(x,n)=>(x>>>n)|(x<<(32-n)),w=new Uint32Array(64);
+ for(let offset=0;offset<padded.length;offset+=64){
+  for(let i=0;i<16;i++)w[i]=view.getUint32(offset+i*4);
+  for(let i=16;i<64;i++){const x=w[i-15],y=w[i-2];w[i]=(w[i-16]+(rotr(x,7)^rotr(x,18)^(x>>>3))+w[i-7]+(rotr(y,17)^rotr(y,19)^(y>>>10)))>>>0;}
+  let [a,b,c,d,e,f,g,h]=H;
+  for(let i=0;i<64;i++){const t1=(h+(rotr(e,6)^rotr(e,11)^rotr(e,25))+((e&f)^(~e&g))+K[i]+w[i])>>>0;const t2=((rotr(a,2)^rotr(a,13)^rotr(a,22))+((a&b)^(a&c)^(b&c)))>>>0;h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0;}
+  [a,b,c,d,e,f,g,h].forEach((v,i)=>H[i]=(H[i]+v)>>>0);
+ }
+ return H.map(x=>x.toString(16).padStart(8,'0')).join('');
+}
+
+
+// Browser demonstration profile of pinned PayGod verifier 0.2.0.
+// Deliberately supports safe integers only; never claims full numeric parity.
+const encoder=new TextEncoder();
+async function hash(s){if(!globalThis.crypto?.subtle)return sha256Fallback(encoder.encode(s));return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',encoder.encode(s))),b=>b.toString(16).padStart(2,'0')).join('');}
+function canonical(v){
+ if(v===null||typeof v==='boolean')return JSON.stringify(v);
+ if(typeof v==='number'){if(!Number.isSafeInteger(v))throw Error('Browser demo supports safe integers only. Use the Python verifier for other numeric values.');return String(v);}
+ if(typeof v==='string')return JSON.stringify(v.normalize('NFC')).replace(/[\u007f-\uffff]/g,c=>'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0'));
+ if(Array.isArray(v))return '['+v.map(canonical).join(',')+']';
+ if(v&&typeof v==='object')return '{'+Object.keys(v).sort().map(k=>canonical(k)+':'+canonical(v[k])).join(',')+'}';
+ throw Error('Unsupported JSON value');
+}
+async function verifyTransport(input){
+ const checks=[],errors=[]; const check=(name,ok,detail)=>{checks.push({name,ok,detail});if(!ok)errors.push(name+': check failed.');};
+ const obj=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
+ const hex=x=>typeof x==='string'&&/^[a-f0-9]{64}$/.test(x);
+ const same=(a,b)=>canonical(a)===canonical(b);
+ try{
+ if(!obj(input)||input.format!=='paygod-demo-transport/1'||!obj(input.files))throw Error('Expected paygod-demo-transport/1 with UTF-8 file strings.');
+ const f=input.files;if(Object.keys(f).length>32||Object.values(f).some(x=>typeof x!=='string'||encoder.encode(x).length>1000000))throw Error('File count or size exceeds demo limits.');
+ if(!Object.hasOwn(f,'manifest.json')||!Object.hasOwn(f,'receipt.json'))throw Error('Missing manifest.json or receipt.json.');
+ const m=JSON.parse(f['manifest.json']),r=JSON.parse(f['receipt.json']);
+ if(!obj(m)||!obj(r)||!Array.isArray(m.files)||!m.files.length||!obj(m.bundle)||!obj(r.bundle))throw Error('Malformed manifest or receipt controls.');
+ check('Contract','paygod/v1'===m.api_version&&m.kind==='Manifest'&&r.api_version==='paygod/v1'&&r.kind==='Receipt','Manifest and receipt use paygod/v1.');
+ const seen=new Set(),lines=[];
+ for(const entry of m.files){
+  if(!obj(entry)||typeof entry.name!=='string'||!entry.name||/[\\/]/.test(entry.name)||['.','..','manifest.json','receipt.json'].includes(entry.name)||seen.has(entry.name)||!hex(entry.sha256)||!Number.isSafeInteger(entry.bytes)||entry.bytes<0)throw Error('Invalid or duplicate manifest file entry.');
+  seen.add(entry.name);const raw=f[entry.name];
+  check('Artifact · '+entry.name,typeof raw==='string'&&await hash(raw)===entry.sha256&&encoder.encode(raw).length===entry.bytes,'SHA-256 and byte count: '+entry.name);
+  lines.push(entry.name+'='+entry.sha256+'\n');
+ }
+ const digest=await hash(lines.sort().join(''));
+ check('Bundle digest',m.bundle.algorithm==='sha256'&&m.bundle.file_count===m.files.length&&hex(m.bundle.bundle_digest)&&digest===m.bundle.bundle_digest,'Manifest bundle digest matches the ordered file commitments.');
+ check('Manifest binding',r.bundle.manifest_sha256===await hash(f['manifest.json'])&&r.bundle.bundle_digest===digest&&same(r.bundle.files,m.files),'Receipt binds the exact manifest bytes and bundle digest.');
+ check('Locked ledger',seen.has('ledger.jsonl')&&typeof f['ledger.jsonl']==='string','Exactly one ledger.jsonl is locked in the manifest.');
+ if(!seen.has('ledger.jsonl')||typeof f['ledger.jsonl']!=='string')throw Error('Missing manifest-locked ledger.');
+ let previous='0'.repeat(64),index=0,last;let chain=true;
+ for(const line of f['ledger.jsonl'].split(/\r?\n/).filter(x=>x.trim())){
+  const e=JSON.parse(line);if(!obj(e))throw Error('Malformed ledger entry.');
+  const calculated=await hash(canonical({previous_hash:e.previous_hash,timestamp:e.timestamp,data:e.data}));
+  chain=chain&&e.entry_index===index&&e.previous_hash===previous&&e.record_hash===calculated;
+  previous=e.record_hash;last=e;index++;
+ }
+ check('Ledger chain',index>0&&chain,'Ledger sequence, previous hashes and record hashes are consistent.');
+ if(!last||!obj(last.data)||!obj(r.verdict)||!obj(r.pack)||!obj(r.input)||!obj(r.clock))throw Error('Missing decision-critical control fields.');
+ const d=last.data,v=r.verdict;
+ const verdicts=['allow','deny','flag','error'];
+ check('Decision binding',verdicts.includes(v.value)&&verdicts.includes(d.verdict)&&typeof v.rule_name==='string'&&typeof v.reason==='string'&&v.value===d.verdict&&v.rule_name===d.rule_name&&v.reason===d.reason,'Receipt verdict, rule and reason match the locked ledger.');
+ check('Pack and input binding',['name','version','path','digest_sha256'].every(k=>typeof r.pack[k]==='string')&&hex(r.pack.digest_sha256)&&hex(r.input.canonical_hash)&&same(r.pack,m.pack)&&same(r.pack,d.pack)&&same(r.input,m.input)&&r.input.canonical_hash===d.input_hash,'Pack identity and input hash agree across receipt, manifest and ledger.');
+ const instant=x=>typeof x==='string'&&/(Z|[+-]\d{2}:\d{2})$/.test(x)&&Number.isFinite(Date.parse(x));
+ check('Clock binding',r.clock.source==='env:PAYGOD_CLOCK'&&r.generated_at===r.clock.value&&[r.clock.value,m.generated_at,last.timestamp].every(instant)&&Date.parse(r.clock.value)===Date.parse(m.generated_at)&&Date.parse(m.generated_at)===Date.parse(last.timestamp),'Injected receipt clock matches manifest and ledger time. Unset is rejected.');
+ check('Canonicalization declaration',obj(r.canonicalization)&&r.canonicalization.json==='rfc8785','Receipt declares the producer canonicalization profile.');
+ return {status:errors.length?'INVALID':'VALID',profile:'browser-demo/0.1; safe-integer subset',checks,errors,bundle_digest:digest,issuer_authenticated:false,external_fact_verified:false};
+ }catch(e){errors.push(e.message);return {status:'INVALID',profile:'browser-demo/0.1; safe-integer subset',checks,errors,issuer_authenticated:false,external_fact_verified:false};}
+}
+
+// Display-only extraction. These values are declarations, never verification results.
+const isObject = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+const displayText = (value, fallback = 'Not declared') => typeof value === 'string' && value.trim() ? value.slice(0, 180) : fallback;
+function summarizeTransport(input) {
+  if (!isObject(input) || input.format !== 'paygod-demo-transport/1' || !isObject(input.files)) throw Error('Choose a PayGod demo bundle JSON file.');
+  const names = Object.keys(input.files);
+  if (names.length > 32 || names.some(name => typeof input.files[name] !== 'string')) throw Error('Unsupported bundle file map.');
+  const read = name => {
+    if (!Object.hasOwn(input.files, name)) return {};
+    try { const value = JSON.parse(input.files[name]); return isObject(value) ? value : {}; } catch { return {}; }
+  };
+  const measurement = read('measurement.json'), receipt = read('receipt.json'), manifest = read('manifest.json');
+  const value = typeof measurement.value === 'number' && Number.isFinite(measurement.value) ? String(measurement.value) : 'Not declared';
+  return {
+    measurement: value + (typeof measurement.unit === 'string' ? ' ' + measurement.unit.slice(0, 24) : ''),
+    metric: displayText(measurement.metric, 'No measurement summary available'),
+    source: displayText(measurement.source),
+    decision: displayText(receipt.verdict?.value).toUpperCase(),
+    rule: displayText(receipt.verdict?.rule_name),
+    time: displayText(receipt.generated_at),
+    files: names.length,
+    committed: Array.isArray(manifest.files) ? manifest.files.length : 0
+  };
+}
+
+const SAMPLE = null;
+const $ = id => document.getElementById(id);
+const editor = $('bundle-editor');
+let latest = null, runId = 0, importId = 0;
+function readSummary() {
+  const hasInput = editor.value.trim().length > 0;
+  $('verify').disabled = !hasInput;
+  $('download').disabled = !hasInput;
+  $('summary-error').textContent = '';
+  $('summary-empty').hidden = hasInput;
+  $('bundle-summary').hidden = true;
+  if (!hasInput) return;
+  try {
+    if (new TextEncoder().encode(editor.value).length > 2000000) throw Error('Maximum bundle size is 2 MB.');
+    const s = summarizeTransport(JSON.parse(editor.value));
+    for (const key of ['measurement', 'metric', 'source', 'decision', 'rule', 'time']) $('summary-' + key).textContent = s[key];
+    $('summary-files').textContent = s.files + ' files · ' + s.committed + ' committed artifacts';
+    $('bundle-summary').hidden = false;
+  } catch (error) { $('summary-error').textContent = 'Summary unavailable: ' + error.message; }
+}
+function invalidate() {
+  runId++; latest = null;
+  $('status').textContent = 'NOT RUN'; $('status').className = 'status pending';
+  $('result-title').textContent = editor.value.trim() ? 'Ready to check the received bytes.' : 'Waiting for a bundle.';
+  $('result-summary').textContent = 'Run verification to inspect file integrity and decision bindings.';
+  $('checks').replaceChildren(); $('error-detail').textContent = ''; $('digest').textContent = 'Not calculated';
+  for (const id of ['integrity-result', 'decision-result']) { $(id).textContent = 'Not checked'; $(id).className = ''; }
+  $('check-count').textContent = '0 checks'; $('download-result').disabled = true;
+  $('transfer-state').textContent = ''; readSummary();
+}
+function setActive(kind) { for (const id of ['clean', 'tamper', 'receipt-tamper']) $(id)?.classList.toggle('active', id === kind); }
+function load(kind = 'clean') {
+  if (!SAMPLE) return;
+  importId++;
+  const t = structuredClone(SAMPLE);
+  if (kind === 'tamper') t.files['measurement.json'] = t.files['measurement.json'].replace('420', '421');
+  if (kind === 'receipt-tamper') { const receipt = JSON.parse(t.files['receipt.json']); receipt.verdict.value = 'allow'; t.files['receipt.json'] = JSON.stringify(receipt, null, 2) + '\n'; }
+  editor.value = JSON.stringify(t, null, 2); invalidate();
+  $('edit-state').textContent = kind === 'clean' ? 'CLEAN SAMPLE' : kind === 'tamper' ? 'MEASUREMENT CHANGED' : 'DECISION CHANGED';
+  $('file-label').textContent = 'Synthetic sample · ready to download'; setActive(kind);
+}
+function save(name, data, type = 'application/json') {
+  const blob = new Blob([typeof data === 'string' ? data : JSON.stringify(data, null, 2) + '\n'], {type});
+  const url = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = url; a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+for (const id of ['clean', 'tamper', 'receipt-tamper']) if ($(id)) $(id).onclick = () => load(id);
+editor.oninput = () => { importId++; invalidate(); $('edit-state').textContent = 'EDITED · REVERIFY'; $('file-label').textContent = 'Edited in this workspace'; setActive(null); };
+$('verify').onclick = async () => {
+  const current = ++runId, bytes = editor.value;
+  $('verify').disabled = true; $('verify').textContent = 'Checking…';
+  let result;
+  try { if (new TextEncoder().encode(bytes).length > 2000000) throw Error('Maximum bundle size is 2 MB.'); result = await verifyTransport(JSON.parse(bytes)); }
+  catch (error) { result = {status: 'INVALID', checks: [], errors: [error.message], issuer_authenticated: false, external_fact_verified: false}; }
+  $('verify').disabled = !editor.value.trim(); $('verify').textContent = 'Run verification';
+  if (current !== runId) return;
+  latest = result;
+  const ok = result.status === 'VALID';
+  $('status').textContent = result.status; $('status').className = 'status ' + (ok ? 'valid' : 'invalid');
+  $('result-title').textContent = ok ? 'The supported checks passed.' : 'This bundle failed verification.';
+  $('result-summary').textContent = ok ? 'The checked files and recorded decision are internally consistent. Source authenticity remains unverified.' : 'A file or binding could not be verified. Inspect the details before relying on this package.';
+  const integrityChecks = result.checks.filter(check => check.name !== 'Decision binding');
+  const integrityPassed = integrityChecks.length > 0 && integrityChecks.every(check => check.ok) && result.errors.every(error => error.startsWith('Decision binding:'));
+  $('integrity-result').textContent = integrityPassed ? 'Passed' : 'Failed';
+  $('integrity-result').className = integrityPassed ? 'passed' : 'failed';
+  const decision = result.checks.find(check => check.name === 'Decision binding');
+  const decisionDependencies = ['Contract', 'Artifact · ledger.jsonl', 'Manifest binding', 'Locked ledger', 'Ledger chain'];
+  const decisionReady = decision && decisionDependencies.every(name => result.checks.some(check => check.name === name && check.ok));
+  $('decision-result').textContent = !decisionReady ? 'Not established' : decision.ok ? 'Matched' : 'Mismatch';
+  $('decision-result').className = decisionReady && decision.ok ? 'passed' : 'failed';
+  $('checks').replaceChildren();
+  for (const check of result.checks) {
+    const row = document.createElement('div'); row.className = 'check-row' + (check.ok ? '' : ' failed');
+    const icon = document.createElement('span'), label = document.createElement('div');
+    icon.textContent = check.ok ? '✓' : '×'; label.textContent = check.name; row.append(icon, label); $('checks').append(row);
+  }
+  $('check-count').textContent = result.checks.filter(check => check.ok).length + '/' + result.checks.length + ' passed';
+  $('error-detail').textContent = result.errors.join('\n'); $('digest').textContent = result.bundle_digest || 'Not calculated'; $('download-result').disabled = false;
+};
+$('download').onclick = () => { save('paygod-evidence-bundle.json', editor.value); $('transfer-state').textContent = 'Bundle download requested. Open the separate verifier and choose this file. The file—not a shared session—carries the evidence.'; };
+$('download-result').onclick = () => { if (latest) save('paygod-verification-result.json', latest); };
+$('upload').onchange = async event => {
+  const file = event.target.files[0]; if (!file) return;
+  const current = ++importId;
+  editor.value = ''; invalidate(); setActive(null); $('edit-state').textContent = 'READING FILE'; $('file-label').textContent = file.name;
+  try {
+    if (file.size > 2000000) throw Error('Import rejected: maximum size is 2 MB.');
+    const text = await file.text(); if (current !== importId) return;
+    editor.value = text; invalidate(); $('edit-state').textContent = 'IMPORTED · REVERIFY';
+  } catch (error) { if (current === importId) { $('summary-error').textContent = error.message; $('edit-state').textContent = 'IMPORT REJECTED'; } }
+  event.target.value = '';
+};
+if (SAMPLE) load(); else invalidate();
+</script></body></html>

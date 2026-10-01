@@ -1,0 +1,29 @@
+<div class="demo-shell">
+  <div class="demo-toolbar"><span class="mono">/*WORKSPACE_LABEL*/ <span class="muted">/ demo profile v0.2</span></span><span class="local-label">PROCESSED ON THIS DEVICE</span></div>
+  <div class="demo-grid">
+    <div class="demo-input">
+      <!--INPUT_INTRO-->
+      <div class="bundle-pick"><label for="upload" class="small-button file-button">Choose bundle file<input id="upload" type="file" accept=".json,application/json" aria-label="Choose bundle file"></label><span id="file-label" class="help">JSON file · up to 2 MB</span></div>
+      <div id="summary-empty" class="empty-bundle"><span class="mono">WAITING FOR EVIDENCE</span><h3>No bundle loaded.</h3><p>Choose a downloaded bundle or paste its JSON below. Nothing is sent to a server.</p></div>
+      <div id="bundle-summary" class="evidence-summary" hidden>
+        <div class="summary-top"><span class="mono">EVIDENCE CARD</span><span class="declared-tag">SELF-DECLARED CONTENT</span></div>
+        <p class="summary-metric" id="summary-metric"></p><p class="measurement-value" id="summary-measurement"></p>
+        <dl class="summary-fields"><div><dt>Recorded decision</dt><dd id="summary-decision"></dd></div><div><dt>Rule reference</dt><dd id="summary-rule"></dd></div><div><dt>Declared source</dt><dd id="summary-source"></dd></div><div><dt>Recorded time</dt><dd id="summary-time"></dd></div><div><dt>Package contents</dt><dd id="summary-files"></dd></div></dl>
+        <p class="help">This card reads the supplied files. It does not establish that the measurement happened or the source is authentic.</p>
+      </div>
+      <p id="summary-error" role="status"></p>
+      <div class="demo-buttons verify-actions"><button id="verify" class="button primary" disabled>Run verification</button><button id="download" class="small-button" disabled>Download this bundle</button></div>
+      <details class="technical-details" id="source-details"><summary>View or edit technical files <span id="edit-state">NO BUNDLE</span></summary><label for="bundle-editor" class="editor-label mono">BUNDLE TRANSPORT JSON</label><textarea id="bundle-editor" spellcheck="false" aria-describedby="demo-help" placeholder="Paste bundle JSON here"></textarea><p id="demo-help" class="help">UTF-8 file strings preserve artifact bytes. This demo transport is not a new kernel standard. Maximum total size: 2 MB.</p></details>
+      <p id="transfer-state" role="status" class="help"></p>
+    </div>
+    <div class="demo-result" aria-live="polite">
+      <div class="result-top"><span class="mono">WHAT CAN BE VERIFIED?</span><span id="status" class="status pending">NOT RUN</span></div>
+      <h3 id="result-title">Waiting for a bundle.</h3><p id="result-summary">Choose a bundle to begin the checks.</p>
+      <dl class="trust-results"><div><dt>File and record integrity</dt><dd id="integrity-result">Not checked</dd></div><div><dt>Receipt matches the decision record</dt><dd id="decision-result">Not checked</dd></div><div><dt>Issuer identity</dt><dd class="unverified">Not verified</dd></div><div><dt>Real-world observation</dt><dd class="unverified">Not verified</dd></div></dl>
+      <div id="error-detail" role="status"></div>
+      <details class="technical-details" id="check-details"><summary>Inspect technical checks <span id="check-count">0 checks</span></summary><div id="checks"></div><div class="digest"><span class="mono">MANIFEST COMMITMENT</span><code id="digest">Not calculated</code><p class="help">Digest of the declared file commitments. Individual file checks detect changes to the actual bytes.</p></div></details>
+      <button id="download-result" class="small-button" disabled>Download verification report</button>
+      <p class="trust-note">VALID means the supported consistency checks passed. A valid bundle can still contain a FLAG or DENY decision. It is not approval, authenticated provenance or proof of a real-world fact.</p>
+    </div>
+  </div>
+</div>

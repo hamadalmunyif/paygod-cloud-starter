@@ -28,7 +28,17 @@ python tests/upstream.py
 python vendor/verify_portable_evidence.py demo/bundle --result demo/local-result.json
 ```
 
-`dist/index.html` is the complete self-contained preview. It can also be opened directly in a desktop browser. Some mobile file previews disable JavaScript; a normal browser on a local server or future HTTPS preview is required in that case. There is no remote processing of imported evidence.
+`dist/index.html` is the landing page and sample producer workspace. `dist/verifier/index.html` is a separate recipient workspace that starts empty. `dist/downloads/paygod-verifier.html` is a self-contained downloadable verifier: open it in a desktop browser, disconnect from the network, and choose an exported bundle JSON. Some mobile file preview apps disable JavaScript. No evidence is uploaded, and the verifier does not inherit producer state.
+
+The recipient edition embeds no fixture, calls no producer API, and uses no cookies, local storage, session storage or message-passing for the handoff. Its Content Security Policy blocks network connections and external runtime assets. This demonstrates separate execution of the same browser implementation; it is not an independent third-party audit.
+
+### Try the handoff
+
+1. Open the landing page's sample workspace. The evidence card displays declarations read from the sample files; it is not a verified measurement.
+2. Download the bundle and open the separate verifier, which starts with no evidence loaded.
+3. Choose the downloaded JSON and run verification. Inspect file integrity, decision binding, and the explicitly unverified source identity and real-world observation.
+4. Change the sample measurement or decision, download that bundle, and repeat in the recipient workspace. The relevant check must fail.
+5. Download the offline verifier to repeat outside the website. The standalone Python verifier remains the pinned reference implementation.
 
 ## Files
 
@@ -37,6 +47,10 @@ python vendor/verify_portable_evidence.py demo/bundle --result demo/local-result
 - `src/verifier.mjs`: browser demonstration verifier.
 - `src/sha256.mjs`: local SHA-256 fallback for offline/non-secure-context preview; Web Crypto is preferred when available.
 - `src/ui.js`: editable bundle, clean/tampered scenarios, import/export and result lifecycle.
+- `src/summary.mjs`: display-only extraction of self-declared evidence-card values; never a source of verification status.
+- `src/inspector.html`: shared human-readable workspace and technical inspector.
+- `src/standalone.html`: empty recipient workspace and offline verifier shell.
+- `PILOT_BRIEF.md`: downloadable template to scope a real source, decision and recipient.
 - `demo/sample.json`: UTF-8 transport wrapper around a synthetic compatible bundle.
 - `demo/bundle/`: unwrapped artifacts accepted by the pinned upstream verifier.
 - `demo/generate.py`: reproducible synthetic fixture generator; not a kernel execution or domain pack.
@@ -56,7 +70,7 @@ The example pack digest is a synthetic identifier, not a published/verified exec
 
 ## Architecture and deployment
 
-Production deliverable: static HTML + CSS + browser JS, all in `dist/index.html`. No Vinext/React runtime is required. A temporary internal preview shell used during review is intentionally excluded from this branch. Keep the static source separate from kernel semantics. No live APIs, CNAME files or secrets are included. `vercel.json` records the review build configuration and skips builds outside Vercel's Preview environment.
+Deliverables: self-contained landing page, recipient verifier and offline verifier, plus a pilot brief, all under `dist/`. No Vinext/React runtime is required. A temporary internal preview shell used during review is intentionally excluded from this branch. Keep the static source separate from kernel semantics. No live APIs, CNAME files or secrets are included. `vercel.json` records the review build configuration and skips builds outside Vercel's Preview environment.
 
 Hosting path: GitHub source → static build → separate Vercel review project; retain GoDaddy registration and existing DNS provider. The owner authorized a separate preview. Production deployment and domain changes remain subject to final review. Exact DNS values must be obtained from the chosen hosting project's domain configuration and compared to the existing DNS records before any write. `REVIEW_AR.md` is the original September 28 review; `DEPLOYMENT.md` records subsequent setup.
 

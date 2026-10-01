@@ -2,13 +2,123 @@
 @media(min-width:1500px){.hero{gap:110px}}@media(max-width:1100px){.wrap{width:calc(100% - 56px)}header{padding:0 28px}.hero{gap:35px}.hero h1{font-size:52px}.hero-visual{padding:20px}.hero-foot{font-size:9px}.hero-foot span{padding:0 3px}.process-strip{flex-wrap:wrap;justify-content:center;gap:14px}.problem{gap:50px}.use-list article{grid-template-columns:25px 190px 1fr}.use-tag{display:none}.cap-grid article{padding:25px}.verification-grid{gap:50px}.arch-column{padding:20px}.demo-under{align-items:start}.demo-under a{white-space:normal}}
 @media(max-width:760px){header{height:75px;padding:0 22px}header nav{display:none}.brand{font-size:23px}.nav-cta{padding:8px 11px;font-size:12px;gap:14px}.wrap{width:calc(100% - 44px)}.hero{grid-template-columns:1fr;padding-top:58px;padding-bottom:48px;gap:42px}.hero h1{font-size:clamp(40px,9vw,61px)}.eyebrow{font-size:11px;margin-bottom:22px}.lede{font-size:17px}.hero-foot{font-size:9px;line-height:2}.hero-visual{max-width:480px;width:100%;margin:auto}.hero .actions{gap:18px}.process-strip{justify-content:flex-start;row-gap:16px}.process-strip i{display:none}.process-strip>span{width:calc(33% - 10px);font-size:10px}.process-strip b{display:block;font-size:10px;margin-left:0}.section{padding-top:65px;padding-bottom:65px}.problem,.verification-grid{grid-template-columns:1fr;gap:32px}.section-head{display:block;margin-bottom:30px}.section-head>p,.section-head>a{margin-top:23px;max-width:none}.cap-grid{grid-template-columns:1fr}.cap-grid article{padding:27px}.cap-index{margin-bottom:20px}.cap-grid p{min-height:0;margin-bottom:22px}.architecture-grid{grid-template-columns:1fr}.arch-column+.arch-column{border-left:0;border-top:1px solid var(--line)}.arch-column{padding:25px}.arch-bundle h3 br{display:none}.arch-label{margin-bottom:20px}.demo-grid{grid-template-columns:1fr}.demo-input{padding:20px;border-right:0;border-bottom:1px solid var(--line)}.demo-result{padding:22px}.demo-toolbar{padding:14px 17px}.demo-toolbar .muted{display:none}.demo-under{display:block}.demo-under a{margin-top:15px}.demo-buttons .button{font-size:12px;padding:13px 14px}.demo-buttons .small-button{font-size:11px}.use-list article{grid-template-columns:20px 1fr;gap:12px;padding:25px 0}.use-list article p{grid-column:2}.use-list h3{font-size:20px}.final-cta{padding-top:70px;padding-bottom:70px}footer{flex-wrap:wrap;gap:14px;padding:25px 0}footer p{margin:0}footer>.mono{width:100%}.hero-visual .file-row{font-size:10px}.bundle-heading strong{font-size:12px}.local-label{font-size:9px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-</style></head><body>
+
+/* Evidence handoff and the self-contained recipient workspace. */
+[hidden]{display:none!important}
+summary{cursor:pointer;list-style-position:inside}
+summary:focus-visible{outline:2px solid var(--cyan);outline-offset:5px}
+.handoff-story{padding:64px 0 12px}
+.handoff-story-head{display:grid;grid-template-columns:1fr 1fr;gap:18px 80px;align-items:end}
+.handoff-story-head .eyebrow{grid-column:1/-1;margin:0}
+.handoff-story-head h2{font-size:clamp(28px,2.6vw,38px)}
+.handoff-story-head>p:last-child{color:var(--muted);max-width:490px;margin:0}
+.handoff-steps{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid #3c514c;margin-top:30px;background:#101b1a}
+.handoff-steps article{padding:28px}
+.handoff-steps article+article{border-left:1px solid #3c514c}
+.step-number{font-size:12px;letter-spacing:.06em;color:var(--cyan);display:block;margin-bottom:22px}
+.handoff-steps h3{font-size:23px}
+.handoff-steps p{color:var(--muted);margin:0 0 20px}
+.story-example{font-size:13px;color:#cae7dd}
+.bundle-pick{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:20px 0}
+.bundle-pick .help{margin:0;overflow-wrap:anywhere}
+.sample-controls{margin-bottom:16px}
+.evidence-summary{padding:24px;background:linear-gradient(130deg,#163029,#101d1b);border:1px solid #537e6c;margin:20px 0}
+.summary-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--cyan)}
+.declared-tag{font-family:'Courier New',monospace;font-size:11px;color:#bdc8b8;border:1px solid #4c6054;padding:3px 6px}
+.summary-metric{color:#afc6bd;font-size:14px;margin:25px 0 4px;overflow-wrap:anywhere}
+.measurement-value{font-size:44px;line-height:1.15;letter-spacing:-.04em;margin:0 0 25px;color:#e4fff2;overflow-wrap:anywhere}
+.summary-fields{margin:0}
+.summary-fields>div{display:grid;grid-template-columns:1fr 1.1fr;gap:14px;border-top:1px solid #355146;padding:10px 0;font-size:14px}
+.summary-fields dt{color:#aac0b6}
+.summary-fields dd{margin:0;color:#e0eee6;overflow-wrap:anywhere}
+#summary-decision{color:var(--amber);font-family:'Courier New',monospace;font-weight:bold}
+.evidence-summary .help{margin:14px 0 0;color:#acbdb6}
+.empty-bundle{padding:30px 24px;border:1px dashed #4d645e;background:#111d1a;margin:20px 0}
+.empty-bundle .mono{font-size:12px;color:#94b0a3}
+.empty-bundle h3{font-size:26px;margin:16px 0}
+.empty-bundle p{color:var(--muted);margin:0;font-size:16px}
+#summary-error{color:#ffb4a7;font-size:14px;overflow-wrap:anywhere}
+.technical-details{border-top:1px solid #3a4c47;margin:24px 0;padding-top:15px}
+.technical-details summary{font-size:14px;color:#c6d7cf}
+.technical-details summary>span{font-size:11px;color:#92aba0;display:block;margin:6px 0 0 16px;letter-spacing:.02em}
+.technical-details textarea{height:270px;font-size:13px}
+.technical-details .editor-label{font-size:12px}
+.trust-results{margin:25px 0}
+.trust-results>div{display:grid;grid-template-columns:1fr auto;gap:20px;padding:17px 0;border-bottom:1px solid #36483f;font-size:15px;align-items:start}
+.trust-results dt{max-width:280px;color:#c9d8d0}
+.trust-results dd{margin:0;text-align:right;color:#a5b7ae;white-space:nowrap}
+.trust-results dd.passed{color:var(--cyan)}
+.trust-results dd.failed{color:#ffb4a7}
+.trust-results dd.unverified{color:var(--amber)}
+.demo-input .small-button,.demo-result .small-button{font-size:14px;padding:10px 13px}
+.demo-result .trust-note,.demo-under p,.help{font-size:13px;line-height:1.7}
+.demo-result h3{line-height:1.25;font-size:26px}
+.result-top>.mono,.demo-toolbar,.local-label{font-size:12px}
+#transfer-state{color:var(--cyan)}
+.handoff-next{padding:30px;background:#16251f;border:1px solid #436759;display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:22px}
+.handoff-next .mono{font-size:12px;color:var(--cyan)}
+.handoff-next h3{font-size:25px;margin-top:15px}
+.handoff-next p{font-size:15px;color:#b1c4b9;margin:0;max-width:600px}
+.handoff-next .actions{align-content:center;gap:18px}
+.handoff-next .text-link{font-size:14px}
+.final-cta>p:not(.eyebrow){max-width:640px;margin:25px auto 30px}
+.pilot-points{display:flex;justify-content:center;gap:26px;flex-wrap:wrap;font-size:14px;color:#bad2c5;margin:0 0 32px}
+.standalone-label{font-size:12px;color:#a3bdaf;letter-spacing:.05em}
+.standalone-main{padding:55px 0 65px}
+.standalone-intro{display:grid;grid-template-columns:1.2fr 1fr;gap:20px 70px;align-items:start;margin-bottom:35px}
+.standalone-intro .eyebrow{grid-column:1/-1;margin:0}
+.standalone-intro h1{font-size:clamp(38px,4vw,55px);letter-spacing:-.05em;grid-row:2/4;margin:0}
+.standalone-intro .lede{font-size:17px;margin:0}
+.execution-note{border-left:2px solid #719f87;padding-left:18px}
+.execution-note .mono{font-size:12px;color:var(--cyan)}
+.execution-note p{font-size:14px;margin:8px 0 0;color:#a3b7ac}
+.standalone-notes{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:45px}
+.standalone-notes h2{font-size:26px}
+.standalone-notes p{font-size:15px;color:#a4b9ac}
+.offline-ready{border-left:2px solid var(--cyan);padding-left:16px}
+.notice{padding:18px;border:1px solid var(--amber)}
+@media(max-width:900px){
+ .handoff-story-head{gap:20px 35px}
+ .handoff-steps article{padding:22px}
+ .demo-grid{grid-template-columns:1fr}
+ .demo-input{border-right:0;border-bottom:1px solid var(--line)}
+ .handoff-next{grid-template-columns:1fr;gap:23px}
+ .standalone-intro{gap:20px 35px}
+}
+@media(max-width:760px){
+ .handoff-story{padding-top:45px}
+ .handoff-story-head,.handoff-steps,.standalone-intro,.standalone-notes{grid-template-columns:1fr}
+ .handoff-story-head{gap:20px}
+ .handoff-steps article+article{border-left:0;border-top:1px solid #3c514c}
+ .handoff-steps article{padding:24px}
+ .handoff-story-head h2 br{display:none}
+ .summary-fields>div{grid-template-columns:1fr 1fr;font-size:14px;gap:10px}
+ .evidence-summary{padding:20px}
+ .measurement-value{font-size:40px}
+ .demo-input .small-button,.demo-result .small-button{font-size:13px}
+ .demo-input .button{font-size:14px}
+ .trust-results>div{font-size:14px;gap:14px}
+ .trust-results dd{white-space:normal;min-width:85px}
+ .demo-toolbar{gap:10px;align-items:flex-start}
+ .demo-toolbar>.mono{max-width:56%;font-size:11px}
+ .local-label{font-size:10px;max-width:40%;text-align:right}
+ .handoff-next{padding:23px}
+ .standalone-label{font-size:10px;max-width:145px;text-align:right}
+ .standalone-main{padding-top:38px}
+ .standalone-intro h1{grid-row:auto;font-size:41px}
+ .standalone-intro{gap:22px}
+ .standalone-notes{gap:30px}
+ .pilot-points{display:grid;gap:12px;text-align:left;justify-content:center}
+ .hero-foot{font-size:11px}
+}
+</style></head><body data-workspace="producer">
 <a class="skip" href="#main">Skip to content</a>
-<header><a class="brand" href="#" aria-label="PayGod home"><svg viewBox="0 0 32 36" aria-hidden="true"><path d="M16 2 30 10v16l-14 8L2 26V10Z M2 10l14 8 14-8 M16 18v16 M9 14V6 M23 14v15" fill="none" stroke="currentColor" stroke-width="2"/></svg>PayGod<span class="wordmark-dot">/</span></a><nav aria-label="Main navigation"><a href="#architecture">Architecture</a><a href="#capabilities">Capabilities</a><a href="#applications">Applications</a></nav><a class="nav-cta" href="#verifier">Open verifier <span>↗</span></a></header>
+<header><a class="brand" href="#" aria-label="PayGod home"><svg viewBox="0 0 32 36" aria-hidden="true"><path d="M16 2 30 10v16l-14 8L2 26V10Z M2 10l14 8 14-8 M16 18v16 M9 14V6 M23 14v15" fill="none" stroke="currentColor" stroke-width="2"/></svg>PayGod<span class="wordmark-dot">/</span></a><nav aria-label="Main navigation"><a href="#architecture">Architecture</a><a href="#capabilities">Capabilities</a><a href="#applications">Applications</a></nav><a class="nav-cta" href="verifier/">Open verifier</a></header>
 <main id="main">
-<section class="hero wrap"><div class="hero-copy"><p class="eyebrow"><span class="tiny-square"></span> EVIDENCE INFRASTRUCTURE</p><h1>Evidence beyond<br>the system<br><span>that produced it.</span></h1><p class="lede">Measure what happened. Preserve how a conclusion was reached. Carry the evidence forward—so others can verify it independently.</p><div class="actions"><a class="button primary" href="#verifier">Verify an evidence bundle <span>↗</span></a><a class="text-link" href="#architecture">Explore the architecture <span>↓</span></a></div><p class="hero-foot mono">DETERMINISTIC CORE <span>/</span> PORTABLE ARTIFACTS <span>/</span> OPEN VERIFICATION</p></div>
+<section class="hero wrap"><div class="hero-copy"><p class="eyebrow"><span class="tiny-square"></span> EVIDENCE INFRASTRUCTURE</p><h1>Evidence beyond<br>the system<br><span>that produced it.</span></h1><p class="lede">Give another party the evidence they need to check your result. Package the recorded inputs, decision context and integrity checks so the evidence can travel beyond your system.</p><div class="actions"><a class="button primary" href="#verifier">Try an evidence handoff</a><a class="text-link" href="#architecture">Explore the architecture <span>↓</span></a></div><p class="hero-foot mono">DETERMINISTIC CORE <span>/</span> PORTABLE ARTIFACTS <span>/</span> OPEN VERIFICATION</p></div>
 <div class="hero-visual" aria-label="An evidence bundle crosses the producer boundary and is checked by an independent verifier"><div class="visual-top mono">TRUST PATH <span>01 → 06</span></div><div class="producer"><span class="mono dim">PRODUCER ENVIRONMENT</span><div class="signals"><span>Observation</span><span>Policy</span><span>Context</span></div><div class="kernel-block"><span class="cross">✳</span><div><strong>Deterministic kernel</strong><small>Evidence + explicit decision logic</small></div></div></div><div class="transit"><span class="transit-line"></span><span class="mono">ENVIRONMENT BOUNDARY</span></div><div class="bundle-card"><div class="bundle-heading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m12 2 9 5v10l-9 5-9-5V7Z M3 7l9 5 9-5 M12 12v10"/></svg><strong>Portable evidence bundle</strong><span class="tag">EXPORT</span></div><div class="file-row"><span>manifest.json</span><span>content commitments</span></div><div class="file-row"><span>receipt.json</span><span>decision binding</span></div><div class="file-row"><span>ledger.jsonl</span><span>hash-linked records</span></div><div class="file-row"><span>evidence artifacts</span><span>inspectable bytes</span></div></div><div class="verifier-block"><div class="check-symbol">✓</div><div><strong>Independent verifier</strong><small>Artifact checks. No original execution.</small></div><span class="mono">06</span></div><p class="visual-caption">The evidence travels. The producer's environment does not.</p></div></section>
 <div class="process-strip wrap" aria-label="Core product sequence"><span>01 <b>Measurement</b></span><i>→</i><span>02 <b>Evidence</b></span><i>→</i><span>03 <b>Inference</b></span><i>→</i><span>04 <b>Proof</b></span><i>→</i><span>05 <b>Portable bundle</b></span><i>→</i><span>06 <b>Verification</b></span></div>
+<section class="handoff-story wrap" aria-labelledby="handoff-title"><div class="handoff-story-head"><p class="eyebrow">ONE DECISION. TWO ENVIRONMENTS.</p><h2 id="handoff-title">From an internal result<br>to someone else's checks.</h2><p>An operations team records a measurement. A reviewer needs to inspect the evidence outside that team's application.</p></div><div class="handoff-steps"><article><span class="step-number mono">01 / PRODUCER</span><h3>Record the result.</h3><p>Keep the input, rule reference and decision together.</p><span class="story-example">420 kWh · recorded decision: FLAG</span></article><article><span class="step-number mono">02 / HANDOFF</span><h3>Send the package.</h3><p>Download the evidence files and their integrity commitments.</p><span class="story-example">One portable bundle</span></article><article><span class="step-number mono">03 / RECIPIENT</span><h3>Check what arrived.</h3><p>Import the file into a separate verifier. No producer session required.</p><span class="story-example">Integrity checked · provenance explicit</span></article></div><p class="help">Illustrative industrial workflow. The demo below uses a synthetic fixture.</p></section>
 <section class="problem wrap section"><div><p class="eyebrow">01 / THE PROBLEM</p><h2>A conclusion is only<br>as useful as the evidence<br>someone else can inspect.</h2></div><div class="problem-copy"><p>Systems generate measurements, decisions and claims. But their evidence often stays inside the application, workflow or organization that produced it.</p><p>When the evidence moves, context is lost. A dashboard becomes a screenshot. A decision becomes a status. A reviewer is asked to trust an answer they cannot check.</p><div class="statement">PayGod makes the evidence a transferable artifact—with explicit contracts, decision context and verifiable integrity.</div></div></section>
 <section id="capabilities" class="section capabilities"><div class="wrap"><div class="section-head"><div><p class="eyebrow">02 / CORE CAPABILITIES</p><h2>From a measurement<br>to an inspectable conclusion.</h2></div><p>One evidence path. Clear boundaries between what was observed, what was inferred and what can be verified.</p></div><div class="cap-grid">
 <article><span class="mono cap-index">01 / DEFINE</span><h3>Measurement contracts</h3><p>Give observations a defined metric, unit and context. Keep the measurement distinct from the conclusion drawn from it.</p><code>observation → measurement</code></article>
@@ -23,11 +133,41 @@
 <div class="arch-column middle"><p class="mono arch-label">B / PORTABLE BOUNDARY</p><div class="arch-bundle"><span class="mono">EVIDENCE BUNDLE</span><h3>The handoff is<br> an artifact.</h3><ul><li>Manifest & artifact hashes</li><li>Decision-bound receipt</li><li>Hash-linked ledger</li><li>Supporting evidence</li></ul></div><p class="arch-note">An inspectable package, independent of its transport.</p></div>
 <div class="arch-column"><p class="mono arch-label">C / RECIPIENT ENVIRONMENT</p><div class="arch-node"><span>04</span><div><h3>Independent verifier</h3><p>Integrity, bindings, ledger consistency</p></div></div><div class="arch-node"><span>05</span><div><h3>Machine-readable result</h3><p>VALID or INVALID, with explicit errors</p></div></div><div class="boundary-note"><strong>Verification ≠ execution</strong><p>The verifier checks evidence. Downstream systems decide how to act.</p></div></div></div></section>
 <section class="verification section"><div class="wrap verification-grid"><div><p class="eyebrow">04 / INDEPENDENT VERIFICATION</p><h2>Trust the checks.<br><span>Understand their limits.</span></h2><p class="lede">A verifier should explain exactly what it checked—and what it did not establish.</p><a class="text-link" href="https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/docs/STANDALONE_VERIFIER.md" target="_blank" rel="noopener">Read the verification boundary ↗</a></div><div class="verification-facts"><div><span class="fact-label">CHECKED BY THE CURRENT VERIFIER</span><p>Artifact SHA-256 digests and byte counts. Manifest and receipt bindings. Decision-critical claims against the locked ledger. Ledger hash-chain integrity.</p></div><div><span class="fact-label amber">NOT ESTABLISHED BY THESE CHECKS</span><p>The truth of an external fact, the identity of an issuer, a signed trust root, regulatory acceptance or permission to execute a transaction.</p></div><div class="integrity-line">Integrity is not provenance.</div><p class="scope-note">Current repository witnesses include cross-environment and standalone verification within CI. Independent third-party distribution and issuer authentication remain separate milestones.</p></div></div></section>
-<section id="verifier" class="wrap section demo-section"><div class="section-head"><div><p class="eyebrow">05 / INTERACTIVE DEMONSTRATION</p><h2>Change the evidence.<br>See the verification fail.</h2></div><p>A synthetic industrial measurement, a recorded policy decision and a portable bundle. Real SHA-256 checks, performed in your browser.</p></div>
-<div class="demo-shell"><div class="demo-toolbar"><span class="mono">BUNDLE INSPECTOR <span class="muted">/ browser demo v0.1</span></span><span class="local-label">LOCAL PROCESSING</span></div><div class="demo-grid"><div class="demo-input"><div class="scenario"><span class="mono">SYNTHETIC SCENARIO</span><h3>Resource consumption review</h3><p><strong>420 kWh</strong> recorded against a <strong>400 kWh</strong> review threshold. The illustrative policy returns <b>flag</b>.</p></div><div class="demo-buttons"><button id="clean" class="small-button active">Load clean bundle</button><button id="tamper" class="small-button">Tamper with evidence</button><button id="receipt-tamper" class="small-button">Alter receipt</button></div><label for="bundle-editor" class="mono editor-label">EDITABLE TRANSPORT JSON <span id="edit-state">SAMPLE LOADED</span></label><textarea id="bundle-editor" spellcheck="false" aria-describedby="demo-help"></textarea><p id="demo-help" class="help">UTF-8 file strings preserve artifact bytes. This demo wrapper is not a new kernel bundle standard. Maximum file size: 2 MB.</p><div class="demo-buttons"><button id="verify" class="button primary">Run verification <span>↗</span></button><label class="small-button file-button">Import JSON<input id="upload" type="file" accept=".json,application/json"></label><button id="download" class="small-button">Export bundle ↓</button></div></div><div class="demo-result"><div class="result-top"><span class="mono">VERIFICATION RESULT</span><span id="status" class="status pending">NOT RUN</span></div><h3 id="result-title">Ready for independent checks.</h3><p id="result-summary">The result comes from the bytes in the editor, not a preset success state.</p><div id="checks" aria-live="polite"></div><div id="error-detail" role="status"></div><div class="digest"><span class="mono">COMPUTED BUNDLE DIGEST</span><code id="digest">Run verification to calculate</code></div><button id="download-result" class="small-button" disabled>Download result ↓</button><p class="trust-note">A VALID bundle may contain a <b>flag</b> or <b>deny</b> verdict. VALID describes artifact consistency—not approval, source truth or issuer identity.</p></div></div></div>
-<div class="demo-under"><p>This browser verifier is a demonstration profile with safe-integer numeric support. The synthetic fixture also passes the pinned upstream Python verifier v0.2.0. Full upstream compatibility is not claimed.</p><a class="text-link" href="https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/f405fdf7cabebddda62196299e50b0598e3e663b/tools/verify_portable_evidence.py" target="_blank" rel="noopener">Inspect the reference verifier ↗</a></div><noscript><p>The page is readable without JavaScript. Enable JavaScript to run the local verifier.</p></noscript></section>
+<section id="verifier" class="wrap section demo-section"><div class="section-head"><div><p class="eyebrow">05 / TRY THE HANDOFF</p><h2>Download the evidence.<br>Check it somewhere else.</h2></div><p>Start with a readable card. Inspect or change the sample, download the bundle, then open it in the separate verifier.</p></div>
+<div class="demo-shell">
+  <div class="demo-toolbar"><span class="mono">PRODUCER WORKSPACE <span class="muted">/ demo profile v0.2</span></span><span class="local-label">PROCESSED ON THIS DEVICE</span></div>
+  <div class="demo-grid">
+    <div class="demo-input">
+      <div class="scenario"><span class="mono">SYNTHETIC INDUSTRIAL EXAMPLE</span><h3>One measurement. A review decision.</h3><p>The sample records 420 kWh against a fictional 400 kWh review threshold. The recorded decision is FLAG. This is a prepared fixture, not a live meter or policy execution.</p></div><div class="demo-buttons sample-controls"><button id="clean" class="small-button active">Load clean bundle</button><button id="tamper" class="small-button">Change the measurement</button><button id="receipt-tamper" class="small-button">Change the decision</button></div>
+      <div class="bundle-pick"><label for="upload" class="small-button file-button">Choose bundle file<input id="upload" type="file" accept=".json,application/json" aria-label="Choose bundle file"></label><span id="file-label" class="help">JSON file · up to 2 MB</span></div>
+      <div id="summary-empty" class="empty-bundle"><span class="mono">WAITING FOR EVIDENCE</span><h3>No bundle loaded.</h3><p>Choose a downloaded bundle or paste its JSON below. Nothing is sent to a server.</p></div>
+      <div id="bundle-summary" class="evidence-summary" hidden>
+        <div class="summary-top"><span class="mono">EVIDENCE CARD</span><span class="declared-tag">SELF-DECLARED CONTENT</span></div>
+        <p class="summary-metric" id="summary-metric"></p><p class="measurement-value" id="summary-measurement"></p>
+        <dl class="summary-fields"><div><dt>Recorded decision</dt><dd id="summary-decision"></dd></div><div><dt>Rule reference</dt><dd id="summary-rule"></dd></div><div><dt>Declared source</dt><dd id="summary-source"></dd></div><div><dt>Recorded time</dt><dd id="summary-time"></dd></div><div><dt>Package contents</dt><dd id="summary-files"></dd></div></dl>
+        <p class="help">This card reads the supplied files. It does not establish that the measurement happened or the source is authentic.</p>
+      </div>
+      <p id="summary-error" role="status"></p>
+      <div class="demo-buttons verify-actions"><button id="verify" class="button primary" disabled>Run verification</button><button id="download" class="small-button" disabled>Download this bundle</button></div>
+      <details class="technical-details" id="source-details"><summary>View or edit technical files <span id="edit-state">NO BUNDLE</span></summary><label for="bundle-editor" class="editor-label mono">BUNDLE TRANSPORT JSON</label><textarea id="bundle-editor" spellcheck="false" aria-describedby="demo-help" placeholder="Paste bundle JSON here"></textarea><p id="demo-help" class="help">UTF-8 file strings preserve artifact bytes. This demo transport is not a new kernel standard. Maximum total size: 2 MB.</p></details>
+      <p id="transfer-state" role="status" class="help"></p>
+    </div>
+    <div class="demo-result" aria-live="polite">
+      <div class="result-top"><span class="mono">WHAT CAN BE VERIFIED?</span><span id="status" class="status pending">NOT RUN</span></div>
+      <h3 id="result-title">Waiting for a bundle.</h3><p id="result-summary">Choose a bundle to begin the checks.</p>
+      <dl class="trust-results"><div><dt>File and record integrity</dt><dd id="integrity-result">Not checked</dd></div><div><dt>Receipt matches the decision record</dt><dd id="decision-result">Not checked</dd></div><div><dt>Issuer identity</dt><dd class="unverified">Not verified</dd></div><div><dt>Real-world observation</dt><dd class="unverified">Not verified</dd></div></dl>
+      <div id="error-detail" role="status"></div>
+      <details class="technical-details" id="check-details"><summary>Inspect technical checks <span id="check-count">0 checks</span></summary><div id="checks"></div><div class="digest"><span class="mono">MANIFEST COMMITMENT</span><code id="digest">Not calculated</code><p class="help">Digest of the declared file commitments. Individual file checks detect changes to the actual bytes.</p></div></details>
+      <button id="download-result" class="small-button" disabled>Download verification report</button>
+      <p class="trust-note">VALID means the supported consistency checks passed. A valid bundle can still contain a FLAG or DENY decision. It is not approval, authenticated provenance or proof of a real-world fact.</p>
+    </div>
+  </div>
+</div>
+
+<div class="handoff-next"><div><span class="mono">NEXT / THE RECIPIENT'S SIDE</span><h3>The file carries the evidence.</h3><p>Download this bundle above, then choose that file in the separate verifier. It opens empty and does not inherit the producer's results.</p></div><div class="actions"><a class="button primary" href="verifier/" target="_blank" rel="noopener">Open separate verifier</a><a class="text-link" href="downloads/paygod-verifier.html" download>Download offline verifier</a></div></div>
+<div class="demo-under"><p>This is a browser demonstration with safe-integer numeric support. The synthetic fixture also passes the pinned Python verifier v0.2.0. Separate execution is demonstrated; a third-party audit and full upstream compatibility are not claimed.</p><a class="text-link" href="https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/f405fdf7cabebddda62196299e50b0598e3e663b/tools/verify_portable_evidence.py" target="_blank" rel="noopener">Inspect the reference verifier</a></div><noscript><p>Enable JavaScript to inspect and verify the local bundle.</p></noscript></section>
 <section id="applications" class="applications section"><div class="wrap"><div class="section-head"><div><p class="eyebrow">06 / APPLICATIONS</p><h2>One primitive.<br>Many evidence boundaries.</h2></div><p>Illustrative integration patterns. Each requires its own contracts, provenance and domain validation.</p></div><div class="use-list"><article><span class="mono">01</span><h3>AI systems</h3><p>Carry evaluation inputs, policy context and decision records beyond the model or agent runtime.</p><span class="use-tag">EVALUATION EVIDENCE</span></article><article><span class="mono">02</span><h3>Payments</h3><p>Provide inspectable evidence for a release decision, separate from the bank or PSP that executes it.</p><span class="use-tag">DECISION HANDOFF</span></article><article><span class="mono">03</span><h3>Industrial & environmental</h3><p>Package measurement context, calculation inputs and review outcomes for independent inspection.</p><span class="use-tag">MEASUREMENT RECORDS</span></article><article><span class="mono">04</span><h3>Enterprise workflows</h3><p>Preserve why an approval, exception or procurement decision occurred across system boundaries.</p><span class="use-tag">WORKFLOW ACCOUNTABILITY</span></article><article><span class="mono">05</span><h3>Compliance</h3><p>Make control-evaluation evidence transferable and checkable by a reviewer outside the originating application.</p><span class="use-tag">CONTROL EVIDENCE</span></article></div></div></section>
-<section class="wrap final-cta"><p class="eyebrow">BUILD ON INSPECTABLE EVIDENCE</p><h2>Let the evidence<br>speak outside your system.</h2><p>Start with a bundle. Inspect its contents. Verify its integrity.</p><div class="actions"><a class="button primary" href="#verifier">Try the verifier <span>↗</span></a><a class="button secondary" href="https://github.com/hamadalmunyif/paygod-kernel-mvp" target="_blank" rel="noopener">Explore the kernel ↗</a></div></section>
+<section id="pilot" class="wrap final-cta"><p class="eyebrow">START WITH ONE EVIDENCE HANDOFF</p><h2>Bring one decision.<br>Define the evidence.</h2><p>Choose a source, an explicit rule and a recipient who needs to check the result. Use the pilot brief to scope a real workflow before building an integration.</p><div class="pilot-points"><span>01 · Identify the source</span><span>02 · Define the decision</span><span>03 · Agree on recipient checks</span></div><div class="actions"><a class="button primary" href="downloads/paygod-pilot-brief.md" download>Get the pilot brief</a><a class="button secondary" href="https://github.com/hamadalmunyif/paygod-kernel-mvp" target="_blank" rel="noopener">Explore the kernel</a></div></section>
 </main><footer class="wrap"><a class="brand" href="#">PayGod<span class="wordmark-dot">/</span></a><p>Measurement. Evidence. Inference. Proof.</p><span class="mono">TECHNICAL PREVIEW · 2026</span></footer><script type="module">// SHA-256 fallback for a self-contained offline demonstration.
 // FIPS 180-4 compression, tested against Node crypto for multiple lengths/UTF-8.
 // Production uses Web Crypto when available. This fallback is not audited.
@@ -104,7 +244,32 @@ async function verifyTransport(input){
  }catch(e){errors.push(e.message);return {status:'INVALID',profile:'browser-demo/0.1; safe-integer subset',checks,errors,issuer_authenticated:false,external_fact_verified:false};}
 }
 
-const SAMPLE={
+// Display-only extraction. These values are declarations, never verification results.
+const isObject = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+const displayText = (value, fallback = 'Not declared') => typeof value === 'string' && value.trim() ? value.slice(0, 180) : fallback;
+function summarizeTransport(input) {
+  if (!isObject(input) || input.format !== 'paygod-demo-transport/1' || !isObject(input.files)) throw Error('Choose a PayGod demo bundle JSON file.');
+  const names = Object.keys(input.files);
+  if (names.length > 32 || names.some(name => typeof input.files[name] !== 'string')) throw Error('Unsupported bundle file map.');
+  const read = name => {
+    if (!Object.hasOwn(input.files, name)) return {};
+    try { const value = JSON.parse(input.files[name]); return isObject(value) ? value : {}; } catch { return {}; }
+  };
+  const measurement = read('measurement.json'), receipt = read('receipt.json'), manifest = read('manifest.json');
+  const value = typeof measurement.value === 'number' && Number.isFinite(measurement.value) ? String(measurement.value) : 'Not declared';
+  return {
+    measurement: value + (typeof measurement.unit === 'string' ? ' ' + measurement.unit.slice(0, 24) : ''),
+    metric: displayText(measurement.metric, 'No measurement summary available'),
+    source: displayText(measurement.source),
+    decision: displayText(receipt.verdict?.value).toUpperCase(),
+    rule: displayText(receipt.verdict?.rule_name),
+    time: displayText(receipt.generated_at),
+    files: names.length,
+    committed: Array.isArray(manifest.files) ? manifest.files.length : 0
+  };
+}
+
+const SAMPLE = {
   "format": "paygod-demo-transport/1",
   "description": "Synthetic fixture. UTF-8 file strings; not a new kernel bundle standard.",
   "files": {
@@ -115,30 +280,96 @@ const SAMPLE={
   }
 }
 ;
-const $=id=>document.getElementById(id);let latest=null,runId=0;
-const editor=$('bundle-editor');
-function invalidate(){runId++;latest=null;$('status').textContent='NOT RUN';$('status').className='status pending';$('result-title').textContent='Ready for independent checks.';$('result-summary').textContent='Run verification on the current bytes.';$('checks').replaceChildren();$('error-detail').textContent='';$('digest').textContent='Run verification to calculate';$('download-result').disabled=true;}
-function load(kind='clean'){
- const t=structuredClone(SAMPLE);
- if(kind==='tamper')t.files['measurement.json']=t.files['measurement.json'].replace('420','421');
- if(kind==='receipt-tamper'){const r=JSON.parse(t.files['receipt.json']);r.verdict.value='allow';t.files['receipt.json']=JSON.stringify(r,null,2)+'\n';}
- editor.value=JSON.stringify(t,null,2);invalidate();$('edit-state').textContent=kind==='clean'?'CLEAN SAMPLE':kind==='tamper'?'1 BYTE CHANGED':'RECEIPT ALTERED';
- for(const id of ['clean','tamper','receipt-tamper'])$(id).classList.toggle('active',kind===id);
+const $ = id => document.getElementById(id);
+const editor = $('bundle-editor');
+let latest = null, runId = 0, importId = 0;
+function readSummary() {
+  const hasInput = editor.value.trim().length > 0;
+  $('verify').disabled = !hasInput;
+  $('download').disabled = !hasInput;
+  $('summary-error').textContent = '';
+  $('summary-empty').hidden = hasInput;
+  $('bundle-summary').hidden = true;
+  if (!hasInput) return;
+  try {
+    if (new TextEncoder().encode(editor.value).length > 2000000) throw Error('Maximum bundle size is 2 MB.');
+    const s = summarizeTransport(JSON.parse(editor.value));
+    for (const key of ['measurement', 'metric', 'source', 'decision', 'rule', 'time']) $('summary-' + key).textContent = s[key];
+    $('summary-files').textContent = s.files + ' files · ' + s.committed + ' committed artifacts';
+    $('bundle-summary').hidden = false;
+  } catch (error) { $('summary-error').textContent = 'Summary unavailable: ' + error.message; }
 }
-function save(name,data){const blob=new Blob([typeof data==='string'?data:JSON.stringify(data,null,2)+'\n'],{type:'application/json'});const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),5000);}
-$('clean').onclick=()=>load();$('tamper').onclick=()=>load('tamper');$('receipt-tamper').onclick=()=>load('receipt-tamper');
-editor.oninput=()=>{invalidate();$('edit-state').textContent='EDITED — REVERIFY';for(const id of ['clean','tamper','receipt-tamper'])$(id).classList.remove('active');};
-$('verify').onclick=async()=>{
- const current=++runId; $('verify').disabled=true; $('verify').textContent='Checking…';
- let result;
- try {if(new TextEncoder().encode(editor.value).length>2000000)throw Error('Demo transport must be at most 2 MB.');result=await verifyTransport(JSON.parse(editor.value));}
- catch(e){result={status:'INVALID',checks:[],errors:[e.message],issuer_authenticated:false,external_fact_verified:false};}
- $('verify').disabled=false;$('verify').textContent='Run verification ↗';if(current!==runId)return;
- latest=result;const ok=result.status==='VALID';$('status').textContent=result.status;$('status').className='status '+(ok?'valid':'invalid');$('result-title').textContent=ok?'Evidence is internally consistent.':'Evidence verification failed.';$('result-summary').textContent=ok?'All supported checks passed. Issuer identity and source truth remain unverified.':'One or more checks failed. Inspect the failed bindings below.';
- $('checks').replaceChildren();for(const check of result.checks){const row=document.createElement('div');row.className='check-row'+(check.ok?'':' failed');const icon=document.createElement('span');icon.textContent=check.ok?'✓':'×';const label=document.createElement('div');label.textContent=check.name;row.append(icon,label);$('checks').append(row);}
- $('error-detail').textContent=result.errors.join('\n');$('digest').textContent=result.bundle_digest||'Not calculated';$('download-result').disabled=false;
+function invalidate() {
+  runId++; latest = null;
+  $('status').textContent = 'NOT RUN'; $('status').className = 'status pending';
+  $('result-title').textContent = editor.value.trim() ? 'Ready to check the received bytes.' : 'Waiting for a bundle.';
+  $('result-summary').textContent = 'Run verification to inspect file integrity and decision bindings.';
+  $('checks').replaceChildren(); $('error-detail').textContent = ''; $('digest').textContent = 'Not calculated';
+  for (const id of ['integrity-result', 'decision-result']) { $(id).textContent = 'Not checked'; $(id).className = ''; }
+  $('check-count').textContent = '0 checks'; $('download-result').disabled = true;
+  $('transfer-state').textContent = ''; readSummary();
+}
+function setActive(kind) { for (const id of ['clean', 'tamper', 'receipt-tamper']) $(id)?.classList.toggle('active', id === kind); }
+function load(kind = 'clean') {
+  if (!SAMPLE) return;
+  importId++;
+  const t = structuredClone(SAMPLE);
+  if (kind === 'tamper') t.files['measurement.json'] = t.files['measurement.json'].replace('420', '421');
+  if (kind === 'receipt-tamper') { const receipt = JSON.parse(t.files['receipt.json']); receipt.verdict.value = 'allow'; t.files['receipt.json'] = JSON.stringify(receipt, null, 2) + '\n'; }
+  editor.value = JSON.stringify(t, null, 2); invalidate();
+  $('edit-state').textContent = kind === 'clean' ? 'CLEAN SAMPLE' : kind === 'tamper' ? 'MEASUREMENT CHANGED' : 'DECISION CHANGED';
+  $('file-label').textContent = 'Synthetic sample · ready to download'; setActive(kind);
+}
+function save(name, data, type = 'application/json') {
+  const blob = new Blob([typeof data === 'string' ? data : JSON.stringify(data, null, 2) + '\n'], {type});
+  const url = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = url; a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+for (const id of ['clean', 'tamper', 'receipt-tamper']) if ($(id)) $(id).onclick = () => load(id);
+editor.oninput = () => { importId++; invalidate(); $('edit-state').textContent = 'EDITED · REVERIFY'; $('file-label').textContent = 'Edited in this workspace'; setActive(null); };
+$('verify').onclick = async () => {
+  const current = ++runId, bytes = editor.value;
+  $('verify').disabled = true; $('verify').textContent = 'Checking…';
+  let result;
+  try { if (new TextEncoder().encode(bytes).length > 2000000) throw Error('Maximum bundle size is 2 MB.'); result = await verifyTransport(JSON.parse(bytes)); }
+  catch (error) { result = {status: 'INVALID', checks: [], errors: [error.message], issuer_authenticated: false, external_fact_verified: false}; }
+  $('verify').disabled = !editor.value.trim(); $('verify').textContent = 'Run verification';
+  if (current !== runId) return;
+  latest = result;
+  const ok = result.status === 'VALID';
+  $('status').textContent = result.status; $('status').className = 'status ' + (ok ? 'valid' : 'invalid');
+  $('result-title').textContent = ok ? 'The supported checks passed.' : 'This bundle failed verification.';
+  $('result-summary').textContent = ok ? 'The checked files and recorded decision are internally consistent. Source authenticity remains unverified.' : 'A file or binding could not be verified. Inspect the details before relying on this package.';
+  const integrityChecks = result.checks.filter(check => check.name !== 'Decision binding');
+  const integrityPassed = integrityChecks.length > 0 && integrityChecks.every(check => check.ok) && result.errors.every(error => error.startsWith('Decision binding:'));
+  $('integrity-result').textContent = integrityPassed ? 'Passed' : 'Failed';
+  $('integrity-result').className = integrityPassed ? 'passed' : 'failed';
+  const decision = result.checks.find(check => check.name === 'Decision binding');
+  const decisionDependencies = ['Contract', 'Artifact · ledger.jsonl', 'Manifest binding', 'Locked ledger', 'Ledger chain'];
+  const decisionReady = decision && decisionDependencies.every(name => result.checks.some(check => check.name === name && check.ok));
+  $('decision-result').textContent = !decisionReady ? 'Not established' : decision.ok ? 'Matched' : 'Mismatch';
+  $('decision-result').className = decisionReady && decision.ok ? 'passed' : 'failed';
+  $('checks').replaceChildren();
+  for (const check of result.checks) {
+    const row = document.createElement('div'); row.className = 'check-row' + (check.ok ? '' : ' failed');
+    const icon = document.createElement('span'), label = document.createElement('div');
+    icon.textContent = check.ok ? '✓' : '×'; label.textContent = check.name; row.append(icon, label); $('checks').append(row);
+  }
+  $('check-count').textContent = result.checks.filter(check => check.ok).length + '/' + result.checks.length + ' passed';
+  $('error-detail').textContent = result.errors.join('\n'); $('digest').textContent = result.bundle_digest || 'Not calculated'; $('download-result').disabled = false;
 };
-$('download').onclick=()=>save('paygod-demo-bundle.json',editor.value);$('download-result').onclick=()=>{if(latest)save('paygod-verification-result.json',latest);};
-$('upload').onchange=async event=>{const f=event.target.files[0];if(!f)return;invalidate();try{if(f.size>2000000)throw Error('Import rejected: maximum size is 2 MB.');editor.value=await f.text();$('edit-state').textContent='IMPORTED — REVERIFY';for(const id of ['clean','tamper','receipt-tamper'])$(id).classList.remove('active');}catch(e){$('error-detail').textContent=e.message;}event.target.value='';};
-load();
+$('download').onclick = () => { save('paygod-evidence-bundle.json', editor.value); $('transfer-state').textContent = 'Bundle download requested. Open the separate verifier and choose this file. The file—not a shared session—carries the evidence.'; };
+$('download-result').onclick = () => { if (latest) save('paygod-verification-result.json', latest); };
+$('upload').onchange = async event => {
+  const file = event.target.files[0]; if (!file) return;
+  const current = ++importId;
+  editor.value = ''; invalidate(); setActive(null); $('edit-state').textContent = 'READING FILE'; $('file-label').textContent = file.name;
+  try {
+    if (file.size > 2000000) throw Error('Import rejected: maximum size is 2 MB.');
+    const text = await file.text(); if (current !== importId) return;
+    editor.value = text; invalidate(); $('edit-state').textContent = 'IMPORTED · REVERIFY';
+  } catch (error) { if (current === importId) { $('summary-error').textContent = error.message; $('edit-state').textContent = 'IMPORT REJECTED'; } }
+  event.target.value = '';
+};
+if (SAMPLE) load(); else invalidate();
 </script></body></html>

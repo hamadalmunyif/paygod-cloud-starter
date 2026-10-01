@@ -1,5 +1,11 @@
 # PayGod review deployment
 
+## October 2 revision — evidence handoff
+
+The review branch now includes a readable evidence card, a separate empty recipient workspace at `verifier/`, a self-contained downloadable verifier at `downloads/paygod-verifier.html`, and a pilot-scoping brief. Technical JSON and detailed check lists are collapsed initially. Source identity and real-world observation remain visibly unverified.
+
+The verifier core, synthetic fixture, kernel pin and numerical profile are unchanged. Existing browser and upstream Python regression cases passed locally after rebuilding. The three emitted HTML documents passed duplicate-ID, embedded-runtime and JavaScript syntax checks. The recipient outputs contain no sample fixture and block network connections with a Content Security Policy. A new Preview deployment is required for browser handoff verification; the October 1 URL below is the previous design.
+
 Updated: 2026-10-01. This is a review workflow, not a production release approval.
 
 ## Source and project

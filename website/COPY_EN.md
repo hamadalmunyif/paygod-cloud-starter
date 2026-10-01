@@ -1,52 +1,172 @@
-# PayGod — final English page copy
+# PayGod — English page copy
 
-Skip to content PayGod / Architecture Capabilities Applications Open verifier ↗
+PayGod — Evidence beyond the system.
+
+Skip to content
+
+PayGod
+
+/
+
+Architecture
+
+Capabilities
+
+Applications
+
+Open verifier
 
 EVIDENCE INFRASTRUCTURE
 
-Evidence beyond the system that produced it.
+Evidence beyond
 
-Measure what happened. Preserve how a conclusion was reached. Carry the evidence forward—so others can verify it independently.
+the system
 
-Verify an evidence bundle ↗ Explore the architecture ↓
+that produced it.
 
-DETERMINISTIC CORE / PORTABLE ARTIFACTS / OPEN VERIFICATION
+Give another party the evidence they need to check your result. Package the recorded inputs, decision context and integrity checks so the evidence can travel beyond your system.
 
-TRUST PATH 01 → 06
+Try an evidence handoff
+
+Explore the architecture
+
+↓
+
+DETERMINISTIC CORE
+
+/
+
+PORTABLE ARTIFACTS
+
+/
+
+OPEN VERIFICATION
+
+TRUST PATH
+
+01 → 06
 
 PRODUCER ENVIRONMENT
 
-Observation Policy Context
+Observation
+
+Policy
+
+Context
 
 ✳
 
-Deterministic kernel Evidence + explicit decision logic
+Deterministic kernel
+
+Evidence + explicit decision logic
 
 ENVIRONMENT BOUNDARY
 
-Portable evidence bundle EXPORT
+Portable evidence bundle
 
-manifest.json content commitments
+EXPORT
 
-receipt.json decision binding
+manifest.json
 
-ledger.jsonl hash-linked records
+content commitments
 
-evidence artifacts inspectable bytes
+receipt.json
+
+decision binding
+
+ledger.jsonl
+
+hash-linked records
+
+evidence artifacts
+
+inspectable bytes
 
 ✓
 
-Independent verifier Artifact checks. No original execution.
+Independent verifier
+
+Artifact checks. No original execution.
 
 06
 
 The evidence travels. The producer's environment does not.
 
-01 Measurement → 02 Evidence → 03 Inference → 04 Proof → 05 Portable bundle → 06 Verification
+01
+
+Measurement
+
+→
+
+02
+
+Evidence
+
+→
+
+03
+
+Inference
+
+→
+
+04
+
+Proof
+
+→
+
+05
+
+Portable bundle
+
+→
+
+06
+
+Verification
+
+ONE DECISION. TWO ENVIRONMENTS.
+
+From an internal result
+
+to someone else's checks.
+
+An operations team records a measurement. A reviewer needs to inspect the evidence outside that team's application.
+
+01 / PRODUCER
+
+Record the result.
+
+Keep the input, rule reference and decision together.
+
+420 kWh · recorded decision: FLAG
+
+02 / HANDOFF
+
+Send the package.
+
+Download the evidence files and their integrity commitments.
+
+One portable bundle
+
+03 / RECIPIENT
+
+Check what arrived.
+
+Import the file into a separate verifier. No producer session required.
+
+Integrity checked · provenance explicit
+
+Illustrative industrial workflow. The demo below uses a synthetic fixture.
 
 01 / THE PROBLEM
 
-A conclusion is only as useful as the evidence someone else can inspect.
+A conclusion is only
+
+as useful as the evidence
+
+someone else can inspect.
 
 Systems generate measurements, decisions and claims. But their evidence often stays inside the application, workflow or organization that produced it.
 
@@ -56,7 +176,9 @@ PayGod makes the evidence a transferable artifact—with explicit contracts, dec
 
 02 / CORE CAPABILITIES
 
-From a measurement to an inspectable conclusion.
+From a measurement
+
+to an inspectable conclusion.
 
 One evidence path. Clear boundaries between what was observed, what was inferred and what can be verified.
 
@@ -112,7 +234,9 @@ Implementation scope: the open kernel provides decision evidence and integrity v
 
 03 / ARCHITECTURE
 
-Small trust core. Evidence that can leave.
+Small trust core.
+
+Evidence that can leave.
 
 Explore the open kernel ↗
 
@@ -140,7 +264,9 @@ B / PORTABLE BOUNDARY
 
 EVIDENCE BUNDLE
 
-The handoff is an artifact.
+The handoff is
+
+an artifact.
 
 Manifest & artifact hashes
 
@@ -172,7 +298,9 @@ The verifier checks evidence. Downstream systems decide how to act.
 
 04 / INDEPENDENT VERIFICATION
 
-Trust the checks. Understand their limits.
+Trust the checks.
+
+Understand their limits.
 
 A verifier should explain exactly what it checked—and what it did not establish.
 
@@ -190,49 +318,129 @@ Integrity is not provenance.
 
 Current repository witnesses include cross-environment and standalone verification within CI. Independent third-party distribution and issuer authentication remain separate milestones.
 
-05 / INTERACTIVE DEMONSTRATION
+05 / TRY THE HANDOFF
 
-Change the evidence. See the verification fail.
+Download the evidence.
 
-A synthetic industrial measurement, a recorded policy decision and a portable bundle. Real SHA-256 checks, performed in your browser.
+Check it somewhere else.
 
-BUNDLE INSPECTOR / browser demo v0.1 LOCAL PROCESSING
+Start with a readable card. Inspect or change the sample, download the bundle, then open it in the separate verifier.
 
-SYNTHETIC SCENARIO
+PRODUCER WORKSPACE
 
-Resource consumption review
+/ demo profile v0.2
 
-420 kWh recorded against a 400 kWh review threshold. The illustrative policy returns flag .
+PROCESSED ON THIS DEVICE
 
-Load clean bundle Tamper with evidence Alter receipt
+SYNTHETIC INDUSTRIAL EXAMPLE
 
-EDITABLE TRANSPORT JSON SAMPLE LOADED
+One measurement. A review decision.
 
-UTF-8 file strings preserve artifact bytes. This demo wrapper is not a new kernel bundle standard. Maximum file size: 2 MB.
+The sample records 420 kWh against a fictional 400 kWh review threshold. The recorded decision is FLAG. This is a prepared fixture, not a live meter or policy execution.
 
-Run verification ↗ Import JSON Export bundle ↓
+Load clean bundle
 
-VERIFICATION RESULT NOT RUN
+Change the measurement
 
-Ready for independent checks.
+Change the decision
 
-The result comes from the bytes in the editor, not a preset success state.
+Choose bundle file
 
-COMPUTED BUNDLE DIGEST Run verification to calculate
+JSON file · up to 2 MB
 
-Download result ↓
+WAITING FOR EVIDENCE
 
-A VALID bundle may contain a flag or deny verdict. VALID describes artifact consistency—not approval, source truth or issuer identity.
+No bundle loaded.
 
-This browser verifier is a demonstration profile with safe-integer numeric support. The synthetic fixture also passes the pinned upstream Python verifier v0.2.0. Full upstream compatibility is not claimed.
+Choose a downloaded bundle or paste its JSON below. Nothing is sent to a server.
 
-Inspect the reference verifier ↗
+EVIDENCE CARD
 
-The page is readable without JavaScript. Enable JavaScript to run the local verifier.
+SELF-DECLARED CONTENT
+
+Recorded decision
+
+Rule reference
+
+Declared source
+
+Recorded time
+
+Package contents
+
+This card reads the supplied files. It does not establish that the measurement happened or the source is authentic.
+
+Run verification
+
+Download this bundle
+
+View or edit technical files
+
+NO BUNDLE
+
+BUNDLE TRANSPORT JSON
+
+UTF-8 file strings preserve artifact bytes. This demo transport is not a new kernel standard. Maximum total size: 2 MB.
+
+WHAT CAN BE VERIFIED?
+
+NOT RUN
+
+Waiting for a bundle.
+
+Choose a bundle to begin the checks.
+
+File and record integrity
+
+Not checked
+
+Receipt matches the decision record
+
+Not checked
+
+Issuer identity
+
+Not verified
+
+Real-world observation
+
+Not verified
+
+Inspect technical checks
+
+0 checks
+
+MANIFEST COMMITMENT
+
+Not calculated
+
+Digest of the declared file commitments. Individual file checks detect changes to the actual bytes.
+
+Download verification report
+
+VALID means the supported consistency checks passed. A valid bundle can still contain a FLAG or DENY decision. It is not approval, authenticated provenance or proof of a real-world fact.
+
+NEXT / THE RECIPIENT'S SIDE
+
+The file carries the evidence.
+
+Download this bundle above, then choose that file in the separate verifier. It opens empty and does not inherit the producer's results.
+
+Open separate verifier
+
+Download offline verifier
+
+This is a browser demonstration with safe-integer numeric support. The synthetic fixture also passes the pinned Python verifier v0.2.0. Separate execution is demonstrated; a third-party audit and full upstream compatibility are not claimed.
+
+Inspect the reference verifier
+
+Enable JavaScript to inspect and verify the local bundle.
 
 06 / APPLICATIONS
 
-One primitive. Many evidence boundaries.
+One primitive.
+
+Many evidence boundaries.
 
 Illustrative integration patterns. Each requires its own contracts, provenance and domain validation.
 
@@ -276,15 +484,27 @@ Make control-evaluation evidence transferable and checkable by a reviewer outsid
 
 CONTROL EVIDENCE
 
-BUILD ON INSPECTABLE EVIDENCE
+START WITH ONE EVIDENCE HANDOFF
 
-Let the evidence speak outside your system.
+Bring one decision.
 
-Start with a bundle. Inspect its contents. Verify its integrity.
+Define the evidence.
 
-Try the verifier ↗ Explore the kernel ↗
+Choose a source, an explicit rule and a recipient who needs to check the result. Use the pilot brief to scope a real workflow before building an integration.
 
-PayGod /
+01 · Identify the source
+
+02 · Define the decision
+
+03 · Agree on recipient checks
+
+Get the pilot brief
+
+Explore the kernel
+
+PayGod
+
+/
 
 Measurement. Evidence. Inference. Proof.
 
