@@ -57,3 +57,20 @@ User-provided GoDaddy screenshots from September 30 show GoDaddy Website Builder
 No GoDaddy setting, nameserver, DNS record or custom-domain association was changed. Domain registration stays at GoDaddy.
 
 Before any production cutover: review the successful preview and verifier results with the owner, approve the final content and production settings, obtain exact destination DNS values from Vercel, preserve unrelated records, and record a rollback plan. The preview's ignore rule and noindex settings must be intentionally reviewed for any approved production release. Do not promote the review build or attach `paygod.net` automatically.
+
+
+## Evidence handoff review — October 2, 2026
+
+- Reviewed implementation commit: `762d0f852bbc804c8b6b2b2192f8e313bc1d8041`.
+- Verified landing preview: <https://paygod-evidence-preview-3ypduajqg-paygod1.vercel.app/>
+- Verified receiver: <https://paygod-evidence-preview-3ypduajqg-paygod1.vercel.app/verifier/>
+- Preview deployment: `9hTxNDS6FjyYXqDV1aQpaPSMbRzj`; Ready, Preview; custom domains skipped.
+- Receiver opened empty, with verification disabled until evidence was supplied.
+- The producer's displayed JSON was saved to a local test file and imported through the receiver's file chooser. The receiver showed 420 kWh and FLAG, initially NOT RUN.
+- Clean received bundle: VALID, 11/11 checks passed. File integrity Passed; decision Matched. Issuer identity and real-world observation remained Not verified.
+- Measurement changed from 420 to 421: INVALID, Artifact · measurement.json failed.
+- Receipt verdict changed to allow: INVALID, Decision binding failed; the interface distinguished matching artifact integrity from a mismatched decision.
+- Restoring the original JSON restored VALID. Screenshot: `review/paygod-verifier-final-20261002.jpg`.
+- Validation limitation: the cloud browser did not return download events for the bundle button or static offline-HTML link. The download-to-import path and offline execution in a desktop file browser were therefore not fully confirmed. No successful download is claimed. File import and independent-page verification were confirmed separately.
+- The self-contained offline HTML is built at `dist/downloads/paygod-verifier.html`; its inline code/static structure and no-WebCrypto SHA fallback were covered by the existing build and verifier checks.
+- No production, DNS, registrar, nameserver, or custom-domain change was made. Production cutover remains pending final owner review and resolution of the download/offline browser check.
