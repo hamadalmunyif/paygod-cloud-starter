@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /verifier/
+Disallow: /downloads/
+Sitemap: https://paygod.net/sitemap.xml

@@ -1,5 +1,6 @@
 from pathlib import Path
 import shutil
+import os
 
 r = Path(__file__).parent
 style = (r / 'src/style.css').read_text(encoding='utf-8')
@@ -26,6 +27,15 @@ dist = r / 'dist'
 for sub in ('verifier', 'downloads'):
     (dist / sub).mkdir(parents=True, exist_ok=True)
 outputs = {'index.html': render('page.html'), 'verifier/index.html': render('standalone.html', True), 'downloads/paygod-verifier.html': render('standalone.html', True, True)}
+production = os.environ.get('VERCEL_ENV') == 'production'
+if production:
+    outputs['index.html'] = outputs['index.html'].replace('<meta name="robots" content="noindex,nofollow">', '<meta name="robots" content="index,follow"><link rel="canonical" href="https://paygod.net/">')
+(dist / 'robots.txt').write_text('User-agent: *\nDisallow: /verifier/\nDisallow: /downloads/\nSitemap: https://paygod.net/sitemap.xml\n' if production else 'User-agent: *\nDisallow: /\n', encoding='utf-8')
+sitemap = dist / 'sitemap.xml'
+if production:
+    sitemap.write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://paygod.net/</loc></url></urlset>', encoding='utf-8')
+else:
+    sitemap.unlink(missing_ok=True)
 for path, html in outputs.items():
     (dist / path).write_text(html, encoding='utf-8')
     print(f'Built {path}: {len(html.encode())} bytes')
