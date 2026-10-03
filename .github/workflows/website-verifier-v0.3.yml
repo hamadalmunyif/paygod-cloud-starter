@@ -1,4 +1,4 @@
-name: Website Verifier v0.3
+name: Website Verifier v0.4
 
 on:
   pull_request:
@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   verify:
-    name: Website Verifier v0.3
+    name: Website Verifier v0.4
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,6 +27,9 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Install issuer-auth crypto backend
+        run: python -m pip install -r website/vendor/requirements-issuer-auth.txt
+
       - name: Build website and regenerate fixture
         working-directory: website
         run: python3 build.py
@@ -35,17 +38,19 @@ jobs:
         working-directory: website
         run: node tests/verify.mjs
 
-      - name: Standalone Python verifier v0.3 suite
+      - name: Standalone Python verifier v0.4 suite
         working-directory: website
         run: python3 tests/upstream.py
 
       - name: Assert built verifier contract
         shell: bash
         run: |
-          grep -q "BROWSER VERIFIER v0.3" website/dist/verifier/index.html
+          grep -q "BROWSER VERIFIER v0.4" website/dist/verifier/index.html
           grep -q "EXPECTED RECEIPT SHA-256" website/dist/verifier/index.html
           grep -q "paygod-c14n-v1" website/dist/verifier/index.html
           grep -q "Issuer authenticity" website/dist/verifier/index.html
+          grep -q "Choose trusted issuer keys" website/dist/verifier/index.html
+          grep -q "paygod-ed25519-receipt-v1" website/dist/verifier/index.html
           grep -q "Replay" website/dist/verifier/index.html
           grep -q "Time authority" website/dist/verifier/index.html
           if grep -q "browser-demo/0.1" website/dist/verifier/index.html; then
@@ -60,6 +65,6 @@ jobs:
       - name: Publish built preview artifact
         uses: actions/upload-artifact@v4
         with:
-          name: paygod-website-verifier-v0.3
+          name: paygod-website-verifier-v0.4
           path: website/dist
           retention-days: 30
