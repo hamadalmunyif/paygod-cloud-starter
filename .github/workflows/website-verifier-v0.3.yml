@@ -1,4 +1,4 @@
-name: Website Verifier v0.3
+name: Website Verifier v0.4
 
 on:
   pull_request:
@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   verify:
-    name: Website Verifier v0.3
+    name: Website Verifier v0.4
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,27 +27,39 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Build website and regenerate fixture
+      - name: Install pinned issuer-auth backend
+        run: python -m pip install -r website/vendor/requirements-issuer-auth.txt
+
+      - name: Build website and regenerate signed fixture
         working-directory: website
         run: python3 build.py
 
-      - name: Browser verifier regression suite
+      - name: Browser verifier v0.4 regression suite
         working-directory: website
         run: node tests/verify.mjs
 
-      - name: Standalone Python verifier v0.3 suite
+      - name: Standalone Python verifier v0.4 suite
         working-directory: website
         run: python3 tests/upstream.py
 
       - name: Assert built verifier contract
         shell: bash
         run: |
-          grep -q "BROWSER VERIFIER v0.3" website/dist/verifier/index.html
+          grep -q "BROWSER VERIFIER v0.4" website/dist/verifier/index.html
+          grep -q "verifier v0.4" website/dist/verifier/index.html
           grep -q "EXPECTED RECEIPT SHA-256" website/dist/verifier/index.html
+          grep -q "TRUSTED ISSUER KEYS" website/dist/verifier/index.html
           grep -q "paygod-c14n-v1" website/dist/verifier/index.html
+          grep -q "paygod-ed25519-receipt-v1" website/dist/verifier/index.html
           grep -q "Issuer authenticity" website/dist/verifier/index.html
-          grep -q "Replay" website/dist/verifier/index.html
-          grep -q "Time authority" website/dist/verifier/index.html
+          test -f website/dist/downloads/paygod-demo-trust-store.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          trust=json.loads(Path('website/dist/downloads/paygod-demo-trust-store.json').read_text())
+          assert trust['profile']=='paygod-ed25519-trust-v1'
+          assert trust['keys'][0]['key_id']=='paygod-demo-issuer-2026-10-03'
+          PY
           if grep -q "browser-demo/0.1" website/dist/verifier/index.html; then
             echo "legacy browser-demo profile leaked into build"
             exit 1
@@ -60,6 +72,6 @@ jobs:
       - name: Publish built preview artifact
         uses: actions/upload-artifact@v4
         with:
-          name: paygod-website-verifier-v0.3
+          name: paygod-website-verifier-v0.4
           path: website/dist
           retention-days: 30

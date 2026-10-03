@@ -43,3 +43,4 @@ for path, html in outputs.items():
     (dist / path).write_text(html, encoding='utf-8')
     print(f'Built {path}: {len(html.encode())} bytes')
 shutil.copyfile(r / 'PILOT_BRIEF.md', dist / 'downloads/paygod-pilot-brief.md')
+shutil.copyfile(r / 'demo' / 'trusted-issuer-demo.json', dist / 'downloads' / 'paygod-demo-trust-store.json')
