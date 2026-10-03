@@ -111,3 +111,5 @@ summary:focus-visible{outline:2px solid var(--cyan);outline-offset:5px}
  .pilot-points{display:grid;gap:12px;text-align:left;justify-content:center}
  .hero-foot{font-size:11px}
 }
+
+.pin-field{margin:20px 0 6px}.pin-field .editor-label{margin:0 0 9px}.pin-field input{width:100%;background:#080e13;color:#bacdc9;border:1px solid #35454e;padding:12px 14px;border-radius:0;font:12px/1.5 'Courier New',monospace}.pin-field input::placeholder{color:#65747b}.pin-field .help{margin:8px 0 0}.status.valid{white-space:normal;text-align:center}.trust-results dd.unverified{white-space:normal}
