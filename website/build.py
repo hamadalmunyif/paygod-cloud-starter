@@ -1,8 +1,11 @@
 from pathlib import Path
 import shutil
 import os
+import subprocess
+import sys
 
 r = Path(__file__).parent
+subprocess.run([sys.executable, str(r / 'demo' / 'generate.py')], check=True)
 style = (r / 'src/style.css').read_text(encoding='utf-8')
 core = (r / 'src/sha256.mjs').read_text(encoding='utf-8').replace('export ', '')
 core += '\n' + (r / 'src/verifier.mjs').read_text(encoding='utf-8').replace("import {sha256Fallback} from './sha256.mjs';", '').replace('export ', '')

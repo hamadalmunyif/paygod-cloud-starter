@@ -1,0 +1,65 @@
+name: Website Verifier v0.3
+
+on:
+  pull_request:
+    branches:
+      - website/paygod-production
+    paths:
+      - 'website/**'
+      - '.github/workflows/website-verifier-v0.3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Website Verifier v0.3
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Build website and regenerate fixture
+        working-directory: website
+        run: python3 build.py
+
+      - name: Browser verifier regression suite
+        working-directory: website
+        run: node tests/verify.mjs
+
+      - name: Standalone Python verifier v0.3 suite
+        working-directory: website
+        run: python3 tests/upstream.py
+
+      - name: Assert built verifier contract
+        shell: bash
+        run: |
+          grep -q "BROWSER VERIFIER v0.3" website/dist/verifier/index.html
+          grep -q "EXPECTED RECEIPT SHA-256" website/dist/verifier/index.html
+          grep -q "paygod-c14n-v1" website/dist/verifier/index.html
+          grep -q "Issuer authenticity" website/dist/verifier/index.html
+          grep -q "Replay" website/dist/verifier/index.html
+          grep -q "Time authority" website/dist/verifier/index.html
+          if grep -q "browser-demo/0.1" website/dist/verifier/index.html; then
+            echo "legacy browser-demo profile leaked into build"
+            exit 1
+          fi
+          if grep -q "canonicalization.json==='rfc8785'" website/dist/verifier/index.html; then
+            echo "legacy rfc8785 claim leaked into build"
+            exit 1
+          fi
+
+      - name: Publish built preview artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: paygod-website-verifier-v0.3
+          path: website/dist
+          retention-days: 30
