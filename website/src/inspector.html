@@ -9,11 +9,13 @@
         <input id="receipt-pin" type="text" autocomplete="off" spellcheck="false" inputmode="text" placeholder="64 lowercase hexadecimal characters">
         <p class="help">If the sender gave you the receipt hash through a separate channel, paste it here. A mismatch fails integrity verification.</p>
       </div>
-      <div class="bundle-pick trust-pick">
-        <label for="issuer-trust-file" class="small-button file-button">Choose trusted issuer keys<input id="issuer-trust-file" type="file" accept=".json,application/json" aria-label="Choose trusted issuer key store"></label>
-        <span id="issuer-trust-state" class="help">No external trust store loaded.</span>
+      <div class="trust-store-field">
+        <label for="issuer-trust-store" class="editor-label mono">TRUSTED ISSUER KEYS <span>OPTIONAL EXTERNAL TRUST STORE</span></label>
+        <label for="issuer-trust-store" class="small-button file-button">Choose trust store<input id="issuer-trust-store" type="file" accept=".json,application/json" aria-label="Choose trusted issuer key store"></label>
+        <span id="issuer-trust-status" class="help">No trusted issuer keys loaded.</span>
+        <p class="help">The trust store is recipient-supplied. It is not accepted from inside the evidence bundle.</p>
+        <a class="text-link" href="/downloads/paygod-demo-trust-store.json" download>Download demo trust store <span class="mono">TEST KEY ONLY</span></a>
       </div>
-      <p class="help trust-boundary">Trusted issuer keys come from the recipient's separate trust channel, never from the evidence bundle itself.</p>
       <div id="summary-empty" class="empty-bundle"><span class="mono">WAITING FOR EVIDENCE</span><h3>No bundle loaded.</h3><p>Choose a downloaded bundle or paste its JSON below. Nothing is sent to a server.</p></div>
       <div id="bundle-summary" class="evidence-summary" hidden>
         <div class="summary-top"><span class="mono">EVIDENCE CARD</span><span class="declared-tag">SELF-DECLARED CONTENT</span></div>
@@ -38,13 +40,14 @@
       </dl>
       <div id="error-detail" role="status"></div>
       <details class="technical-details" id="check-details"><summary>Inspect technical checks <span id="check-count">0 checks</span></summary><div id="checks"></div>
+        <div class="digest"><span class="mono">ISSUER SIGNATURE</span><code id="issuer-signature">Not checked</code></div>
         <div class="digest"><span class="mono">RECEIPT SHA-256</span><code id="receipt-sha">Not calculated</code></div>
         <div class="digest"><span class="mono">LEDGER HEAD</span><code id="ledger-head">Not calculated</code></div>
         <div class="digest"><span class="mono">MANIFEST SHA-256</span><code id="manifest-sha">Not calculated</code></div>
-        <div class="digest"><span class="mono">BUNDLE DIGEST</span><code id="digest">Not calculated</code><p class="help">Integrity checks bind the transferred bytes and decision record. They do not authenticate the issuer or prove an external fact.</p></div>
+        <div class="digest"><span class="mono">BUNDLE DIGEST</span><code id="digest">Not calculated</code><p class="help">Integrity and issuer authentication are separate. A valid Ed25519 signature authenticates a trusted signing key for this receipt commitment; it does not prove the external fact or issuer authorization.</p></div>
       </details>
       <button id="download-result" class="small-button" disabled>Download verification report</button>
-      <p class="trust-note">Integrity VERIFIED means the supported byte, manifest, receipt and ledger checks passed. Issuer authenticity is VERIFIED only when a detached Ed25519 signature validates under a recipient-supplied trusted key. Neither result proves external truth, policy replay, regulator authorization, or third-party trusted time.</p>
+      <p class="trust-note">Integrity VERIFIED means the supported byte, manifest, receipt and ledger checks passed. Issuer authenticity is VERIFIED only when receipt.sig.json validates under a recipient-supplied trusted Ed25519 key. Neither claim proves the real-world evidence is true.</p>
     </div>
   </div>
 </div>
