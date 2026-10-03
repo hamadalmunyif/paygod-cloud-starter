@@ -1,12 +1,16 @@
 import {sha256Fallback} from './sha256.mjs';
 
-export const VERIFIER_VERSION='0.3.0';
+export const VERIFIER_VERSION='0.4.0';
 export const CANONICALIZATION_PROFILE='paygod-c14n-v1';
 export const SAFE_INTEGER_MAX=9007199254740991n;
+export const ISSUER_SIGNATURE_PROFILE='paygod-ed25519-receipt-v1';
+export const ISSUER_TRUST_PROFILE='paygod-ed25519-trust-v1';
 
 const encoder=new TextEncoder();
 const HEX64=/^[a-f0-9]{64}$/;
 const VERDICTS=new Set(['allow','deny','flag','error']);
+const KEY_ID=/^[A-Za-z0-9._:-]{1,128}$/;
+const ED25519_DOMAIN=encoder.encode('PAYGOD-RECEIPT-v1\0');
 
 function toHex(bytes){return Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');}
 export async function hashBytes(bytes){
@@ -14,6 +18,77 @@ export async function hashBytes(bytes){
  return sha256Fallback(bytes);
 }
 export async function hash(value){return hashBytes(encoder.encode(value));}
+
+
+function hexToBytes(hex){
+ if(!HEX64.test(hex))throw Error('receipt_sha256 must be 64 lowercase hex characters.');
+ const out=new Uint8Array(32);
+ for(let i=0;i<32;i++)out[i]=Number.parseInt(hex.slice(i*2,i*2+2),16);
+ return out;
+}
+function base64ToBytes(value,expectedLength,label){
+ if(typeof value!=='string')throw Error(label+' must be base64 text.');
+ let raw;
+ try{raw=Uint8Array.from(atob(value),ch=>ch.charCodeAt(0));}
+ catch{throw Error(label+' is not valid base64.');}
+ if(raw.length!==expectedLength)throw Error(label+' must decode to '+expectedLength+' bytes.');
+ return raw;
+}
+export function parseIssuerTrustStore(value){
+ if(!value||Array.isArray(value)||typeof value!=='object'||value.profile!==ISSUER_TRUST_PROFILE)throw Error('Trust store profile must be '+ISSUER_TRUST_PROFILE+'.');
+ if(!Array.isArray(value.keys))throw Error('Trust store keys must be an array.');
+ const result={};
+ for(let i=0;i<value.keys.length;i++){
+  const item=value.keys[i];
+  if(!item||Array.isArray(item)||typeof item!=='object')throw Error('Trust store key entry '+i+' must be an object.');
+  if(Object.keys(item).sort().join(',')!=='algorithm,key_id,public_key_b64')throw Error('Trust store key entry '+i+' has unsupported fields.');
+  if(!KEY_ID.test(item.key_id))throw Error('Trust store key entry '+i+' has invalid key_id.');
+  if(item.algorithm!=='Ed25519')throw Error('Trust store key entry '+i+' algorithm must be Ed25519.');
+  if(Object.hasOwn(result,item.key_id))throw Error('Duplicate trust-store key_id: '+item.key_id);
+  base64ToBytes(item.public_key_b64,32,'public_key_b64');
+  result[item.key_id]=item.public_key_b64;
+ }
+ return result;
+}
+export function issuerSigningMessage(keyId,receiptSha){
+ if(!KEY_ID.test(keyId))throw Error('Invalid issuer key_id.');
+ const key=encoder.encode(keyId),digest=hexToBytes(receiptSha);
+ const out=new Uint8Array(ED25519_DOMAIN.length+key.length+1+digest.length);
+ out.set(ED25519_DOMAIN,0);
+ out.set(key,ED25519_DOMAIN.length);
+ out[ED25519_DOMAIN.length+key.length]=0;
+ out.set(digest,ED25519_DOMAIN.length+key.length+1);
+ return out;
+}
+async function verifyIssuerSignature(rawSignature,receiptSha,trustedIssuerKeys){
+ const details={present:typeof rawSignature==='string',profile:null,algorithm:null,key_id:null,receipt_sha256_matches:false,key_trusted:false,signature_valid:false,reason:null};
+ if(typeof rawSignature!=='string'){details.reason='signature_not_present';return ['not_verified',details];}
+ try{
+  const envelope=strictJsonParse(rawSignature);
+  if(!envelope||Array.isArray(envelope)||typeof envelope!=='object')throw Error('Signature envelope must be an object.');
+  if(Object.keys(envelope).sort().join(',')!=='algorithm,key_id,profile,receipt_sha256,signature_b64')throw Error('Signature envelope fields do not match the profile.');
+  details.profile=envelope.profile;details.algorithm=envelope.algorithm;details.key_id=envelope.key_id;
+  if(envelope.profile!==ISSUER_SIGNATURE_PROFILE)throw Error('Signature profile must be '+ISSUER_SIGNATURE_PROFILE+'.');
+  if(envelope.algorithm!=='Ed25519')throw Error('Signature algorithm must be Ed25519.');
+  if(!KEY_ID.test(envelope.key_id))throw Error('Invalid signature key_id.');
+  if(!HEX64.test(envelope.receipt_sha256))throw Error('Signature receipt_sha256 must be 64 lowercase hex characters.');
+  details.receipt_sha256_matches=envelope.receipt_sha256===receiptSha;
+  if(!details.receipt_sha256_matches){details.reason='receipt_commitment_mismatch';return ['failed',details];}
+  const signature=base64ToBytes(envelope.signature_b64,64,'signature_b64');
+  const keys=trustedIssuerKeys||{};
+  if(Object.keys(keys).length===0){details.reason='no_trust_anchor_supplied';return ['not_verified',details];}
+  if(!Object.hasOwn(keys,envelope.key_id)){details.reason='key_id_not_in_trust_store';return ['failed',details];}
+  const publicKeyBytes=base64ToBytes(keys[envelope.key_id],32,'public_key_b64');
+  details.key_trusted=true;
+  if(!globalThis.crypto?.subtle){details.reason='webcrypto_backend_unavailable';return ['not_verified',details];}
+  let publicKey;
+  try{publicKey=await globalThis.crypto.subtle.importKey('raw',publicKeyBytes,{name:'Ed25519'},false,['verify']);}
+  catch{details.reason='ed25519_backend_unavailable';return ['not_verified',details];}
+  const valid=await globalThis.crypto.subtle.verify({name:'Ed25519'},publicKey,signature,issuerSigningMessage(envelope.key_id,receiptSha));
+  if(!valid){details.reason='signature_invalid';return ['failed',details];}
+  details.signature_valid=true;details.reason='verified';return ['verified',details];
+ }catch(error){details.reason='signature_envelope_invalid: '+error.message;return ['failed',details];}
+}
 
 function validateNumberLexemes(text){
  let inString=false,escaped=false;
@@ -111,8 +186,8 @@ function deepEqual(a,b){
 }
 function safeName(name){return typeof name==='string'&&name&&name!=='.'&&name!=='..'&&!/[\\/]/.test(name)&&!['manifest.json','receipt.json'].includes(name);}
 function instant(value){return typeof value==='string'&&/(?:Z|[+-]\d{2}:\d{2})$/.test(value)&&Number.isFinite(Date.parse(value));}
-function dimensions(integrity,timeAuthority='failed'){
- return {integrity,issuer_authenticity:'not_verified',replay:'not_performed',time_authority:timeAuthority};
+function dimensions(integrity,timeAuthority='failed',issuerAuthenticity='not_verified'){
+ return {integrity,issuer_authenticity:issuerAuthenticity,replay:'not_performed',time_authority:timeAuthority};
 }
 
 async function verifyLedger(raw,errors,check){
@@ -136,7 +211,7 @@ async function verifyLedger(raw,errors,check){
  return last;
 }
 
-export async function verifyTransport(input,{expectedReceiptSha256=null,allowUnboundClock=false}={}){
+export async function verifyTransport(input,{expectedReceiptSha256=null,allowUnboundClock=false,trustedIssuerKeys={}}={}){
  const checks=[],errors=[];
  const check=(name,ok,detail)=>{checks.push({name,ok,detail});if(!ok)errors.push(name+': check failed.');};
  const obj=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
@@ -170,7 +245,7 @@ export async function verifyTransport(input,{expectedReceiptSha256=null,allowUnb
    digestLines.push(entry.name+'='+entry.sha256+'\n');
   }
 
-  const allowed=new Set(['manifest.json','receipt.json',...seen]);
+  const allowed=new Set(['manifest.json','receipt.json','receipt.sig.json',...seen]);
   for(const name of names)if(!allowed.has(name))check('Unexpected member · '+name,false,'Every transferred file must be manifest-locked or a control file.');
 
   const digest=await hash(digestLines.sort().join(''));
@@ -205,12 +280,14 @@ export async function verifyTransport(input,{expectedReceiptSha256=null,allowUnb
 
   const ledgerHead=typeof last.record_hash==='string'&&HEX64.test(last.record_hash)?last.record_hash:null;
   const integrity=errors.length?'failed':'verified';
+  const [issuerAuthenticity,issuerSignature]=await verifyIssuerSignature(files['receipt.sig.json'],receiptSha,trustedIssuerKeys);
   return {
    status:errors.length?'invalid':'valid',
    portable:!errors.length,
    verifier_version:VERIFIER_VERSION,
    profile:CANONICALIZATION_PROFILE,
-   verification:dimensions(integrity,timeAuthority),
+   verification:dimensions(integrity,timeAuthority,issuerAuthenticity),
+   issuer_signature:issuerSignature,
    checks,
    errors,
    bundle_digest:digest,
