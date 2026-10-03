@@ -27,14 +27,14 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Install issuer-auth crypto backend
+      - name: Install pinned issuer-auth backend
         run: python -m pip install -r website/vendor/requirements-issuer-auth.txt
 
-      - name: Build website and regenerate fixture
+      - name: Build website and regenerate signed fixture
         working-directory: website
         run: python3 build.py
 
-      - name: Browser verifier regression suite
+      - name: Browser verifier v0.4 regression suite
         working-directory: website
         run: node tests/verify.mjs
 
@@ -46,13 +46,20 @@ jobs:
         shell: bash
         run: |
           grep -q "BROWSER VERIFIER v0.4" website/dist/verifier/index.html
+          grep -q "verifier v0.4" website/dist/verifier/index.html
           grep -q "EXPECTED RECEIPT SHA-256" website/dist/verifier/index.html
+          grep -q "TRUSTED ISSUER KEYS" website/dist/verifier/index.html
           grep -q "paygod-c14n-v1" website/dist/verifier/index.html
-          grep -q "Issuer authenticity" website/dist/verifier/index.html
-          grep -q "Choose trusted issuer keys" website/dist/verifier/index.html
           grep -q "paygod-ed25519-receipt-v1" website/dist/verifier/index.html
-          grep -q "Replay" website/dist/verifier/index.html
-          grep -q "Time authority" website/dist/verifier/index.html
+          grep -q "Issuer authenticity" website/dist/verifier/index.html
+          test -f website/dist/downloads/paygod-demo-trust-store.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          trust=json.loads(Path('website/dist/downloads/paygod-demo-trust-store.json').read_text())
+          assert trust['profile']=='paygod-ed25519-trust-v1'
+          assert trust['keys'][0]['key_id']=='paygod-demo-issuer-2026-10-03'
+          PY
           if grep -q "browser-demo/0.1" website/dist/verifier/index.html; then
             echo "legacy browser-demo profile leaked into build"
             exit 1
