@@ -4,13 +4,14 @@ A complete English, infrastructure-focused landing page with a real local eviden
 
 ## Run
 
-Python 3.10+ and Node 22+ are sufficient for the build and tests. No npm install, API credentials, database, remote fonts or CDN JavaScript is needed.
+Python 3.10+ and Node 22+ are sufficient for the build. Issuer-authentication tests additionally install the pinned `cryptography==50.0.2` backend from `vendor/requirements-issuer-auth.txt`. No npm install, API credentials, database, remote fonts or CDN JavaScript is needed.
 
 ```bash
 cd website
 python3 build.py
 python3 -m http.server 8080 --directory dist
 # Open http://localhost:8080
+python3 -m pip install -r vendor/requirements-issuer-auth.txt
 node tests/verify.mjs
 python3 tests/upstream.py
 python3 vendor/verify_portable_evidence.py demo/bundle --result demo/local-result.json
@@ -23,6 +24,7 @@ Set-Location website
 python build.py
 python -m http.server 8080 --directory dist
 # Open http://localhost:8080
+python -m pip install -r vendor/requirements-issuer-auth.txt
 node tests/verify.mjs
 python tests/upstream.py
 python vendor/verify_portable_evidence.py demo/bundle --result demo/local-result.json
