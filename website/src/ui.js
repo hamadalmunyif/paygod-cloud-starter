@@ -1,6 +1,9 @@
 const $ = id => document.getElementById(id);
 const editor = $('bundle-editor');
 const receiptPin = $('receipt-pin');
+const issuerTrustFile = $('issuer-trust-file');
+const issuerTrustState = $('issuer-trust-state');
+let trustedIssuerKeys = {};
 let latest = null, runId = 0, importId = 0;
 
 function readSummary() {
@@ -80,6 +83,27 @@ editor.oninput = () => {
   setActive(null);
 };
 if (receiptPin) receiptPin.oninput = invalidate;
+if (issuerTrustFile) issuerTrustFile.onchange = async event => {
+  trustedIssuerKeys = {};
+  const file = event.target.files?.[0];
+  if (!file) {
+    issuerTrustState.textContent = 'No external trust store loaded.';
+    invalidate();
+    return;
+  }
+  try {
+    if (file.size > 256000) throw Error('Trust store exceeds 256 KB.');
+    const parsed = JSON.parse(await file.text());
+    trustedIssuerKeys = parseIssuerTrustStore(parsed);
+    const count = Object.keys(trustedIssuerKeys).length;
+    issuerTrustState.textContent = count + ' trusted issuer key' + (count === 1 ? '' : 's') + ' loaded from recipient-supplied trust.';
+  } catch (error) {
+    trustedIssuerKeys = {};
+    issuerTrustState.textContent = 'Trust store rejected: ' + error.message;
+  }
+  event.target.value = '';
+  invalidate();
+};
 
 $('verify').onclick = async () => {
   const current = ++runId, source = editor.value;
@@ -88,7 +112,8 @@ $('verify').onclick = async () => {
   try {
     if (new TextEncoder().encode(source).length > 2000000) throw Error('Maximum bundle size is 2 MB.');
     result = await verifyTransport(JSON.parse(source), {
-      expectedReceiptSha256: receiptPin?.value.trim() || null
+      expectedReceiptSha256: receiptPin?.value.trim() || null,
+      trustedIssuerKeys
     });
   } catch (error) {
     result = {
@@ -116,7 +141,7 @@ $('verify').onclick = async () => {
   $('status').className = 'status ' + (ok ? 'valid' : 'invalid');
   $('result-title').textContent = ok ? 'Bundle integrity verified.' : 'Bundle integrity failed.';
   $('result-summary').textContent = ok
-    ? 'The transferred bytes and declared decision bindings are internally consistent under PayGod verifier v0.3. Other trust dimensions remain separate.'
+    ? 'The transferred bytes and declared decision bindings are internally consistent under PayGod verifier v0.4. Issuer authenticity is evaluated separately against recipient-supplied trusted keys.'
     : 'One or more integrity checks failed. Inspect the errors before relying on the transferred package.';
 
   setTrust('integrity-result', result.verification?.integrity);
