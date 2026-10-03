@@ -38,33 +38,36 @@ The recipient edition embeds no fixture, calls no producer API, and uses no cook
 
 1. Open the landing page's sample workspace. The evidence card displays declarations read from the sample files; it is not a verified measurement.
 2. Download the bundle and open the separate verifier, which starts with no evidence loaded.
-3. Choose the downloaded JSON and run verification. Inspect file integrity, decision binding, and the explicitly unverified source identity and real-world observation.
-4. Change the sample measurement or decision, download that bundle, and repeat in the recipient workspace. The relevant check must fail.
-5. Download the offline verifier to repeat outside the website. The standalone Python verifier remains the pinned reference implementation.
+3. Choose the downloaded JSON and run verification. Integrity should verify while issuer authenticity remains separate.
+4. Download `paygod-demo-trust-store.json`, load it as the recipient-supplied trust store, and re-run. The signed demo receipt should move issuer authenticity to `VERIFIED` under the clearly labeled demo key.
+5. Change the sample measurement or decision, download that bundle, and repeat in the recipient workspace. The relevant integrity or signature commitment check must fail.
+6. Download the offline verifier to repeat outside the website. The standalone Python verifier remains the pinned reference implementation.
 
 ## Files
 
 - `src/page.html`: authoritative final English page copy and semantic markup.
 - `src/style.css`: responsive design, reduced-motion support and focus states.
-- `src/verifier.mjs`: browser verifier v0.3 implementing the restricted `paygod-c14n-v1` integrity contract.
+- `src/verifier.mjs`: browser verifier v0.4 implementing `paygod-c14n-v1` integrity plus detached Ed25519 receipt authentication.
 - `src/sha256.mjs`: local SHA-256 fallback for offline/non-secure-context preview; Web Crypto is preferred when available.
 - `src/ui.js`: editable bundle, clean/tampered scenarios, import/export and result lifecycle.
 - `src/summary.mjs`: display-only extraction of self-declared evidence-card values; never a source of verification status.
 - `src/inspector.html`: shared human-readable workspace and technical inspector.
 - `src/standalone.html`: empty recipient workspace and offline verifier shell.
 - `PILOT_BRIEF.md`: downloadable template to scope a real source, decision and recipient.
-- `demo/sample.json`: UTF-8 transport wrapper around a synthetic compatible bundle.
+- `demo/sample.json`: UTF-8 transport wrapper around a synthetic signed compatible bundle.
+- `demo/trusted-issuer-demo.json`: recipient trust store for the static demo key only; it is not production authority.
 - `demo/bundle/`: unwrapped artifacts accepted by the pinned upstream verifier.
 - `demo/generate.py`: reproducible synthetic fixture generator; not a kernel execution or domain pack.
-- `vendor/verify_portable_evidence.py`: vendored upstream verifier v0.3.0, Apache-2.0, sourced from the kernel repository.
+- `vendor/verify_portable_evidence.py`: vendored upstream verifier v0.4.0, Apache-2.0, sourced from the kernel repository.
+- `vendor/issuer_auth.py`: detached Ed25519 issuer-authentication helper matching the kernel profile.
 - `REVIEW_AR.md`: current-state review, design, architecture, release proposal and outstanding access limits.
 - `COPY_EN.md`: extracted final reader-facing copy.
 
 ## Demonstration boundary
 
-The browser verifier checks manifest/receipt kind and version, file SHA-256 and size, manifest binding, aggregate digest, locked ledger presence, ledger chain, decision/pack/input bindings and injected-clock consistency. It does not execute a pack, authenticate an issuer, verify real-world facts or authorize a downstream action.
+The browser verifier checks manifest/receipt kind and version, file SHA-256 and size, manifest binding, aggregate digest, locked ledger presence, ledger chain, decision/pack/input bindings and injected-clock consistency. Separately, it can verify `receipt.sig.json` under a recipient-supplied Ed25519 trust store. It does not execute a pack, prove issuer authorization, verify real-world facts or authorize a downstream action.
 
-The browser verifier implements the same restricted `paygod-c14n-v1` integrity contract used by the current kernel verifier, including lexical rejection of decimals/exponents and unsafe integers in decision-critical JSON, NFC property-name enforcement, receipt commitment support and explicit trust dimensions. It is still a separate implementation rather than a third-party audit. JSON duplicate keys retain the platform parser's last-value semantics, and JavaScript Date parsing is not presented as an independent timestamp authority.
+The browser verifier implements the same restricted `paygod-c14n-v1` integrity contract and `paygod-ed25519-receipt-v1` issuer-authentication profile used by the current kernel verifier. It includes lexical rejection of decimals/exponents and unsafe integers in decision-critical JSON, NFC property-name enforcement, receipt commitment support and explicit trust dimensions. It is still a separate implementation rather than a third-party audit. JSON duplicate keys retain the platform parser's last-value semantics, and JavaScript Date parsing is not presented as an independent timestamp authority.
 
 A malicious producer can generate an entirely new self-consistent bundle. Integrity checking alone does not establish provenance, freshness or a genuine observation. The optional Expected Receipt SHA-256 field lets a recipient compare the received receipt against an independently supplied external commitment. `generated_at` is an injected value bound to the evidence, not a trusted timestamp. The displayed digest is calculated from manifest file commitments; individual file checks determine whether actual bytes meet them. Never use this demo as an authorization decision.
 
