@@ -1,14 +1,31 @@
 import {readFileSync} from 'node:fs';
 import assert from 'node:assert/strict';
-import {verifyTransport,canonical,strictJsonParse,hash} from '../src/verifier.mjs';
-import {createHash} from 'node:crypto';
+import {verifyTransport,canonical,strictJsonParse,hash,issuerSigningMessage} from '../src/verifier.mjs';
+import {createHash,generateKeyPairSync,sign as nodeSign} from 'node:crypto';
 import {sha256Fallback} from '../src/sha256.mjs';
 
 const enc=new TextEncoder();
 const sample=JSON.parse(readFileSync(new URL('../demo/sample.json',import.meta.url),'utf8'));
 const clone=x=>structuredClone(x);
 
+function rawEd25519PublicKey(publicKey){
+ const spki=publicKey.export({type:'spki',format:'der'});
+ return new Uint8Array(spki.subarray(spki.length-32));
+}
+function b64(value){return Buffer.from(value).toString('base64');}
 async function receiptSha(transport){return hash(transport.files['receipt.json']);}
+async function attachSignature(transport,keyPair,keyId='website-test-key'){
+ const digest=await receiptSha(transport);
+ const signature=nodeSign(null,Buffer.from(issuerSigningMessage(keyId,digest)),keyPair.privateKey);
+ transport.files['receipt.sig.json']=JSON.stringify({
+  profile:'paygod-ed25519-receipt-v1',
+  algorithm:'Ed25519',
+  key_id:keyId,
+  receipt_sha256:digest,
+  signature_b64:signature.toString('base64')
+ },null,2)+'\n';
+ return {[keyId]:b64(rawEd25519PublicKey(keyPair.publicKey))};
+}
 
 const baseCases=[
  ['clean',x=>{},'valid'],
@@ -31,7 +48,7 @@ for(const [name,mutate,expected] of baseCases){
 }
 
 const clean=await verifyTransport(sample);
-assert.equal(clean.verifier_version,'0.3.0');
+assert.equal(clean.verifier_version,'0.4.0');
 assert.equal(clean.profile,'paygod-c14n-v1');
 assert.equal(clean.verification.integrity,'verified');
 assert.equal(clean.verification.issuer_authenticity,'not_verified');
@@ -39,7 +56,40 @@ assert.equal(clean.verification.replay,'not_performed');
 assert.equal(clean.verification.time_authority,'producer_supplied');
 assert.match(clean.receipt_sha256,/^[a-f0-9]{64}$/);
 assert.match(clean.ledger_head,/^[a-f0-9]{64}$/);
-console.log('Scoped v0.3 verification dimensions: PASS');
+console.log('Scoped v0.4 verification dimensions: PASS');
+
+const signed=clone(sample);
+const signer=generateKeyPairSync('ed25519');
+const trustedIssuerKeys=await attachSignature(signed,signer);
+
+const signedNoTrust=await verifyTransport(signed);
+assert.equal(signedNoTrust.status,'valid');
+assert.equal(signedNoTrust.verification.integrity,'verified');
+assert.equal(signedNoTrust.verification.issuer_authenticity,'not_verified');
+assert.equal(signedNoTrust.issuer_signature.reason,'no_trust_anchor_supplied');
+
+const signedTrusted=await verifyTransport(signed,{trustedIssuerKeys});
+assert.equal(signedTrusted.status,'valid');
+assert.equal(signedTrusted.verification.integrity,'verified');
+assert.equal(signedTrusted.verification.issuer_authenticity,'verified');
+assert.equal(signedTrusted.issuer_signature.signature_valid,true);
+
+const wrongSigner=generateKeyPairSync('ed25519');
+const wrongTrust={'website-test-key':b64(rawEd25519PublicKey(wrongSigner.publicKey))};
+const signedWrongKey=await verifyTransport(signed,{trustedIssuerKeys:wrongTrust});
+assert.equal(signedWrongKey.status,'valid');
+assert.equal(signedWrongKey.verification.integrity,'verified');
+assert.equal(signedWrongKey.verification.issuer_authenticity,'failed');
+assert.equal(signedWrongKey.issuer_signature.reason,'signature_invalid');
+
+const signedReceiptChanged=clone(signed);
+signedReceiptChanged.files['receipt.json']+=' ';
+const receiptChanged=await verifyTransport(signedReceiptChanged,{trustedIssuerKeys});
+assert.equal(receiptChanged.status,'valid');
+assert.equal(receiptChanged.verification.integrity,'verified');
+assert.equal(receiptChanged.verification.issuer_authenticity,'failed');
+assert.equal(receiptChanged.issuer_signature.reason,'receipt_commitment_mismatch');
+console.log('Detached Ed25519 issuer-auth trust boundary: PASS');
 
 const originalPin=await receiptSha(sample);
 assert.equal((await verifyTransport(sample,{expectedReceiptSha256:originalPin})).status,'valid');
