@@ -1,5 +1,5 @@
 <div class="demo-shell">
-  <div class="demo-toolbar"><span class="mono">/*WORKSPACE_LABEL*/ <span class="muted">/ verifier v0.3 · paygod-c14n-v1</span></span><span class="local-label">PROCESSED ON THIS DEVICE</span></div>
+  <div class="demo-toolbar"><span class="mono">/*WORKSPACE_LABEL*/ <span class="muted">/ verifier v0.4 · paygod-c14n-v1</span></span><span class="local-label">PROCESSED ON THIS DEVICE</span></div>
   <div class="demo-grid">
     <div class="demo-input">
       <!--INPUT_INTRO-->
@@ -9,6 +9,11 @@
         <input id="receipt-pin" type="text" autocomplete="off" spellcheck="false" inputmode="text" placeholder="64 lowercase hexadecimal characters">
         <p class="help">If the sender gave you the receipt hash through a separate channel, paste it here. A mismatch fails integrity verification.</p>
       </div>
+      <div class="bundle-pick trust-pick">
+        <label for="issuer-trust-file" class="small-button file-button">Choose trusted issuer keys<input id="issuer-trust-file" type="file" accept=".json,application/json" aria-label="Choose trusted issuer key store"></label>
+        <span id="issuer-trust-state" class="help">No external trust store loaded.</span>
+      </div>
+      <p class="help trust-boundary">Trusted issuer keys come from the recipient's separate trust channel, never from the evidence bundle itself.</p>
       <div id="summary-empty" class="empty-bundle"><span class="mono">WAITING FOR EVIDENCE</span><h3>No bundle loaded.</h3><p>Choose a downloaded bundle or paste its JSON below. Nothing is sent to a server.</p></div>
       <div id="bundle-summary" class="evidence-summary" hidden>
         <div class="summary-top"><span class="mono">EVIDENCE CARD</span><span class="declared-tag">SELF-DECLARED CONTENT</span></div>
@@ -39,7 +44,7 @@
         <div class="digest"><span class="mono">BUNDLE DIGEST</span><code id="digest">Not calculated</code><p class="help">Integrity checks bind the transferred bytes and decision record. They do not authenticate the issuer or prove an external fact.</p></div>
       </details>
       <button id="download-result" class="small-button" disabled>Download verification report</button>
-      <p class="trust-note">Integrity VERIFIED means the supported byte, manifest, receipt and ledger checks passed. It does not mean the issuer is authenticated, the policy was replayed, the timestamp is third-party trusted, or the real-world evidence is true.</p>
+      <p class="trust-note">Integrity VERIFIED means the supported byte, manifest, receipt and ledger checks passed. Issuer authenticity is VERIFIED only when a detached Ed25519 signature validates under a recipient-supplied trusted key. Neither result proves external truth, policy replay, regulator authorization, or third-party trusted time.</p>
     </div>
   </div>
 </div>
