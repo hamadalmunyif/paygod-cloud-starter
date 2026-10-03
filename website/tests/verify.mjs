@@ -19,7 +19,8 @@ const baseCases=[
  ['malformed control',x=>x.files['manifest.json']='[]','invalid'],
  ['malformed receipt',x=>x.files['receipt.json']='null','invalid'],
  ['duplicate manifest file',x=>{let m=JSON.parse(x.files['manifest.json']);m.files.push(m.files[0]);x.files['manifest.json']=JSON.stringify(m,null,2)+'\n';},'invalid'],
- ['unexpected member',x=>x.files['extra.txt']='noise','invalid']
+ ['unexpected member',x=>x.files['extra.txt']='noise','invalid'],
+ ['legacy canonicalization claim',x=>{let r=JSON.parse(x.files['receipt.json']);r.canonicalization.json='rfc8785';x.files['receipt.json']=JSON.stringify(r,null,2)+'\\n';},'invalid']
 ];
 
 for(const [name,mutate,expected] of baseCases){
