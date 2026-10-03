@@ -7,7 +7,7 @@
     "value": "2026-09-28T12:00:00Z"
   },
   "canonicalization": {
-    "json": "rfc8785"
+    "json": "paygod-c14n-v1"
   },
   "pack": {
     "name": "demo-resource-review",
@@ -40,5 +40,13 @@
     "value": "flag",
     "rule_name": "review-consumption",
     "reason": "420 kWh exceeds the illustrative 400 kWh review threshold."
+  },
+  "spec_version": "0.2.0",
+  "runner": {
+    "image": "paygod/website-demo",
+    "image_digest": "unknown"
+  },
+  "replay": {
+    "command": "not performed by integrity verifier"
   }
 }
