@@ -1,8 +1,8 @@
 const $ = id => document.getElementById(id);
 const editor = $('bundle-editor');
 const receiptPin = $('receipt-pin');
-const issuerTrustFile = $('issuer-trust-file');
-const issuerTrustState = $('issuer-trust-state');
+const trustInput = $('issuer-trust-store');
+const trustStatus = $('issuer-trust-status');
 let trustedIssuerKeys = {};
 let latest = null, runId = 0, importId = 0;
 
@@ -33,13 +33,23 @@ function setTrust(id, value) {
     'unverified';
 }
 
+function issuerDetail(result) {
+  const s = result?.issuer_signature;
+  if (!s) return 'Not checked';
+  const state = String(result.verification?.issuer_authenticity || 'not_verified').replaceAll('_', ' ').toUpperCase();
+  const key = s.key_id ? ' · ' + s.key_id : '';
+  const reason = s.reason ? ' · ' + s.reason : '';
+  return state + key + reason;
+}
+
 function invalidate() {
   runId++; latest = null;
   $('status').textContent = 'NOT RUN'; $('status').className = 'status pending';
   $('result-title').textContent = editor.value.trim() ? 'Ready to verify the received bytes.' : 'Waiting for a bundle.';
-  $('result-summary').textContent = 'Run verification to inspect the integrity contract and its explicit trust boundaries.';
+  $('result-summary').textContent = 'Run verification to inspect integrity and the separate issuer-authentication boundary.';
   $('checks').replaceChildren(); $('error-detail').textContent = '';
   for (const id of ['digest', 'receipt-sha', 'ledger-head', 'manifest-sha']) $(id).textContent = 'Not calculated';
+  $('issuer-signature').textContent = 'Not checked';
   setTrust('integrity-result', 'not_checked');
   setTrust('issuer-result', 'not_verified');
   setTrust('replay-result', 'not_performed');
@@ -65,8 +75,8 @@ function load(kind = 'clean') {
   editor.value = JSON.stringify(t, null, 2);
   if (receiptPin) receiptPin.value = '';
   invalidate();
-  $('edit-state').textContent = kind === 'clean' ? 'CLEAN SAMPLE' : kind === 'tamper' ? 'MEASUREMENT CHANGED' : 'DECISION CHANGED';
-  $('file-label').textContent = 'Synthetic sample · ready to download'; setActive(kind);
+  $('edit-state').textContent = kind === 'clean' ? 'SIGNED CLEAN SAMPLE' : kind === 'tamper' ? 'MEASUREMENT CHANGED' : 'DECISION CHANGED';
+  $('file-label').textContent = 'Synthetic signed sample · ready to download'; setActive(kind);
 }
 
 function save(name, data, type = 'application/json') {
@@ -83,27 +93,26 @@ editor.oninput = () => {
   setActive(null);
 };
 if (receiptPin) receiptPin.oninput = invalidate;
-if (issuerTrustFile) issuerTrustFile.onchange = async event => {
-  trustedIssuerKeys = {};
-  const file = event.target.files?.[0];
-  if (!file) {
-    issuerTrustState.textContent = 'No external trust store loaded.';
-    invalidate();
-    return;
-  }
-  try {
-    if (file.size > 256000) throw Error('Trust store exceeds 256 KB.');
-    const parsed = JSON.parse(await file.text());
-    trustedIssuerKeys = parseIssuerTrustStore(parsed);
-    const count = Object.keys(trustedIssuerKeys).length;
-    issuerTrustState.textContent = count + ' trusted issuer key' + (count === 1 ? '' : 's') + ' loaded from recipient-supplied trust.';
-  } catch (error) {
+
+if (trustInput) {
+  trustInput.onchange = async event => {
     trustedIssuerKeys = {};
-    issuerTrustState.textContent = 'Trust store rejected: ' + error.message;
-  }
-  event.target.value = '';
-  invalidate();
-};
+    trustStatus.textContent = 'No trusted issuer keys loaded.';
+    const file = event.target.files?.[0];
+    if (!file) { invalidate(); return; }
+    try {
+      if (file.size > 200000) throw Error('Trust store too large.');
+      const parsed = JSON.parse(await file.text());
+      trustedIssuerKeys = parseIssuerTrustStore(parsed);
+      const count = Object.keys(trustedIssuerKeys).length;
+      trustStatus.textContent = count + ' trusted issuer key' + (count === 1 ? '' : 's') + ' loaded from ' + file.name + '.';
+    } catch (error) {
+      trustedIssuerKeys = {};
+      trustStatus.textContent = 'Trust store rejected: ' + error.message;
+    }
+    invalidate();
+  };
+}
 
 $('verify').onclick = async () => {
   const current = ++runId, source = editor.value;
@@ -124,6 +133,7 @@ $('verify').onclick = async () => {
         replay: 'not_performed',
         time_authority: 'failed'
       },
+      issuer_signature: null,
       checks: [],
       errors: [error.message],
       receipt_sha256: null,
@@ -136,12 +146,15 @@ $('verify').onclick = async () => {
   if (current !== runId) return;
   latest = result;
 
-  const ok = result.verification?.integrity === 'verified';
-  $('status').textContent = ok ? 'INTEGRITY VERIFIED' : 'INTEGRITY FAILED';
-  $('status').className = 'status ' + (ok ? 'valid' : 'invalid');
-  $('result-title').textContent = ok ? 'Bundle integrity verified.' : 'Bundle integrity failed.';
-  $('result-summary').textContent = ok
-    ? 'The transferred bytes and declared decision bindings are internally consistent under PayGod verifier v0.4. Issuer authenticity is evaluated separately against recipient-supplied trusted keys.'
+  const integrityOk = result.verification?.integrity === 'verified';
+  const issuerOk = result.verification?.issuer_authenticity === 'verified';
+  $('status').textContent = integrityOk ? 'INTEGRITY VERIFIED' : 'INTEGRITY FAILED';
+  $('status').className = 'status ' + (integrityOk ? 'valid' : 'invalid');
+  $('result-title').textContent = integrityOk ? 'Bundle integrity verified.' : 'Bundle integrity failed.';
+  $('result-summary').textContent = integrityOk
+    ? issuerOk
+      ? 'Integrity passed and the detached receipt signature verified under a recipient-supplied trusted Ed25519 key.'
+      : 'The transferred bytes and declared decision bindings are internally consistent. Issuer authentication remains a separate result.'
     : 'One or more integrity checks failed. Inspect the errors before relying on the transferred package.';
 
   setTrust('integrity-result', result.verification?.integrity);
@@ -164,6 +177,7 @@ $('verify').onclick = async () => {
 
   $('check-count').textContent = (result.checks || []).filter(check => check.ok).length + '/' + (result.checks || []).length + ' passed';
   $('error-detail').textContent = (result.errors || []).join('\n');
+  $('issuer-signature').textContent = issuerDetail(result);
   $('receipt-sha').textContent = result.receipt_sha256 || 'Not calculated';
   $('ledger-head').textContent = result.ledger_head || 'Not calculated';
   $('manifest-sha').textContent = result.manifest_sha256 || 'Not calculated';
@@ -173,7 +187,7 @@ $('verify').onclick = async () => {
 
 $('download').onclick = () => {
   save('paygod-evidence-bundle.json', editor.value);
-  $('transfer-state').textContent = 'Bundle download requested. Open the separate verifier and choose this file. The file—not a shared session—carries the evidence.';
+  $('transfer-state').textContent = 'Bundle download requested. Transfer this file separately from the recipient trust store.';
 };
 $('download-result').onclick = () => { if (latest) save('paygod-verification-result.json', latest); };
 
