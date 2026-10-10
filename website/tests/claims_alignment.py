@@ -27,7 +27,7 @@ class Links(HTMLParser):
 def main():
     editorial = (ROOT/"CLAIMS_REGISTER_2026-10-10.md").read_text(encoding="utf-8")
     assert REGISTER in editorial
-    assert "18" in editorial and "two skipped" in editorial, "must preserve exact pinned CI scope"
+    assert "18" in editorial and "2 skipped" in editorial, "must preserve exact pinned CI scope"
     assert "NOT" in editorial and "Observatory" in editorial
 
     for route in ROUTES:
