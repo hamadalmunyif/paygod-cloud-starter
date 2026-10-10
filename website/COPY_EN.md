@@ -1,5 +1,8 @@
 # PayGod — English page copy
 
+> **Archived English landing-page copy:** This is a snapshot of the original producer/evidence handoff page, not the canonical copy for the new bilingual evidence atlas. Current atlas copy is maintained in [src/atlas.html](src/atlas.html), built to `/explore/` and `/ar/`. Public technical claims must link only to [paygod-kernel-mvp](https://github.com/hamadalmunyif/paygod-kernel-mvp) and remain within its implemented/tested boundaries. Publication review: [claims register](CLAIMS_REGISTER_2026-10-10.md).
+
+
 PayGod — Evidence beyond the system.
 
 Skip to content

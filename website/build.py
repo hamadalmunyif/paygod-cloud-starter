@@ -3,6 +3,7 @@ import shutil
 import os
 import subprocess
 import sys
+import re
 
 r = Path(__file__).parent
 subprocess.run([sys.executable, str(r / 'demo' / 'generate.py')], check=True)
@@ -30,17 +31,49 @@ dist = r / 'dist'
 for sub in ('verifier', 'downloads'):
     (dist / sub).mkdir(parents=True, exist_ok=True)
 outputs = {'index.html': render('page.html'), 'verifier/index.html': render('standalone.html', True), 'downloads/paygod-verifier.html': render('standalone.html', True, True)}
+# The evidence atlas is a separate editorial surface; the original verifier core and
+# recipient workspace remain untouched. Language variants are static and SEO-addressable.
+atlas_source = (r / 'src/atlas.html').read_text(encoding='utf-8')
+for language, direction, title, description, output_path in (
+    ('en', 'ltr', 'PayGod — Examine the Evidence',
+     'Inspectable infrastructure: deterministic decision evidence, bounded tests, independent verification and open research.',
+     'explore/index.html'),
+    ('ar', 'rtl', 'PayGod — الأدلة والمنهج والمساهمة',
+     'بنية مفتوحة للأدلة والقرارات الحتمية والتحقق المستقل، مع شواهد قابلة للفحص وحدود معلنة.',
+     'ar/index.html'),
+):
+    page = (atlas_source
+        .replace('__LANG__', language)
+        .replace('__DIR__', direction)
+        .replace('__TITLE__', title)
+        .replace('__DESCRIPTION__', description))
+    opposite = 'ar' if language == 'en' else 'en'
+    # One main landmark and one locale navigation per generated page.
+    page = re.sub(r'<nav class="' + opposite + r'"[^>]*>.*?</nav>', '', page, flags=re.S)
+    page = re.sub(r'<main class="' + opposite + r'"[^>]*>.*?</main>', '', page, flags=re.S)
+    outputs[output_path] = page
+
 production = os.environ.get('VERCEL_ENV') == 'production'
 if production:
     outputs['index.html'] = outputs['index.html'].replace('<meta name="robots" content="noindex,nofollow">', '<meta name="robots" content="index,follow"><link rel="canonical" href="https://paygod.net/">')
+    for atlas_path, canonical in (
+        ('explore/index.html', 'https://paygod.net/explore/'),
+        ('ar/index.html', 'https://paygod.net/ar/'),
+    ):
+        outputs[atlas_path] = outputs[atlas_path].replace(
+            '<meta name="robots" content="noindex,nofollow">',
+            f'<meta name="robots" content="index,follow"><link rel="canonical" href="{canonical}">')
+
 (dist / 'robots.txt').write_text('User-agent: *\nDisallow: /verifier/\nDisallow: /downloads/\nSitemap: https://paygod.net/sitemap.xml\n' if production else 'User-agent: *\nDisallow: /\n', encoding='utf-8')
 sitemap = dist / 'sitemap.xml'
 if production:
-    sitemap.write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://paygod.net/</loc></url></urlset>', encoding='utf-8')
+    sitemap.write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://paygod.net/</loc></url><url><loc>https://paygod.net/explore/</loc></url><url><loc>https://paygod.net/ar/</loc></url></urlset>', encoding='utf-8')
 else:
     sitemap.unlink(missing_ok=True)
 for path, html in outputs.items():
-    (dist / path).write_text(html, encoding='utf-8')
+    target = dist / path
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(html, encoding='utf-8')
     print(f'Built {path}: {len(html.encode())} bytes')
 shutil.copyfile(r / 'PILOT_BRIEF.md', dist / 'downloads/paygod-pilot-brief.md')
 shutil.copyfile(r / 'demo' / 'trusted-issuer-demo.json', dist / 'downloads' / 'paygod-demo-trust-store.json')
