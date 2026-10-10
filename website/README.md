@@ -1,5 +1,8 @@
 # PayGod landing page — review candidate
 
+> **2026-10-10 canonical-source update (PR #4, DRAFT):** This website branch now builds English `/explore/` and Arabic RTL `/ar/` pages alongside the existing producer/demo landing and unchanged recipient `/verifier/`. Both new pages present **only** `hamadalmunyif/paygod-kernel-mvp` as the public implementation repository. Controlled-harness/Observatory research is not advertised as shipped Kernel capability. Source classifications and publication gate: [CLAIMS_REGISTER_2026-10-10.md](CLAIMS_REGISTER_2026-10-10.md). The Kernel documentation/test acceptance review is [Kernel PR #102](https://github.com/hamadalmunyif/paygod-kernel-mvp/pull/102), not merged by this website PR. The dated review history below remains historical and must not be taken as the latest deployment status.
+
+
 A complete English, infrastructure-focused landing page with a real local evidence-verification demonstration. A separate Vercel review project is now connected to this branch's repository. Production publication and DNS changes remain pending owner review. See `DEPLOYMENT.md` for the current setup and deployment record.
 
 ## Run
