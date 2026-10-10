@@ -65,7 +65,7 @@ def main():
     assert all(x in ar.ids for x in ("main","capabilities","architecture","verifier","applications","pilot"))
     assert "أدلة قابلة للتحقق" in "".join(ar.text)
     assert "العربية" in "".join(eng.text)
-    assert not any("paygod-workflow-observatory" in t for t in (DIST / "ar/home/index.html",))
+    assert "paygod-workflow-observatory" not in (DIST / "ar/home/index.html").read_text(encoding="utf-8")
     for path, a in (("index.html",eng),("ar/home/index.html",ar)):
         base = (DIST / path).parent
         for url, _, _ in a.links:
