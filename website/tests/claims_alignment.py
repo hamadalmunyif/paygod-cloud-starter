@@ -48,7 +48,7 @@ def main():
     cases=(DIST/"use-cases/index.html").read_text(encoding="utf-8")
     for item in ["ghg-scope-1-2-guard", "critical-cve-blocker", "iso27001-policy-review"]:
         assert item in cases
-    assert "The current generic CLI run does not automatically" in cases or "does not enforce" in cases.lower()
+    assert "does not automatically enforce" in cases.lower()
     for route in ["verifier/index.html","downloads/paygod-verifier.html"]:
         assert (DIST/route).is_file(),route
     print("PASS: six editorial surfaces source-bound; verifier unaffected")
