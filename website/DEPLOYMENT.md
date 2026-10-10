@@ -1,5 +1,8 @@
 # PayGod review deployment
 
+> **2026-10-10 ADDENDUM — CURRENT RELATION TO PRODUCTION:** The live `paygod.net` Vercel alias points to production deployment `dpl_3Jvzccdvx54euUTWBnyPDbFW7Q43` from `website/paygod-production@8532995` (READY). The bilingual Kernel-only website changes exist on draft PR #4 at `website/bilingual-proof-atlas-20261010`; they build as Vercel previews and are **not** promoted to the production domain by this work. Keep review-state and historical October 1/2 entries below for provenance; they are not current publication claims. Do not promote a preview before Kernel PR #102 is accepted and current site tests/content are reviewed.
+
+
 ## October 2 revision — evidence handoff
 
 The review branch now includes a readable evidence card, a separate empty recipient workspace at `verifier/`, a self-contained downloadable verifier at `downloads/paygod-verifier.html`, and a pilot-scoping brief. Technical JSON and detailed check lists are collapsed initially. Source identity and real-world observation remain visibly unverified.
