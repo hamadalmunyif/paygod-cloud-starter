@@ -1,42 +1,46 @@
-# Canonical Kernel Website Claims Register — 2026-10-10
+# PayGod.net — Public Claims and Kernel Evidence Mapping
 
-Status: **EDITORIAL RELEASE REVIEW — NOT A NEW SECURITY AUDIT**
+**Current editorial review:** 2026-10-11 · **historical document name retained for inbound links**.  
+**Authority:** [Canonical Kernel Claims Register](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/docs/CLAIMS_REGISTER.md), pinned to `main@18b57ff` on 2026-10-10. The website is only a view of the canonical technical source, not an independent Kernel authority or accreditation registry.
 
-This register supports `/explore/` and `/ar/` in the PayGod website proposal. The public technical source is **only** [paygod-kernel-mvp](https://github.com/hamadalmunyif/paygod-kernel-mvp).
+## What was actually observed
 
-## Publication rule
+- The pinned Kernel main SHA had **18 GitHub Check Runs succeeded and 2 skipped**, according to direct Check Run inspection; the skipped entries were not converted into successes. A separate main-branch security-gate workflow run was successful.
+- The active GitHub [ruleset #12300800](https://github.com/hamadalmunyif/paygod-kernel-mvp/rules/12300800) requires the six contexts stated in [GATES](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/GATES.md). Classic branch-protection API could not be read (403); this does not invalidate the directly readable ruleset.
+- These observations do **not** mean source fact truth, independent institutional acceptance, or a productive external release rail was verified.
 
-The public site may present a claim only if its functionality or scope is documented in the canonical Kernel repository and (for operational claims) has a named corresponding witness there. Research performed outside the canonical repository is **not a delivered Kernel feature**, and no external research repo is presented as another technical project on the site.
+## Published surfaces and exact claim ceilings
 
-| Public claim | Canonical supporting material | Limit |
+| Live page | What is supported | Explicit non-claim |
 |---|---|---|
-| Deterministic Kernel policy execution | [README](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/README.md), [START_HERE](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/START_HERE.md), [vectors](https://github.com/hamadalmunyif/paygod-kernel-mvp/tree/main/spec/test-vectors) | Requires represented and admitted input; not third-party fact truth |
-| Portable integrity verification | [Standalone Verifier](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/docs/STANDALONE_VERIFIER.md) | Hashes/receipt/ledger/bundle binding, not replay or historical original issuance on its own |
-| Recipient-key Ed25519 receipt authentication | [Issuer Authenticity](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/docs/ISSUER_AUTHENTICITY.md) | Does not confer a regulatory or contractual mandate |
-| Single canonical decision path for registered adapters | [Repository Boundary](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/docs/REPOSITORY_BOUNDARY.md) | Does not cover arbitrary unregistered or external rails |
-| Pre-kernel evidence admission `WITHHELD`, orchestration `NOT RUN` | [ADR 0003](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/adrs/0003-evidence-admission-before-decision-execution.md) | Not a tri-state Kernel DSL or decision verdict |
-| Full coherent bundle re-authoring requires independent receipt commitment for identity comparison | [Internal Verification Challenge](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/docs/INTERNAL_VERIFICATION_CHALLENGE.md) | Receipt pin needs independent trusted delivery for source authentication |
-| `paygod-c14n-v1` safe-integer contract | [Verifier contract](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/docs/STANDALONE_VERIFIER.md) | No production decimal-heavy temperature or environmental profile demonstrated |
-| Real B2 readiness remains open | [B2 Report](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/rehearsals/gas-site-readiness/b2/READINESS_REPORT.md) | 0/10 real/deidentified qualifying cases, 0/5 independent nondeveloper recipients; no validated willingness to pay |
-| Open-Core and contribution pathways | [License](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/LICENSE), [Contributing](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/CONTRIBUTING.md), [Stop-Build](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/docs/STOP_BUILD_RULE.md) | No shipped hosted enterprise SKU, SSO/RBAC, billing or regulatory certification |
+| `/` English home | Synthetic industrial handoff, canonical contracts and portable integrity; direct link to claims register | A prepared 420 kWh / FLAG fixture is **not** a measurement from a real meter or a live Pack run |
+| `/ar/home/` Arabic home | Same editorial content and original verifier demo, marked as English-language technical controls | Translation is not a second Kernel; demo UI controls are still English |
+| `/explore/` and `/ar/` evidence atlas | Named reproducible tests, CI architecture, local research boundary, independently checkable package integrity | No regulator-certified, trusted-time, source-truth or financial-release claim |
+| `/use-cases/` and `/ar/use-cases/` | Three real Pack definitions and source-controlled policy fixture examples: GHG, CVE and ISO review | Not a live browser-side Pack execution; no built-in scanner, GHG calculation, or ISO certification; no universal runtime input-schema admission |
+| `/verifier/` and downloadable verifier | v0.4 compatible integrity/bindings, optional trusted-key receipt authentication | No proof that original evidence claims are authentic, policy replayed, time is independent, or issuer has external legal mandate |
+| `/downloads/paygod-pilot-brief.md` | A reusable proposal template for a prospective partner | No completed real pilot, specific buyer or commercial qualification |
 
-## Excluded from the public capability list
+## Three classes not to mix
 
-- Local experimental warrant/E1/E2/S0/controlled-provider results and attack-catalogue numbers.
-- Assertions of independent institutional or public-chain enforcement.
-- AP2 / ACP / x402 protocol originality or live payment settlement.
-- Other GitHub project identities, research taxonomies, or experimental partner integrations.
-- Future hosted SaaS, enterprise features, paid subscription thresholds, or investment valuation assertions.
+1. **Kernel accepted:** code/contracts with named fixtures and recorded CI evidence for the exact pinned scope.
+2. **Research (Observatory):** publicly readable separate repo, experimental source and T0 local-harness numbers. Can be attributed as research via the Kernel transfer record; **must not become a website-feature assertion**.
+3. **Future direction:** externally submitted certified Packs, creator benefits/royalties, managed enterprise, conditional release in real financial rails, and institution-specific regulatory gates. None is a currently delivered site product.
 
-Unapproved source evidence may inform research, but **only canonical Kernel-adopted evidence** may enlarge the public capability list.
+The six implemented/fixture-tested [starter Packs](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/docs/STARTER_PACKS.md) have **no blanket production accreditation**. Pack YAML definition validation and `test --pack` on synthetic cases do not guarantee admitted/complete/true external input. Under [Evidence Admission ADR](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/adrs/0003-evidence-admission-before-decision-execution.md), `WITHHELD/NOT RUN` are pre-Kernel orchestration states, not Kernel outcomes universally enforced at every entrypoint.
 
-## Release gate
+## Maintenance and publication checklist
 
-1. Confirm canonical Kernel docs and accepted claims at the release commit.
-2. Require GitHub tests: site build, Arabic RTL + English LTR structural checks, existing browser verifier v0.4 regressions, standalone Python parity, and an assertion that only the Kernel repository is linked as source.
-3. Review both locales on mobile and desktop; a CI-green markup test is not a visual/a11y certification.
-4. Preserve `/verifier/` and offline download unchanged.
-5. Keep PR #4 draft and `paygod.net` production alias unchanged until approval.
-6. After Kernel's pending documentation reconciliation PR is accepted and merged, review all new wording again before promoting site copy to production.
+- Pin current source SHA and Check Run evidence before modifying visible claims; retain earlier historical snapshots rather than rewriting.
+- Update Kernel docs first; website links follow the merged canonical record.
+- Keep English/Arabic home, atlas and use-case pages semantically consistent and internally connected.
+- Website CI must build all locales, verify links/claims, and preserve v0.4 verifier regression tests.
+- Separately inspect live deployment state and `paygod.net`/`www.paygod.net` aliases; a green GitHub Action is not Vercel production publication evidence.
+- Full mobile visual/accessibility review and real-world institutional adoption are not implied by static HTML checks.
 
-The website presentation is a derivative of the **accepted Kernel implementation and its documented limits**, not a second source of execution truth.
+## Decision on Observatory
+
+Maintain the Observatory as a **public, separate, frozen-reference research source**, subject to future repository privacy review, not as a public product catalog. Only canonical Kernel repo is linked directly from website pages as the authoritative software. Kernel transfer register may cite Observatory research sources with explicit HARNESS_ONLY/UNRESOLVED boundaries.
+
+## Source version note
+
+This website register was originally created on 2026-10-10 for an earlier draft PR #4. Previous claims about PR #4 being unmerged or PayGod production pending are **superseded**: the English/Arabic atlas and use cases have since been published and a reciprocal Arabic homepage change was prepared separately. This review represents the latest editorial accuracy decision; consult GitHub/hosting for actual release state, never this dated note alone.
