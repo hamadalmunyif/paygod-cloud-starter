@@ -30,13 +30,33 @@ dist = r / 'dist'
 for sub in ('verifier', 'downloads'):
     (dist / sub).mkdir(parents=True, exist_ok=True)
 outputs = {'index.html': render('page.html'), 'verifier/index.html': render('standalone.html', True), 'downloads/paygod-verifier.html': render('standalone.html', True, True)}
+# The evidence atlas is a separate editorial surface; the original verifier core and
+# recipient workspace remain untouched. Language variants are static and SEO-addressable.
+atlas_source = (r / 'src/atlas.html').read_text(encoding='utf-8')
+for language, direction, title, output_path in (
+    ('en', 'ltr', 'PayGod — Examine the Evidence', 'explore/index.html'),
+    ('ar', 'rtl', 'PayGod — الأدلة والمنهج والمساهمة', 'ar/index.html'),
+):
+    outputs[output_path] = (atlas_source
+        .replace('__LANG__', language)
+        .replace('__DIR__', direction)
+        .replace('__TITLE__', title))
+
 production = os.environ.get('VERCEL_ENV') == 'production'
 if production:
     outputs['index.html'] = outputs['index.html'].replace('<meta name="robots" content="noindex,nofollow">', '<meta name="robots" content="index,follow"><link rel="canonical" href="https://paygod.net/">')
+    for atlas_path, canonical in (
+        ('explore/index.html', 'https://paygod.net/explore/'),
+        ('ar/index.html', 'https://paygod.net/ar/'),
+    ):
+        outputs[atlas_path] = outputs[atlas_path].replace(
+            '<meta name="robots" content="noindex,nofollow">',
+            f'<meta name="robots" content="index,follow"><link rel="canonical" href="{canonical}">')
+
 (dist / 'robots.txt').write_text('User-agent: *\nDisallow: /verifier/\nDisallow: /downloads/\nSitemap: https://paygod.net/sitemap.xml\n' if production else 'User-agent: *\nDisallow: /\n', encoding='utf-8')
 sitemap = dist / 'sitemap.xml'
 if production:
-    sitemap.write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://paygod.net/</loc></url></urlset>', encoding='utf-8')
+    sitemap.write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://paygod.net/</loc></url><url><loc>https://paygod.net/explore/</loc></url><url><loc>https://paygod.net/ar/</loc></url></urlset>', encoding='utf-8')
 else:
     sitemap.unlink(missing_ok=True)
 for path, html in outputs.items():
