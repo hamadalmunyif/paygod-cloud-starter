@@ -21,7 +21,12 @@ def render_inspector(recipient=False):
 
 def render(source, recipient=False, offline=False):
     html = (r / 'src' / source).read_text(encoding='utf-8')
-    html = html.replace('/*STYLE*/', style).replace('<!--INSPECTOR-->', render_inspector(recipient))
+    inspector_html = render_inspector(recipient)
+    if source == 'home_ar.html':
+        # The technical demo's controls and dynamic JS remain English; distinguish
+        # this explicitly from the translated Arabic editorial landing page.
+        inspector_html = '<div lang="en" dir="ltr" aria-label="English-language synthetic technical demo">' + inspector_html + '</div>'
+    html = html.replace('/*STYLE*/', style).replace('<!--INSPECTOR-->', inspector_html)
     offline_link = '<p class="offline-ready">You have the self-contained HTML edition. Keep this file and open it again whenever you need it.</p>' if offline else '<a class="button secondary" href="../downloads/paygod-verifier.html" download>Download offline verifier</a>'
     html = html.replace('<!--OFFLINE_DOWNLOAD-->', offline_link)
     js = core + '\nconst SAMPLE = ' + ('null' if recipient else sample) + ';\n' + ui
@@ -30,7 +35,12 @@ def render(source, recipient=False, offline=False):
 dist = r / 'dist'
 for sub in ('verifier', 'downloads'):
     (dist / sub).mkdir(parents=True, exist_ok=True)
-outputs = {'index.html': render('page.html'), 'verifier/index.html': render('standalone.html', True), 'downloads/paygod-verifier.html': render('standalone.html', True, True)}
+outputs = {
+    'index.html': render('page.html'),
+    'ar/home/index.html': render('home_ar.html'),
+    'verifier/index.html': render('standalone.html', True),
+    'downloads/paygod-verifier.html': render('standalone.html', True, True),
+}
 # The evidence atlas is a separate editorial surface; the original verifier core and
 # recipient workspace remain untouched. Language variants are static and SEO-addressable.
 atlas_source = (r / 'src/atlas.html').read_text(encoding='utf-8')
@@ -51,6 +61,8 @@ for language, direction, title, description, output_path in (
     # One main landmark and one locale navigation per generated page.
     page = re.sub(r'<nav class="' + opposite + r'"[^>]*>.*?</nav>', '', page, flags=re.S)
     page = re.sub(r'<main class="' + opposite + r'"[^>]*>.*?</main>', '', page, flags=re.S)
+    if language == 'ar':
+        page = page.replace('href="../" aria-label="PayGod home"', 'href="home/" aria-label="PayGod الصفحة الرئيسية"')
     outputs[output_path] = page
 
 # One source, two static use-case routes. The page explains implemented Kernel
@@ -63,7 +75,7 @@ for language, direction, title, description, home_href, output_path in (
      '../', 'use-cases/index.html'),
     ('ar', 'rtl', 'PayGod — البنية وحالات الاستخدام',
      'ثلاث حزم فعلية في PayGod Kernel للانبعاثات والثغرات والحوكمة، مع شرح المدخلات والنتائج وحدود الإثبات.',
-     '../../', 'ar/use-cases/index.html'),
+     '../home/', 'ar/use-cases/index.html'),
 ):
     case_page = (case_source
         .replace('__LANG__', language).replace('__DIR__', direction)
@@ -78,6 +90,9 @@ for language, direction, title, description, home_href, output_path in (
 production = os.environ.get('VERCEL_ENV') == 'production'
 if production:
     outputs['index.html'] = outputs['index.html'].replace('<meta name="robots" content="noindex,nofollow">', '<meta name="robots" content="index,follow"><link rel="canonical" href="https://paygod.net/">')
+    outputs['ar/home/index.html'] = outputs['ar/home/index.html'].replace(
+        '<meta name="robots" content="noindex,nofollow">',
+        '<meta name="robots" content="index,follow"><link rel="canonical" href="https://paygod.net/ar/home/">')
     for atlas_path, canonical in (
         ('explore/index.html', 'https://paygod.net/explore/'),
         ('ar/index.html', 'https://paygod.net/ar/'),
@@ -96,7 +111,7 @@ if production:
 (dist / 'robots.txt').write_text('User-agent: *\nDisallow: /verifier/\nDisallow: /downloads/\nSitemap: https://paygod.net/sitemap.xml\n' if production else 'User-agent: *\nDisallow: /\n', encoding='utf-8')
 sitemap = dist / 'sitemap.xml'
 if production:
-    sitemap.write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://paygod.net/</loc></url><url><loc>https://paygod.net/explore/</loc></url><url><loc>https://paygod.net/ar/</loc></url><url><loc>https://paygod.net/use-cases/</loc></url><url><loc>https://paygod.net/ar/use-cases/</loc></url></urlset>', encoding='utf-8')
+    sitemap.write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://paygod.net/</loc></url><url><loc>https://paygod.net/explore/</loc></url><url><loc>https://paygod.net/ar/</loc></url><url><loc>https://paygod.net/use-cases/</loc></url><url><loc>https://paygod.net/ar/use-cases/</loc></url><url><loc>https://paygod.net/ar/home/</loc></url></urlset>', encoding='utf-8')
 else:
     sitemap.unlink(missing_ok=True)
 for path, html in outputs.items():
