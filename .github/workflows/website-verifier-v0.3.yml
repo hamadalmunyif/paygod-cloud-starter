@@ -38,6 +38,10 @@ jobs:
         working-directory: website
         run: python3 tests/atlas.py
 
+      - name: Kernel use-case editorial and route audit
+        working-directory: website
+        run: python3 tests/use_cases.py
+
       - name: Browser verifier v0.4 regression suite
         working-directory: website
         run: node tests/verify.mjs

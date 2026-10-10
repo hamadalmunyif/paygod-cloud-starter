@@ -53,6 +53,28 @@ for language, direction, title, description, output_path in (
     page = re.sub(r'<main class="' + opposite + r'"[^>]*>.*?</main>', '', page, flags=re.S)
     outputs[output_path] = page
 
+# One source, two static use-case routes. The page explains implemented Kernel
+# Packs and synthetic fixtures; it does not execute packs in the browser.
+case_source = (r / 'src/use-cases.html').read_text(encoding='utf-8')
+atlas_css = atlas_source.split('<style>', 1)[1].split('</style>', 1)[0]
+for language, direction, title, description, home_href, output_path in (
+    ('en', 'ltr', 'PayGod — Architecture & Use Cases',
+     'Three executable PayGod Kernel Packs: GHG Scope 1 and 2, critical CVE and ISO 27001 policy-review; exact proof boundaries.',
+     '../', 'use-cases/index.html'),
+    ('ar', 'rtl', 'PayGod — البنية وحالات الاستخدام',
+     'ثلاث حزم فعلية في PayGod Kernel للانبعاثات والثغرات والحوكمة، مع شرح المدخلات والنتائج وحدود الإثبات.',
+     '../../', 'ar/use-cases/index.html'),
+):
+    case_page = (case_source
+        .replace('__LANG__', language).replace('__DIR__', direction)
+        .replace('__TITLE__', title).replace('__DESCRIPTION__', description)
+        .replace('__HOME_HREF__', home_href)
+        .replace('__ATLAS_CSS__', atlas_css))
+    opposite = 'ar' if language == 'en' else 'en'
+    case_page = re.sub(r'<nav class="' + opposite + r'"[^>]*>.*?</nav>', '', case_page, flags=re.S)
+    case_page = re.sub(r'<main class="' + opposite + r'"[^>]*>.*?</main>', '', case_page, flags=re.S)
+    outputs[output_path] = case_page
+
 production = os.environ.get('VERCEL_ENV') == 'production'
 if production:
     outputs['index.html'] = outputs['index.html'].replace('<meta name="robots" content="noindex,nofollow">', '<meta name="robots" content="index,follow"><link rel="canonical" href="https://paygod.net/">')
@@ -63,11 +85,18 @@ if production:
         outputs[atlas_path] = outputs[atlas_path].replace(
             '<meta name="robots" content="noindex,nofollow">',
             f'<meta name="robots" content="index,follow"><link rel="canonical" href="{canonical}">')
+    for case_path, canonical in (
+        ('use-cases/index.html', 'https://paygod.net/use-cases/'),
+        ('ar/use-cases/index.html', 'https://paygod.net/ar/use-cases/'),
+    ):
+        outputs[case_path] = outputs[case_path].replace(
+            '<meta name="robots" content="noindex,nofollow">',
+            f'<meta name="robots" content="index,follow"><link rel="canonical" href="{canonical}">')
 
 (dist / 'robots.txt').write_text('User-agent: *\nDisallow: /verifier/\nDisallow: /downloads/\nSitemap: https://paygod.net/sitemap.xml\n' if production else 'User-agent: *\nDisallow: /\n', encoding='utf-8')
 sitemap = dist / 'sitemap.xml'
 if production:
-    sitemap.write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://paygod.net/</loc></url><url><loc>https://paygod.net/explore/</loc></url><url><loc>https://paygod.net/ar/</loc></url></urlset>', encoding='utf-8')
+    sitemap.write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://paygod.net/</loc></url><url><loc>https://paygod.net/explore/</loc></url><url><loc>https://paygod.net/ar/</loc></url><url><loc>https://paygod.net/use-cases/</loc></url><url><loc>https://paygod.net/ar/use-cases/</loc></url></urlset>', encoding='utf-8')
 else:
     sitemap.unlink(missing_ok=True)
 for path, html in outputs.items():
