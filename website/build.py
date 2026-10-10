@@ -61,6 +61,8 @@ for language, direction, title, description, output_path in (
     # One main landmark and one locale navigation per generated page.
     page = re.sub(r'<nav class="' + opposite + r'"[^>]*>.*?</nav>', '', page, flags=re.S)
     page = re.sub(r'<main class="' + opposite + r'"[^>]*>.*?</main>', '', page, flags=re.S)
+    if language == 'ar':
+        page = page.replace('href="../" aria-label="PayGod home"', 'href="home/" aria-label="PayGod الصفحة الرئيسية"')
     outputs[output_path] = page
 
 # One source, two static use-case routes. The page explains implemented Kernel
@@ -73,7 +75,7 @@ for language, direction, title, description, home_href, output_path in (
      '../', 'use-cases/index.html'),
     ('ar', 'rtl', 'PayGod — البنية وحالات الاستخدام',
      'ثلاث حزم فعلية في PayGod Kernel للانبعاثات والثغرات والحوكمة، مع شرح المدخلات والنتائج وحدود الإثبات.',
-     '../../', 'ar/use-cases/index.html'),
+     '../home/', 'ar/use-cases/index.html'),
 ):
     case_page = (case_source
         .replace('__LANG__', language).replace('__DIR__', direction)
