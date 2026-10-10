@@ -1,36 +1,31 @@
-# Proposed Numeric Evidence Admission Profile — NOT IMPLEMENTED
+# Fractional External Measurements: an Admission Research Note
 
-Status: RESEARCH PROPOSAL (2026-10-10). No kernel, schema, c14n or domain-pack semantics are changed by this file.
+Status: **NOT IMPLEMENTED / NO KERNEL SEMANTIC CHANGE** (2026-10-10).
 
-## Observed cause
+The canonical source for current behavior is **only** [PayGod Kernel](https://github.com/hamadalmunyif/paygod-kernel-mvp), especially the [restricted verifier/canonicalization profile](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/docs/STANDALONE_VERIFIER.md), [ADR 0003](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/adrs/0003-evidence-admission-before-decision-execution.md) and [Stop-Build](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/docs/STOP_BUILD_RULE.md).
 
-The frozen `paygod-c14n-v1` canonicalization profile rejects JSON fractional/exponent numbers. Live ACP Witness 001 on 2026-10-06 encountered this exact admission mismatch and first failed closed. A later shadow-only run succeeded by preserving the external descriptor in the Observation Pack and passing a compatible bounded input into the canonical kernel. See [Witness 001 Result](https://github.com/hamadalmunyif/paygod-workflow-observatory/blob/main/docs/WITNESS_001_RESULT.md).
+`paygod-c14n-v1` accepts safe integers in JSON, but not decimal/exponent numeric syntax or unsafe integers. A temperature, emissions factor or quantitative input that does not meet this contract must not be silently truncated or coerced to allow Kernel execution.
 
-## Candidate adapter-level representation, not a default standard
+## Candidate admission-layer strategy, not a shipped profile
 
-Original acquired raw bytes must remain preserved and hash-bound outside any derived representation. A separate typed admission envelope MAY encode a physical measurement as a safe integer, with declared unit and scale.
+Preserve the original external bytes separately with their claimed source/time and a cryptographic commitment. Under a future frozen metric contract, derive an integer plus unit and scale, with declared precision, range, signedness and rounding behavior. Reject values that cannot be represented faithfully. The externally acquired original must remain available for subsequent review.
 
-**Illustrative transformation only** (not a verified CEMS reading):
+Illustrative—not live CEMS data:
 
-| Raw external value | Candidate admitted representation | Interpretation |
+| Raw value | Candidate representation | Meaning |
 |---|---|---|
-| 23.7 degrees C | `{"quantity":237,"unit":"degC","scale_denominator":10}` | 237 / 10 °C |
-| 0.184 kgCO2e/kWh | `{"quantity":184000,"unit":"kgCO2e_per_kWh","scale_denominator":1000000}` | 0.184 kgCO2e/kWh |
-| 2.5 kWh | `{"quantity":2500,"unit":"kWh","scale_denominator":1000}` | 2.500 kWh |
+| 23.7 °C | `{"quantity":237,"unit":"degC","denominator":10}` | 23.7 °C |
+| 0.184 kgCO2e/kWh | `{"quantity":184000,"unit":"kgCO2e_per_kWh","denominator":1000000}` | 0.184 kgCO2e/kWh |
 
-## Admission prerequisites before any real pilot
+This is only a sketch: the field names above are not a public versioned Kernel schema.
 
-- A frozen metric contract specifies base unit, denominator, allowable range, significant digits, and whether negative values are meaningful.
-- Conversion parses the original decimal **lexically**, not through binary floating-point coercion; no rounding or truncation without an explicitly versioned rule and a `rounded` flag.
-- Reject values whose numerator or denominator exceeds the safe-integer/canonical profile.
-- Include input source identity as an **assertion with explicit provenance state**, not as automatically authenticated fact.
-- Keep a cryptographic commitment to raw acquisition bytes and a versioned transformation code/spec digest.
-- Preserve timestamp provenance separately: producer-supplied time ≠ trusted external time.
-- Test unit mismatches, locale decimal comma, exponent formatting, missing values, NaN/Infinity, scientific instruments' calibration flags, and silent unit conversions.
-- Only then admit eligible fields into a domain-specific pack; `WITHHELD` should prevent Kernel execution for missing mandatory fields.
+## Required evidence before promotion
 
-## Why this is an adoption gap, not a Kernel defect
+1. Versioned metric/field specification and admissible source.
+2. Lexically precise decimal parsing, explicit rounding/overflow/invalid-value policy, tested bounds.
+3. Input byte commitments and source-label preservation.
+4. Negative test vectors and independent recipient interpretation.
+5. Confirmation no change to frozen `paygod-c14n-v1`, receipts, digests or policy truth-values.
+6. Approved ADR/governance if any frozen Kernel primitive actually needs to change.
 
-The current canonicalization rejects unsupported numbers as documented. Changing that global profile merely to accommodate temperatures or emission factors would change existing receipt/digest semantics. The correct next step is a separately reviewed representation/acceptance profile under the current stop-build rule, with a local test case demonstrating need and interoperability.
-
-**Not claimed:** published CoPco or CEMS support, environmental certification, automated emissions calculation, or a live numeric-profile implementation.
+The production website must not market a general decimal, emissions or cold-chain measurement adapter until the canonical Kernel repo accepts, implements and tests such an interface. Experimental evidence is not automatic product acceptance.
