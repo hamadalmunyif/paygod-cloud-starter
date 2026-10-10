@@ -34,6 +34,10 @@ jobs:
         working-directory: website
         run: python3 build.py
 
+      - name: Bilingual evidence atlas static checks
+        working-directory: website
+        run: python3 tests/atlas.py
+
       - name: Browser verifier v0.4 regression suite
         working-directory: website
         run: node tests/verify.mjs
