@@ -3,6 +3,7 @@ import shutil
 import os
 import subprocess
 import sys
+import re
 
 r = Path(__file__).parent
 subprocess.run([sys.executable, str(r / 'demo' / 'generate.py')], check=True)
@@ -33,14 +34,24 @@ outputs = {'index.html': render('page.html'), 'verifier/index.html': render('sta
 # The evidence atlas is a separate editorial surface; the original verifier core and
 # recipient workspace remain untouched. Language variants are static and SEO-addressable.
 atlas_source = (r / 'src/atlas.html').read_text(encoding='utf-8')
-for language, direction, title, output_path in (
-    ('en', 'ltr', 'PayGod — Examine the Evidence', 'explore/index.html'),
-    ('ar', 'rtl', 'PayGod — الأدلة والمنهج والمساهمة', 'ar/index.html'),
+for language, direction, title, description, output_path in (
+    ('en', 'ltr', 'PayGod — Examine the Evidence',
+     'Inspectable infrastructure: deterministic decision evidence, bounded tests, independent verification and open research.',
+     'explore/index.html'),
+    ('ar', 'rtl', 'PayGod — الأدلة والمنهج والمساهمة',
+     'بنية مفتوحة للأدلة والقرارات الحتمية والتحقق المستقل، مع شواهد قابلة للفحص وحدود معلنة.',
+     'ar/index.html'),
 ):
-    outputs[output_path] = (atlas_source
+    page = (atlas_source
         .replace('__LANG__', language)
         .replace('__DIR__', direction)
-        .replace('__TITLE__', title))
+        .replace('__TITLE__', title)
+        .replace('__DESCRIPTION__', description))
+    opposite = 'ar' if language == 'en' else 'en'
+    # One main landmark and one locale navigation per generated page.
+    page = re.sub(r'<nav class="' + opposite + r'"[^>]*>.*?</nav>', '', page, flags=re.S)
+    page = re.sub(r'<main class="' + opposite + r'"[^>]*>.*?</main>', '', page, flags=re.S)
+    outputs[output_path] = page
 
 production = os.environ.get('VERCEL_ENV') == 'production'
 if production:
