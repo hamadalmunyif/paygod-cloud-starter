@@ -67,6 +67,16 @@ def promote_primary_home(dist: Path, production: bool) -> None:
             '<meta name="description" content="' + escape(descriptions[lang], quote=True) + '">',
             v2_html, count=1)
         assert description_count == 1
+        # SEO alternate URLs must be absolute, while UI navigation stays local.
+        for alternate_lang, target in (
+            ("en", "https://paygod.net/"),
+            ("ar", "https://paygod.net/ar/home/"),
+        ):
+            v2_html, count = re.subn(
+                r'<link rel="alternate" hreflang="' + alternate_lang + r'" href="[^"]*">',
+                '<link rel="alternate" hreflang="' + alternate_lang + '" href="' + target + '">',
+                v2_html, count=1)
+            assert count == 1, (lang, alternate_lang)
         if production:
             v2_html = v2_html.replace('<meta name="robots" content="noindex,nofollow">',
                 '<meta name="robots" content="index,follow"><link rel="canonical" href="' + official + '">', 1)
