@@ -90,7 +90,7 @@ def main():
     landing = (DIST / "index.html").read_text(encoding="utf-8")
     atlas_en = (DIST / "explore/index.html").read_text(encoding="utf-8")
     atlas_ar = (DIST / "ar/index.html").read_text(encoding="utf-8")
-    assert 'href="use-cases/"' in landing
+    assert 'href="/v2/use-cases/"' in landing, "V2 homepage must route to built use-case view"
     assert 'href="../use-cases/"' in atlas_en
     assert 'href="../ar/use-cases/"' in atlas_ar
     for path in ["verifier/index.html", "downloads/paygod-verifier.html"]:
