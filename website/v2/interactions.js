@@ -30,6 +30,8 @@
       select(active + (event.key === 'ArrowRight' ? 1 : -1));
     }
   });
+  /* Prevent the browser's native anchor drag from stealing pointer gestures. */
+  rail.addEventListener('dragstart', event => event.preventDefault());
   /* Native touch scrolling stays enabled. Mouse drag allows desktop slide browsing. */
   rail.addEventListener('pointerdown', event => {
     if (event.pointerType !== 'mouse' || event.button !== 0) return;
