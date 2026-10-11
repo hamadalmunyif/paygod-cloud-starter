@@ -14,6 +14,15 @@ Status: **design experiment only**. Source branch: `website/v2-gold-evidence-pre
 
 The V2 carousel supports arrow-button movement and mouse dragging, while the cards themselves are genuine links. Touch scrolling is native. The same locale switch goes to the corresponding page in the other language. All generated V2 pages are `noindex,nofollow` and use locally hosted CSS and JS.
 
+## Evidence Lens and interactive source journey (October 11 revision)
+
+- Home EN/AR: added an **Evidence Lens** with three explicit claims (portable bundle, canonical authority, CVE Pack) and two user-selectable views: STORY and PROOF. Each proof view links directly to named Kernel source/README/test documentation and displays limits. The lens is also shown on the EN/AR Evidence Atlas pages.
+- Home and How-it-works EN/AR: a **six-station Pack journey** with three fixed real Pack examples: critical CVE, GHG Scope 1/2 and ISO 27001. Each station takes the reviewer to a real source/test/contract page. The six stations are fixture → source declaration → Pack policy → expected decision → verifier receipt contract → original unchanged verifier demo.
+- The homepage's existing right-hand carousel now synchronizes the station selection in the Pack journey. Both controls remain independently accessible through buttons and explicit URLs.
+- Clarification: test cases show *expected* outcomes only; this experience does **not** run the selected Pack, generate a new Pack-specific receipt, check a bank payment, or create an authority witness.
+- No changes to the V2 URL mapping, canonical Kernel, or original v0.4 verifier.
+- Required reviewer flow: switch STORY ↔ PROOF, inspect all 3 evidence tabs, exercise 3 Pack selectors × 6 stations, open real file links, test both locales and mobile/keyboard. Preview may require a logged-in Vercel account.
+
 ## Hard boundaries
 
 - **Existing production paths and independent verifier source are not modified.**
