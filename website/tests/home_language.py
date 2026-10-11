@@ -110,6 +110,21 @@ def main():
         assert "https://paygod.net/ar/home/" in sitemap
     else:
         assert eng.robots == ar.robots == "noindex,nofollow"
+    # Regression for real phone widths: an old max-width:760px rule suppressed
+    # header nav entirely, making Use Cases and the language switch inaccessible.
+    style = (Path(__file__).resolve().parents[1] / "src/style.css").read_text(encoding="utf-8")
+    hidden_rule = style.find("header nav{display:none}")
+    visible_rule = style.rfind('body[data-workspace="producer"] header nav{')
+    assert hidden_rule >= 0 and visible_rule > hidden_rule, "mobile nav must override the old display:none"
+    visible_block = style[visible_rule:style.find("}", visible_rule)]
+    assert "display:flex" in visible_block, "producer mobile navigation must be visible"
+    assert "order:3" in visible_block and "width:100%" in visible_block
+    assert 'header nav a[href^="#"]' in style, "mobile may collapse section anchors, not route/locale links"
+    for raw, label in ((DIST / "index.html", "en"), (DIST / "ar/home/index.html", "ar")):
+        content = raw.read_text(encoding="utf-8")
+        assert 'data-workspace="producer"' in content, label
+        assert 'class="button secondary"' in content, label
+    print("PASS: phone navigation CSS visible for EN/AR, hero Use Cases CTAs and locale links retained")
     print("PASS: Arabic homepage is a distinct RTL landing, has reciprocal language links, retains verifier and local links")
 
 if __name__ == "__main__":
