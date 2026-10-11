@@ -120,3 +120,30 @@ summary:focus-visible{outline:2px solid var(--cyan);outline-offset:5px}
 .trust-store-field .help{display:block;margin:8px 0 0}
 .trust-store-field .text-link{display:inline-block;margin-top:10px;font-size:12px}
 .trust-store-field .text-link .mono{margin-left:7px;color:#a68a55}
+
+/* 2026-10-11: Keep homepage navigation usable on phones. The earlier
+   max-width:760px rule hid the ENTIRE nav, including locale and Use Cases. */
+@media(max-width:760px){
+  body[data-workspace="producer"] header{
+    height:auto;min-height:75px;padding:12px 20px;
+    display:flex;flex-wrap:wrap;align-items:center;row-gap:8px;
+  }
+  body[data-workspace="producer"] header nav{
+    display:flex;order:3;flex:0 0 100%;width:100%;
+    align-items:center;gap:8px 16px;flex-wrap:wrap;
+    padding:7px 0 2px;border-top:1px solid var(--line);
+  }
+  body[data-workspace="producer"] header nav a{
+    display:inline-flex;align-items:center;min-height:40px;
+    padding:5px 2px;font-size:13px;
+  }
+  body[data-workspace="producer"] header nav a[href^="#"]{
+    display:none;
+  }
+  body[data-workspace="producer"] header nav a.lang-switch{
+    padding:6px 12px;
+  }
+  body[data-workspace="producer"] header .nav-cta{
+    margin-inline-start:auto;
+  }
+}
