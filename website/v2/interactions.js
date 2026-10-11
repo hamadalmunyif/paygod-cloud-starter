@@ -16,6 +16,7 @@
     active = (index + cards.length) % cards.length;
     cards.forEach((card, i) => card.classList.toggle('is-active', i === active));
     if (counter) counter.textContent = String(active + 1).padStart(2, '0') + ' / ' + String(cards.length).padStart(2, '0');
+    window.dispatchEvent(new CustomEvent('paygod:stage', { detail: { index: active } }));
     if (shouldScroll) cards[active].scrollIntoView({ behavior: reduced ? 'instant' : 'smooth', block: 'nearest', inline: 'center' });
   }
   next?.addEventListener('click', () => select(active + 1));
