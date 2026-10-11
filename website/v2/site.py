@@ -2,6 +2,9 @@
 from pathlib import Path
 from html import escape
 import shutil
+import os
+import re
+from urllib.parse import urljoin
 from v2.lens import render_lens, render_journey, build_translations_json
 
 ROOT=Path(__file__).parent
@@ -12,23 +15,23 @@ STANDALONE=KERNEL+"/blob/main/docs/STANDALONE_VERIFIER.md"
 
 COPY={
 "en":{
-"nav":["Home","How it works","Use cases","Evidence atlas","Verifier"],"github":"Kernel on GitHub","language":"العربية","preview":"CONCEPT V2 / NOT PRODUCTION","open":"Explore","next":"Next slide","prev":"Previous slide","current":"Existing site","eyebrow":"PORTABLE DECISION EVIDENCE","hero1":"Evidence that travels.","hero2":"Authority that stays accountable.","herodesc":"A decision is not its proof. Package the evidence and decision context you actually hold; let another party inspect the bundle beyond the originating system. Source truth, delegated authority and live execution require separate witnesses.","herocta":"Explore the trust path","herocta2":"Open the real verifier","path":"INTERACTIVE TRUST PATH","pathhint":"Use the arrows to move the cards. Select a card to open its real page or repository source.","view":"OPEN PAGE","pill1":"DETERMINISTIC KERNEL","pill2":"PORTABLE BUNDLE","pill3":"INDEPENDENT CHECKS",
+"nav":["Home","How it works","Use cases","Evidence atlas","Verifier"],"github":"Kernel on GitHub","language":"العربية","preview":"PAYGOD V2 / EVIDENCE INFRASTRUCTURE","open":"Explore","next":"Next slide","prev":"Previous slide","current":"Previous edition","eyebrow":"PORTABLE DECISION EVIDENCE","hero1":"Evidence that travels.","hero2":"Authority that stays accountable.","herodesc":"A decision is not its proof. Package the evidence and decision context you actually hold; let another party inspect the bundle beyond the originating system. Source truth, delegated authority and live execution require separate witnesses.","herocta":"Explore the trust path","herocta2":"Open the real verifier","path":"INTERACTIVE TRUST PATH","pathhint":"Use the arrows to move the cards. Select a card to open its real page or repository source.","view":"OPEN PAGE","pill1":"DETERMINISTIC KERNEL","pill2":"PORTABLE BUNDLE","pill3":"INDEPENDENT CHECKS",
 "stage":[("Source","What was measured or declared","Declared inputs are not automatically trusted."),("Evidence","Committed bytes and references","Integrity proves content consistency, not source truth."),("Policy","Explicit, versioned rules","See runnable Pack fixtures and tests."),("Decision","One canonical decision authority","An adapter cannot originate the Kernel verdict."),("Receipt","Bound, inspectable artifacts","The receipt carries the claimed decision context."),("Verification","Independent receiving environment","Check bundle properties without re-running policy.")],
 "featuretitle":"Built around boundaries, not promises.","features":[("Evidence first","Move files and commitments; do not replace them with a screenshot."),("Single decision path","Keep decision ownership in the canonical Kernel."),("Independent verification","The recipient can check integrity without your app session."),("Explicit limits","Authenticity, time, correctness and authority are separate claims.")],
 "casehead":"Real Kernel Pack examples","casetip":"Executable Pack fixtures in source, not integrated production deployments.","cases":[("GHG / SCOPE 1 + 2","Environmental evidence","A Pack evaluates supplied energy and emission fields against declared controls.","ghg-scope-1-2-guard"),("CRITICAL CVE","Software supply-chain controls","A Pack evaluates declared vulnerability severity and gate conditions.","critical-cve-blocker"),("ISO 27001","Governance evidence","A Pack records supplied policy-review control outcomes.","iso27001-policy-review")],
 "source":"Source Pack","tests":"Test cases","allcases":"Full existing use-cases page","stagehead":"Trust is a series of separately testable statements.","stagelabel":"HOW IT WORKS","steps":[("01 / OBSERVE","Declare the fact","Provide source, context and a known contract. Do not assume an external measurement is authenticated."),("02 / EVALUATE","Apply a rule","The canonical Kernel evaluates explicitly supplied data. Schema preadmission is not universal."),("03 / PACKAGE","Bind artifacts","Manifest and receipts commit to the included evidence and decision context."),("04 / TRANSFER","Leave the system","The recipient gets portable artifacts, not credentials or the producer's database."),("05 / CHECK","Independently verify","The verifier checks declared integrity and bindings. It does not certify the real-world event.")],
 "atlashead":"What does a PASS actually prove?","atlasdesc":"Inspect the boundary of every claim before extending the product to payments, agents or industrial use.","claims":[("Integrity","Checks committed bytes and bundle bindings","Does not show the measurement was true."),("Authenticity","May inspect a signature under an explicit trust configuration","A signature alone does not prove authority."),("Provenance","Requires independently grounded source attribution","Self-declared origin is not independent provenance."),("Correctness","Requires rule and input validity tests","Matching hashes does not establish policy correctness."),("Time authority","Requires a trusted independent time source","Repository timestamps are not an external time authority."),("Execution authority","Requires an actual release gate and witness","An evidence card is not permission to move money.")],
 "readatlas":"Existing detailed evidence atlas","readclaims":"Canonical claims register",
-"verifhead":"Inspect the actual verifier.","verifdesc":"The original v0.4 verifier remains unchanged. This V2 page only presents it within the new visual language. Its checks concern the received bundle, not underlying source truth or delegated release authority.","launch":"Open the full verifier","offline":"Verifier technical documentation","frame":"Existing independent verifier interface (original v0.4)","framenote":"The embedded panel below loads the existing /verifier/ route on this preview deployment. Its controls remain in English.","legacy":"OPEN EXISTING EXPERIENCE","legacylink":"Review the currently published PayGod site","footer":"Concept UI only · No new product capability claimed."},
+"verifhead":"Inspect the actual verifier.","verifdesc":"The original v0.4 verifier remains unchanged. This V2 page only presents it within the new visual language. Its checks concern the received bundle, not underlying source truth or delegated release authority.","launch":"Open the full verifier","offline":"Verifier technical documentation","frame":"Existing independent verifier interface (original v0.4)","framenote":"The embedded panel below loads the existing /verifier/ route on this preview deployment. Its controls remain in English.","legacy":"OPEN EXISTING EXPERIENCE","legacylink":"View the original PayGod homepage","footer":"Evidence infrastructure · Scope-bound claims · No new Kernel capability asserted."},
 "ar":{
-"nav":["الرئيسية","كيف يعمل","حالات الاستخدام","أطلس الأدلة","المحقق"],"github":"النواة على GitHub","language":"English","preview":"نسخة تصورية V2 / ليست إنتاجية","open":"استعرض","next":"الشريحة التالية","prev":"الشريحة السابقة","current":"الموقع الحالي","eyebrow":"أدلة قرار قابلة للنقل","hero1":"الدليل ينتقل.","hero2":"ومسؤولية القرار تبقى واضحة.","herodesc":"القرار ليس إثبات صحته. ننقل الأدلة وسياق القرار المتاحين فعلاً ليتمكن طرف مستقل من فحص الحزمة خارج نظام المنتج. صحة المصدر والتفويض والتنفيذ الفعلي تحتاج شواهد أخرى مستقلة.","herocta":"استعرض مسار الثقة","herocta2":"افتح المحقق الفعلي","path":"مسار الثقة التفاعلي","pathhint":"حرّك الشرائح بالأسهم، واضغط على أي شريحة للانتقال إلى الصفحة أو ملف المستودع الحقيقي.","view":"افتح الصفحة","pill1":"نواة قرار حتمية","pill2":"حزمة أدلة متنقلة","pill3":"فحوص مستقلة",
+"nav":["الرئيسية","كيف يعمل","حالات الاستخدام","أطلس الأدلة","المحقق"],"github":"النواة على GitHub","language":"English","preview":"PAYGOD V2 / بنية الأدلة","open":"استعرض","next":"الشريحة التالية","prev":"الشريحة السابقة","current":"الإصدار السابق","eyebrow":"أدلة قرار قابلة للنقل","hero1":"الدليل ينتقل.","hero2":"ومسؤولية القرار تبقى واضحة.","herodesc":"القرار ليس إثبات صحته. ننقل الأدلة وسياق القرار المتاحين فعلاً ليتمكن طرف مستقل من فحص الحزمة خارج نظام المنتج. صحة المصدر والتفويض والتنفيذ الفعلي تحتاج شواهد أخرى مستقلة.","herocta":"استعرض مسار الثقة","herocta2":"افتح المحقق الفعلي","path":"مسار الثقة التفاعلي","pathhint":"حرّك الشرائح بالأسهم، واضغط على أي شريحة للانتقال إلى الصفحة أو ملف المستودع الحقيقي.","view":"افتح الصفحة","pill1":"نواة قرار حتمية","pill2":"حزمة أدلة متنقلة","pill3":"فحوص مستقلة",
 "stage":[("المصدر","ما تم قياسه أو التصريح به","المدخلات المعلنة ليست موثوقة تلقائيًا."),("الدليل","ملفات والتزامات محتوى","سلامة الملف لا تثبت حقيقة المصدر."),("السياسة","قواعد صريحة ومؤرخة","حزم قابلة للتنفيذ مع اختبارات موثقة."),("القرار","سلطة قرار واحدة للنواة","لا يحق للمحول اختراع قرار نيابة عن النواة."),("الإيصال","ربط نتيجة القرار بالأدلة","يحمل الإيصال السياق المعلن للقرار."),("التحقق","بيئة استقبال مستقلة","فحص سلامة الحزمة دون إعادة تنفيذ السياسة.")],
 "featuretitle":"حدود قابلة للفحص، لا وعود واسعة.","features":[("الدليل أولًا","ننقل الملفات والتزاماتها، لا مجرد صور من الشاشة."),("مسار قرار واحد","تبقى سلطة القرار في النواة المرجعية."),("تحقق مستقل","يمكن للمستلم فحص سلامة الأدلة دون جلسة داخل التطبيق."),("حدود صريحة","الأصالة والزمن والصحة والسلطة ادعاءات مختلفة.")],
 "casehead":"أمثلة فعلية لحزم النواة","casetip":"حزم واختبارات بمستودع المصدر، وليست تكاملات إنتاجية مثبتة.","cases":[("GHG / النطاقان 1 و2","أدلة الانبعاثات","تقيّم الحزمة حقول الطاقة والانبعاثات المقدمة مقابل ضوابط معلنة.","ghg-scope-1-2-guard"),("CVE الحرج","ضوابط سلسلة البرمجيات","تقيّم الحزمة درجة خطورة ثغرة مُدخلة وشروط قرار التحكم.","critical-cve-blocker"),("ISO 27001","أدلة الحوكمة","تسجل الحزمة نتائج مراجعة ضوابط السياسة المقدمة.","iso27001-policy-review")],
 "source":"ملف الحزمة","tests":"حالات الاختبار","allcases":"حالات الاستخدام في الموقع الحالي","stagehead":"الثقة سلسلة من ادعاءات منفصلة قابلة للاختبار.","stagelabel":"كيف يعمل","steps":[("01 / المصدر","تحديد الحقيقة المدعاة","نربط المصدر والسياق والعقد. لا نفترض أن القياس الخارجي موثوق."),("02 / التقييم","تطبيق القاعدة","تقيّم النواة بيانات مُدخلة صراحة؛ لا يوجد فرض تلقائي شامل لكل مخططات الحزم."),("03 / التجميع","ربط المخرجات","يربط البيان والإيصالات الأدلة المتضمنة وسياق القرار."),("04 / النقل","العبور إلى الطرف الآخر","يتسلم المراجع ملفات مستقلة لا بيانات دخول أو قاعدة بيانات المنتج."),("05 / الفحص","تحقق مستقل","يفحص المحقق السلامة والارتباطات المعلنة، ولا يصادق على الحدث الواقعي.")],
 "atlashead":"ماذا يثبت اجتياز التحقق تحديدًا؟","atlasdesc":"افحص حدود كل ادعاء قبل التوسع في المدفوعات والوكلاء والعمليات الصناعية.","claims":[("السلامة","اتساق الملفات والالتزامات والربط","لا تثبت أن القياس صحيح."),("الأصالة","فحص توقيع ضمن إعداد ثقة صريح","التوقيع وحده لا يثبت التفويض."),("المنشأ","يتطلب نسبة للمصدر مؤيدة بشاهد مستقل","إعلان المصدر عن نفسه ليس منشأ مستقلًا."),("صحة القرار","تتطلب اختبارات المدخلات والقواعد","تطابق البصمات لا يثبت صحة السياسة."),("الزمن الموثوق","يحتاج مصدر وقت خارجيًا موثوقًا","تاريخ المستودع ليس سلطة وقت مستقلة."),("سلطة التنفيذ","تحتاج بوابة إفراج وشاهد تنفيذ فعلي","إيصال الأدلة ليس إذنًا بتحويل الأموال.")],
 "readatlas":"أطلس الأدلة التفصيلي الحالي","readclaims":"سجل الادعاءات المرجعي",
-"verifhead":"افحص المحقق الفعلي.","verifdesc":"لم نغير محرك التحقق v0.4. هذه الصفحة تقدمه ضمن الهوية التجريبية فقط. فحوصه تخص الحزمة المستلمة، لا حقيقة المصدر أو التفويض بالإفراج.","launch":"فتح المحقق الكامل","offline":"توثيق المحقق التقني","frame":"واجهة المحقق المستقل الحالية (v0.4)","framenote":"تظهر أدناه واجهة /verifier/ القائمة في نفس معاينة Vercel، وتظل عناصر التحكم التقنية بالإنجليزية.","legacy":"استعراض النسخة المعتمدة","legacylink":"زيارة موقع PayGod الحالي","footer":"تصور بصري فقط · دون ادعاء قدرة تقنية جديدة."}
+"verifhead":"افحص المحقق الفعلي.","verifdesc":"لم نغير محرك التحقق v0.4. هذه الصفحة تقدمه ضمن الهوية التجريبية فقط. فحوصه تخص الحزمة المستلمة، لا حقيقة المصدر أو التفويض بالإفراج.","launch":"فتح المحقق الكامل","offline":"توثيق المحقق التقني","frame":"واجهة المحقق المستقل الحالية (v0.4)","framenote":"تظهر أدناه واجهة /verifier/ القائمة في نفس معاينة Vercel، وتظل عناصر التحكم التقنية بالإنجليزية.","legacy":"استعراض النسخة المعتمدة","legacylink":"استعرض النسخة الأولى للموقع","footer":"بنية أدلة منشورة · ادعاءات محددة النطاق · دون إضافة قدرات للنواة."}
 }
 
 ROUTES={"home":"","how":"how-it-works/","cases":"use-cases/","atlas":"atlas/","verifier":"verifier/"}
@@ -81,7 +84,57 @@ def build_page(lang,which):
         body += render_journey(lang)
     elif which == "atlas":
         body += render_lens(lang)
-    return f'''<!doctype html><html lang="{lang}" dir="{dirs}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#070b0e"><meta name="description" content="PayGod V2 visual exploration of portable decision evidence, canonical Kernel, and independent verification."><title>PayGod V2 — {escape_str(t["nav"][list(ROUTES).index(which)])}</title><link rel="alternate" hreflang="en" href="{url("en",which)}"><link rel="alternate" hreflang="ar" href="{url("ar",which)}"><link rel="stylesheet" href="/v2/assets/style.css"><link rel="stylesheet" href="/v2/assets/lens.css"></head><body><a class="skip-link" href="#content">Skip to content</a>{make_nav(lang,which,t)}<main id="content" class="container"><div class="preview-strip"><span class="status-dot"></span>{escape_str(t["preview"])}<a href="{"/ar/home/" if lang=="ar" else "/"}">{escape_str(t["current"])} ↗</a></div>{body}<section class="bottom-banner"><div>{logo()}<p>PORTABLE EVIDENCE <span> / </span> INDEPENDENT VERIFICATION</p></div>{ext(CLAIMS,t["readclaims"])}</section></main><footer><div class="container footer-inner"><a href="{url(lang,"home")}" class="footer-brand">PayGod <span>V2</span></a><p>{escape_str(t["footer"])}</p><a href="{"/ar/home/" if lang=="ar" else "/"}">{escape_str(t["legacylink"])} ↗</a></div></footer><script defer src="/v2/assets/interactions.js"></script><script type="application/json" id="v2-lens-translations">{build_translations_json()}</script><script defer src="/v2/assets/lens.js"></script></body></html>'''
+    return f'''<!doctype html><html lang="{lang}" dir="{dirs}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#070b0e"><meta name="description" content="PayGod V2 visual exploration of portable decision evidence, canonical Kernel, and independent verification."><title>PayGod V2 — {escape_str(t["nav"][list(ROUTES).index(which)])}</title><link rel="alternate" hreflang="en" href="{url("en",which)}"><link rel="alternate" hreflang="ar" href="{url("ar",which)}"><link rel="stylesheet" href="/v2/assets/style.css"><link rel="stylesheet" href="/v2/assets/lens.css"></head><body><a class="skip-link" href="#content">Skip to content</a>{make_nav(lang,which,t)}<main id="content" class="container"><div class="preview-strip"><span class="status-dot"></span>{escape_str(t["preview"])}<a href="{"/v1/ar/home/" if lang=="ar" else "/v1/"}">{escape_str(t["current"])} ↗</a></div>{body}<section class="bottom-banner"><div>{logo()}<p>PORTABLE EVIDENCE <span> / </span> INDEPENDENT VERIFICATION</p></div>{ext(CLAIMS,t["readclaims"])}</section></main><footer><div class="container footer-inner"><a href="{url(lang,"home")}" class="footer-brand">PayGod <span>V2</span></a><p>{escape_str(t["footer"])}</p><a href="{"/v1/ar/home/" if lang=="ar" else "/v1/"}">{escape_str(t["legacylink"])} ↗</a></div></footer><script defer src="/v2/assets/interactions.js"></script><script type="application/json" id="v2-lens-translations">{build_translations_json()}</script><script defer src="/v2/assets/lens.js"></script></body></html>'''
+def _archive_previous_home(original, language):
+    """Keep the previous self-contained landing accessible at /v1/ with working links."""
+    original_base = "/" if language == "en" else "/ar/home/"
+    def retarget(m):
+        value = m.group(2)
+        if not value or value.startswith(("#", "/", "http:", "https:", "mailto:", "data:")):
+            return m.group(0)
+        path = urljoin(original_base, value)
+        if path == "/":
+            path = "/v1/"
+        elif path == "/ar/home/":
+            path = "/v1/ar/home/"
+        return m.group(1) + path + '"'
+    original = re.sub(r'((?:href|src)=")([^"]+)"', retarget, original)
+    original = original.replace('<meta name="robots" content="index,follow">', '<meta name="robots" content="noindex,nofollow">')
+    original = re.sub(r'<link rel="canonical" href="[^"]+">', '', original)
+    return original
+
+
+def _published_home(language, production):
+    """One source of truth for the live homepage and the /v2/ edition."""
+    html = build_page(language, "home")
+    # The entry URLs are canonical; supporting V2 routes remain under /v2/.
+    html = html.replace('href="/v2/ar/"', 'href="/ar/home/"')
+    html = html.replace('href="/v2/"', 'href="/"')
+    html = html.replace('href="/v2/ar/"', 'href="/ar/home/"')
+    html = html.replace('href="/v2/"', 'href="/"')
+    html = html.replace(
+        '<link rel="alternate" hreflang="en" href="/">',
+        '<link rel="alternate" hreflang="en" href="https://paygod.net/">')
+    html = html.replace(
+        '<link rel="alternate" hreflang="ar" href="/ar/home/">',
+        '<link rel="alternate" hreflang="ar" href="https://paygod.net/ar/home/">')
+    html = html.replace(
+        '<meta name="description" content="PayGod V2 visual exploration of portable decision evidence, canonical Kernel, and independent verification.">',
+        '<meta name="description" content="' +
+        ('PayGod بنية أدلة قابلة للنقل وقرارات محددة النطاق، مع مسارات تحقق مستقل ومصادر مفتوحة قابلة للفحص.' if language == "ar"
+         else 'PayGod makes decision evidence portable, with inspectable Kernel sources, bounded claims and independent verification.') + '">')
+    html = html.replace(
+        '<title>PayGod V2 — ' + ('الرئيسية' if language == 'ar' else 'Home') + '</title>',
+        '<title>' + ('PayGod — أدلة قرار قابلة للنقل والتحقق المستقل' if language == 'ar'
+                     else 'PayGod — Portable Evidence & Independent Verification') + '</title>')
+    if production:
+        canonical = 'https://paygod.net/ar/home/' if language == 'ar' else 'https://paygod.net/'
+        html = html.replace(
+            '<meta name="robots" content="noindex,nofollow">',
+            '<meta name="robots" content="index,follow"><link rel="canonical" href="' + canonical + '">', 1)
+    return html
+
+
 def build_v2(dist):
     assets=dist/"v2"/"assets"
     assets.mkdir(parents=True,exist_ok=True)
@@ -96,3 +149,18 @@ def build_v2(dist):
             markup=build_page(lang,name)
             path.write_text(markup,encoding="utf-8")
             print("Built V2 "+str(path.relative_to(dist))+" ("+str(len(markup.encode()))+" bytes)")
+
+    # Preserve old homepages and promote V2 without touching verifier, atlas or use-case outputs.
+    production = os.environ.get("VERCEL_ENV") == "production"
+    for lang, live, archive in (
+        ("en", "index.html", "v1/index.html"),
+        ("ar", "ar/home/index.html", "v1/ar/home/index.html"),
+    ):
+        old_path = dist / live
+        old_html = old_path.read_text(encoding="utf-8")
+        archived = dist / archive
+        archived.parent.mkdir(parents=True, exist_ok=True)
+        archived.write_text(_archive_previous_home(old_html, lang), encoding="utf-8")
+        old_path.write_text(_published_home(lang, production), encoding="utf-8")
+        print("Promoted V2 -> " + live + "; archived original -> " + archive)
+
