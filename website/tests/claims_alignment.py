@@ -29,6 +29,9 @@ def main():
     assert REGISTER in editorial
     assert "18" in editorial and "2 skipped" in editorial, "must preserve exact pinned CI scope"
     assert "NOT" in editorial and "Observatory" in editorial
+    assert "**private** experimental repository" in editorial.lower() or "**private** experimental repository" in editorial, "Observatory privacy must be disclosed"
+    assert "publicly readable separate repo" not in editorial
+    assert "public, separate, frozen-reference research" not in editorial
 
     for route in ROUTES:
         path=DIST/route
@@ -38,6 +41,7 @@ def main():
         parsed.feed(content)
         assert REGISTER in parsed.links, f"{route} missing auditable claims register"
         assert "paygod-workflow-observatory" not in content, f"second claimed software source leaked: {route}"
+        assert "open research" not in content.lower(), f"stale public-research accessibility in {route}"
         assert "git_info_fail" not in content, f"deployment diagnostic leaked: {route}"
         assert "guarantee no" not in content.lower()
         assert "20-30%" not in content
