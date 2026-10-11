@@ -84,6 +84,8 @@ def main():
             dest = dest.resolve()
             assert DIST.resolve() in dest.parents or dest == DIST.resolve(), (path,url)
             assert dest.is_file() or (dest.is_dir() and (dest / "index.html").is_file()), (path,url)
+    assert ("use-cases/", None, "Explore three real PayGod Kernel policy Pack use cases") in eng.links
+    assert ("../use-cases/", None, "استعرض ثلاث حالات استخدام فعلية لحزم PayGod Kernel") in ar.links
     assert ("../use-cases/", None, None) in ar.links
     assert ("../", None, None) in ar.links
     assert ("../../verifier/", None, None) in ar.links
