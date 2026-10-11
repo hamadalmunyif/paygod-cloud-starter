@@ -42,6 +42,10 @@ jobs:
         working-directory: website
         run: python3 tests/home_language.py
 
+      - name: V2 bilingual preview route and interactive-slide audit
+        working-directory: website
+        run: python3 tests/v2.py
+
       - name: Kernel use-case editorial and route audit
         working-directory: website
         run: python3 tests/use_cases.py
