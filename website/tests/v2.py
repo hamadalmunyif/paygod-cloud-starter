@@ -119,7 +119,8 @@ def main():
         assert 'id="evidence-lens"' in html
         assert 'id="source-journey"' in html
         assert len(re.findall('class="stage-card"', html)) == 6
-        assert 'href="/v2/use-cases/"' in html
+        case_path = "/v2/ar/use-cases/" if lang == "ar" else "/v2/use-cases/"
+        assert ('href="' + case_path + '"') in html, (home, case_path)
         assert 'href="/verifier/"' in html
         assert 'href="/v1/' in html
         assert "paygod-workflow-observatory" not in html
