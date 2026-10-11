@@ -4,6 +4,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote
 import re
+import json
 
 DIST = Path(__file__).resolve().parents[1] / "dist"
 ROUTES = ("", "how-it-works/", "use-cases/", "atlas/", "verifier/")
@@ -39,6 +40,10 @@ def main():
     js = (DIST/"v2/assets/interactions.js").read_text()
     assert "scrollIntoView" in js and "data-next" in js
     assert "dragstart" in js and "event.preventDefault()" in js
+    assert "paygod:stage" in js
+    lens_js = (DIST/"v2/assets/lens.js").read_text()
+    assert "data-lens-toggle" in lens_js and "data-journey-pack" in lens_js
+    assert "tools/verify_portable_evidence.py" in (Path(__file__).resolve().parents[1]/"v2/lens.py").read_text()
     assert "/verifier/" in (DIST/"verifier/index.html").as_posix()
     count=0
     for lang in ("en","ar"):
@@ -53,6 +58,11 @@ def main():
             assert not a.duplicate, (file,a.duplicate)
             assert a.robots=="noindex,nofollow", file
             assert "/v2/assets/style.css" in html and "/v2/assets/interactions.js" in html
+            assert "/v2/assets/lens.css" in html and "/v2/assets/lens.js" in html
+            raw = re.search(r'<script type="application/json" id="v2-lens-translations">(.+?)</script>', html)
+            assert raw, file
+            labels = json.loads(raw.group(1))
+            assert len(labels["en"]["stageNotes"]) == len(labels["ar"]["stageNotes"]) == 6
             assert 'PayGod' in html
             assert "paygod-workflow-observatory" not in html
             for link in a.links:
@@ -66,6 +76,19 @@ def main():
                 if fragment and target.is_dir():
                     target_html=(target/"index.html").read_text(encoding="utf-8")
                     assert 'id="'+fragment+'"' in target_html,(file,link)
+            if part in ("", "atlas/"):
+                assert 'id="evidence-lens"' in html, file
+                assert len(re.findall("data-claim-panel=",html)) == 6
+                assert "docs/CLAIMS_REGISTER.md" in html
+                assert "docs/STANDALONE_VERIFIER.md" in html
+                assert "docs/REPOSITORY_BOUNDARY.md" in html
+                assert "tests/cases.yaml" in html
+                assert "NOT ESTABLISHED" in html if lang=="en" else "ما لا يثبته ذلك" in html
+            if part in ("", "how-it-works/"):
+                assert 'id="source-journey"' in html, file
+                assert len(re.findall("data-journey-step=",html)) == 6
+                assert len(re.findall("data-journey-pack=",html)) == 3
+                assert "The final verifier" in html if lang=="en" else "المحقق النهائي" in html
             if part=="verifier/":
                 assert a.iframes==["/verifier/"],a.iframes
                 assert "original v0.4" in html if lang=="en" else "v0.4" in html
@@ -74,7 +97,7 @@ def main():
                 assert len(re.findall("data-stage=",html))==6
                 assert "/verifier/" in a.links
             count+=1
-    print(f"PASS: {count} bilingual V2 preview pages, local targets, carousel, unchanged verifier link; robots noindex")
+    print(f"PASS: {count} bilingual V2 pages, carousel, three Pack source tracks, claim-to-proof lens, unchanged verifier, preview noindex")
 
 if __name__=="__main__":
     main()
