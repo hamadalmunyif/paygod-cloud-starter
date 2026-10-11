@@ -5,6 +5,7 @@ from pathlib import Path
 from urllib.parse import unquote
 import re
 import json
+import os
 
 DIST = Path(__file__).resolve().parents[1] / "dist"
 ROUTES = ("", "how-it-works/", "use-cases/", "atlas/", "verifier/")
@@ -97,6 +98,52 @@ def main():
                 assert len(re.findall("data-stage=",html))==6
                 assert "/verifier/" in a.links
             count+=1
+    # Production landing should use the same V2 source and keep V1 available for rollback.
+    for lang, home, archived in (
+        ("en", "index.html", "v1/index.html"),
+        ("ar", "ar/home/index.html", "v1/ar/home/index.html"),
+    ):
+        file = DIST / home
+        old = DIST / archived
+        assert file.is_file() and old.is_file(), (file, old)
+        html = file.read_text(encoding="utf-8")
+        old_html = old.read_text(encoding="utf-8")
+        audit = Inspect(); audit.feed(html)
+        old_audit = Inspect(); old_audit.feed(old_html)
+        assert audit.language == lang and audit.direction == ("rtl" if lang=="ar" else "ltr")
+        assert audit.navs == audit.mains == 1
+        assert not audit.duplicate
+        assert old_audit.navs == old_audit.mains == 1
+        assert old_audit.robots == "noindex,nofollow"
+        assert "rel=\"canonical\"" not in old_html, archived
+        assert 'id="evidence-lens"' in html
+        assert 'id="source-journey"' in html
+        assert len(re.findall('class="stage-card"', html)) == 6
+        case_path = "/v2/ar/use-cases/" if lang == "ar" else "/v2/use-cases/"
+        assert ('href="' + case_path + '"') in html, (home, case_path)
+        assert 'href="/verifier/"' in html
+        assert 'href="/v1/' in html
+        assert "paygod-workflow-observatory" not in html
+        assert 'href="https://paygod.net/"' in html
+        assert 'href="https://paygod.net/ar/home/"' in html
+        assert (("Evidence beyond" in old_html) if lang=="en" else ("أدلة قابلة للتحقق" in old_html))
+        for route in ("/v2/assets/style.css", "/v2/assets/lens.css", "/v2/assets/interactions.js", "/v2/assets/lens.js"):
+            assert route in html
+            assert (DIST/route.lstrip("/")).is_file()
+        for href in audit.links:
+            if not href.startswith("/"):
+                continue
+            target = (DIST/href.lstrip("/").split("#",1)[0]).resolve()
+            assert DIST.resolve() == target or DIST.resolve() in target.parents, href
+            assert target.is_file() or (target.is_dir() and (target/"index.html").is_file()), (home,href)
+        if os.environ.get("VERCEL_ENV") == "production":
+            assert audit.robots == "index,follow", (home,audit.robots)
+            canonical = "https://paygod.net/ar/home/" if lang=="ar" else "https://paygod.net/"
+            assert '<link rel="canonical" href="'+canonical+'">' in html
+        else:
+            assert audit.robots == "noindex,nofollow", (home,audit.robots)
+            assert 'rel="canonical"' not in html
+    print("PASS: promoted bilingual V2 home, canonical/preview safety, archived V1 rollback, local links and verifier")
     print(f"PASS: {count} bilingual V2 pages, carousel, three Pack source tracks, claim-to-proof lens, unchanged verifier, preview noindex")
 
 if __name__=="__main__":
