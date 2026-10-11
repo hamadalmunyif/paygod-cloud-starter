@@ -121,3 +121,7 @@ for path, html in outputs.items():
     print(f'Built {path}: {len(html.encode())} bytes')
 shutil.copyfile(r / 'PILOT_BRIEF.md', dist / 'downloads/paygod-pilot-brief.md')
 shutil.copyfile(r / 'demo' / 'trusted-issuer-demo.json', dist / 'downloads' / 'paygod-demo-trust-store.json')
+
+# V2 is preview-only: generated under /v2/ and never overwrites the live routes.
+from v2.site import build_v2
+build_v2(dist)
