@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify that the homepage language switch leads to an Arabic HOME, not the atlas."""
+"""Regression audit: archived V1 homepages remain functional after V2 cutover."""
 from html.parser import HTMLParser
 from pathlib import Path
 import os
@@ -54,18 +54,18 @@ def parse(path):
     return a
 
 def main():
-    eng = parse("index.html")
-    ar = parse("ar/home/index.html")
+    eng = parse("v1/index.html")
+    ar = parse("v1/ar/home/index.html")
     assert eng.lang == "en" and (eng.direction is None or eng.direction == "ltr")
     assert (ar.lang, ar.direction) == ("ar", "rtl")
-    assert ("ar/home/", "ar", "الانتقال إلى الصفحة الرئيسية بالعربية") in eng.links
-    assert ("../../", "en", "View English home page") in ar.links
+    assert ("/v1/ar/home/", "ar", "الانتقال إلى الصفحة الرئيسية بالعربية") in eng.links
+    assert ("/v1/", "en", "View English home page") in ar.links
     assert eng.alternates.get("ar") == ar.alternates.get("ar") == "https://paygod.net/ar/home/"
     assert eng.alternates.get("en") == ar.alternates.get("en") == "https://paygod.net/"
     assert all(x in ar.ids for x in ("main","capabilities","architecture","verifier","applications","pilot"))
     assert "أدلة قابلة للتحقق" in "".join(ar.text)
     assert "العربية" in "".join(eng.text)
-    assert "paygod-workflow-observatory" not in (DIST / "ar/home/index.html").read_text(encoding="utf-8")
+    assert "paygod-workflow-observatory" not in (DIST / "v1/ar/home/index.html").read_text(encoding="utf-8")
     for path, a in (("index.html",eng),("ar/home/index.html",ar)):
         base = (DIST / path).parent
         for url, _, _ in a.links:
@@ -84,14 +84,14 @@ def main():
             dest = dest.resolve()
             assert DIST.resolve() in dest.parents or dest == DIST.resolve(), (path,url)
             assert dest.is_file() or (dest.is_dir() and (dest / "index.html").is_file()), (path,url)
-    assert ("use-cases/", None, "Explore three real PayGod Kernel policy Pack use cases") in eng.links
-    assert ("../use-cases/", None, "استعرض ثلاث حالات استخدام فعلية لحزم PayGod Kernel") in ar.links
-    assert ("../use-cases/", None, None) in ar.links
-    assert ("../", None, None) in ar.links
-    assert ("../../verifier/", None, None) in ar.links
+    assert ("/use-cases/", None, "Explore three real PayGod Kernel policy Pack use cases") in eng.links
+    assert ("/ar/use-cases/", None, "استعرض ثلاث حالات استخدام فعلية لحزم PayGod Kernel") in ar.links
+    assert ("/ar/use-cases/", None, None) in ar.links
+    assert ("/ar/", None, None) in ar.links
+    assert ("/verifier/", None, None) in ar.links
     # Actual technical demo remains the same v0.4 engine; its UI is clearly
     # labeled English inside the Arabic editorial homepage.
-    ar_html = (DIST / "ar/home/index.html").read_text(encoding="utf-8")
+    ar_html = (DIST / "v1/ar/home/index.html").read_text(encoding="utf-8")
     assert 'aria-label="English-language synthetic technical demo"' in ar_html
     assert 'verifier v0.4' in ar_html and 'paygod-c14n-v1' in ar_html
     assert "واجهة التجربة التقنية التفاعلية" in ar_html
@@ -103,13 +103,13 @@ def main():
     assert 'href="../ar/home/"' in atlas, "Arabic atlas nav must link to Arabic home"
     assert 'href="../../ar/home/"' in cases, "Arabic cases nav must link to Arabic home"
     assert 'href="../home/"' in cases, "Arabic cases brand must link to Arabic home"
+    # Previous pages are archived and must not compete with the new canonical homepages.
+    assert eng.canonical == ar.canonical == []
+    assert eng.robots == ar.robots == "noindex,nofollow"
     if os.environ.get("VERCEL_ENV") == "production":
-        assert eng.canonical == ["https://paygod.net/"]
-        assert ar.canonical == ["https://paygod.net/ar/home/"]
         sitemap = (DIST / "sitemap.xml").read_text(encoding="utf-8")
         assert "https://paygod.net/ar/home/" in sitemap
-    else:
-        assert eng.robots == ar.robots == "noindex,nofollow"
+        assert "https://paygod.net/v1/" not in sitemap
     # Regression for real phone widths: an old max-width:760px rule suppressed
     # header nav entirely, making Use Cases and the language switch inaccessible.
     style = (Path(__file__).resolve().parents[1] / "src/style.css").read_text(encoding="utf-8")
@@ -120,12 +120,12 @@ def main():
     assert "display:flex" in visible_block, "producer mobile navigation must be visible"
     assert "order:3" in visible_block and "width:100%" in visible_block
     assert 'header nav a[href^="#"]' in style, "mobile may collapse section anchors, not route/locale links"
-    for raw, label in ((DIST / "index.html", "en"), (DIST / "ar/home/index.html", "ar")):
+    for raw, label in ((DIST / "v1/index.html", "en"), (DIST / "v1/ar/home/index.html", "ar")):
         content = raw.read_text(encoding="utf-8")
         assert 'data-workspace="producer"' in content, label
         assert 'class="button secondary"' in content, label
-    print("PASS: phone navigation CSS visible for EN/AR, hero Use Cases CTAs and locale links retained")
-    print("PASS: Arabic homepage is a distinct RTL landing, has reciprocal language links, retains verifier and local links")
+    print("PASS: archived V1 phone navigation CSS, Use Cases links and locale links retained")
+    print("PASS: archived original Arabic/English landing is accessible at /v1/, with source/verifier routes retained")
 
 if __name__ == "__main__":
     main()
