@@ -46,6 +46,12 @@ jobs:
         working-directory: website
         run: python3 tests/v2.py
 
+      - name: V2 UI script syntax (interaction and Evidence Lens)
+        working-directory: website
+        run: |
+          node --check v2/interactions.js
+          node --check v2/lens.js
+
       - name: Kernel use-case editorial and route audit
         working-directory: website
         run: python3 tests/use_cases.py
