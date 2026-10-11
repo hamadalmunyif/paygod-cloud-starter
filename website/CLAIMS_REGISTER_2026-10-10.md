@@ -23,7 +23,7 @@
 ## Three classes not to mix
 
 1. **Kernel accepted:** code/contracts with named fixtures and recorded CI evidence for the exact pinned scope.
-2. **Research (Observatory):** publicly readable separate repo, experimental source and T0 local-harness numbers. Can be attributed as research via the Kernel transfer record; **must not become a website-feature assertion**.
+2. **Research (Observatory):** **private** experimental repository containing local harness records. The public cannot independently inspect its frozen T0 source, so internal research records are **not public verification evidence or delivered website features**. The Kernel transfer register retains only appropriately bounded private-source attribution.
 3. **Future direction:** externally submitted certified Packs, creator benefits/royalties, managed enterprise, conditional release in real financial rails, and institution-specific regulatory gates. None is a currently delivered site product.
 
 The six implemented/fixture-tested [starter Packs](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/docs/STARTER_PACKS.md) have **no blanket production accreditation**. Pack YAML definition validation and `test --pack` on synthetic cases do not guarantee admitted/complete/true external input. Under [Evidence Admission ADR](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/adrs/0003-evidence-admission-before-decision-execution.md), `WITHHELD/NOT RUN` are pre-Kernel orchestration states, not Kernel outcomes universally enforced at every entrypoint.
@@ -39,7 +39,7 @@ The six implemented/fixture-tested [starter Packs](https://github.com/hamadalmun
 
 ## Decision on Observatory
 
-Maintain the Observatory as a **public, separate, frozen-reference research source**, subject to future repository privacy review, not as a public product catalog. Only canonical Kernel repo is linked directly from website pages as the authoritative software. Kernel transfer register may cite Observatory research sources with explicit HARNESS_ONLY/UNRESOLVED boundaries.
+**Observed privacy change (2026-10-11):** Observatory is now **Private**, separated from the public canonical Kernel and paygod.net. Neither site pages nor this editorial register may point unauthenticated readers to its restricted records as public proof. Internal harness claims remain HARNESS_ONLY / UNRESOLVED; the website links **only** to independently readable canonical Kernel code, bounded witnesses and public claim limits. Previously public clones/history are not retroactively recalled.
 
 ## Source version note
 
