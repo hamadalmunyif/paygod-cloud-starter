@@ -95,6 +95,17 @@ jobs:
             exit 1
           fi
 
+      - name: Production-home cutover rehearsal (SEO, bilingual routes, archive)
+        working-directory: website
+        env:
+          VERCEL_ENV: production
+        run: |
+          python3 build.py
+          python3 tests/v2.py
+          python3 tests/home_language.py
+          python3 tests/use_cases.py
+          python3 tests/claims_alignment.py
+
       - name: Publish built preview artifact
         uses: actions/upload-artifact@v4
         with:
