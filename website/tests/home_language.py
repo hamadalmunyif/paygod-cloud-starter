@@ -72,8 +72,8 @@ def validate_local_links(path, audit):
         dest = dest.resolve()
         assert dest == DIST.resolve() or DIST.resolve() in dest.parents, (path, href)
         assert dest.is_file() or (dest.is_dir() and (dest/"index.html").is_file()), (path, href)
-        if parts.fragment and (dest/"index.html").is_file() if dest.is_dir() else False:
-            target = dest/"index.html"
+        if parts.fragment:
+            target = dest/"index.html" if dest.is_dir() else dest
             assert 'id="' + parts.fragment + '"' in target.read_text(encoding="utf-8"), (path, href)
 
 def main():
@@ -82,7 +82,7 @@ def main():
         ("ar", "ar/home/index.html", "ar/legacy/index.html", "/", "/ar/legacy/"),
     ):
         p, html = inspect(home)
-        assert (p.lang, p.direction) == (lang, "rtl" if lang == "ar" else None), (home, p.lang, p.direction)
+        assert (p.lang, p.direction) == (lang, "rtl" if lang == "ar" else "ltr"), (home, p.lang, p.direction)
         assert "data-evidence-lens" in html and "data-evidence-journey" in html, home
         assert len(re.findall('class="stage-card"', html)) == 6, home
         assert len(re.findall("data-claim-panel=", html)) == 6, home
