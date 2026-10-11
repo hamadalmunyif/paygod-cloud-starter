@@ -46,7 +46,7 @@ outputs = {
 atlas_source = (r / 'src/atlas.html').read_text(encoding='utf-8')
 for language, direction, title, description, output_path in (
     ('en', 'ltr', 'PayGod — Examine the Evidence',
-     'Inspectable infrastructure: deterministic decision evidence, bounded tests, independent verification and open research.',
+     'Inspectable infrastructure: deterministic decision evidence, bounded tests, independent verification and documented limits.',
      'explore/index.html'),
     ('ar', 'rtl', 'PayGod — الأدلة والمنهج والمساهمة',
      'بنية مفتوحة للأدلة والقرارات الحتمية والتحقق المستقل، مع شواهد قابلة للفحص وحدود معلنة.',
