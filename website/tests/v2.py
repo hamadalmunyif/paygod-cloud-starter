@@ -38,6 +38,7 @@ def main():
     assert (DIST/"v2/assets/style.css").is_file()
     js = (DIST/"v2/assets/interactions.js").read_text()
     assert "scrollIntoView" in js and "data-next" in js
+    assert "dragstart" in js and "event.preventDefault()" in js
     assert "/verifier/" in (DIST/"verifier/index.html").as_posix()
     count=0
     for lang in ("en","ar"):
