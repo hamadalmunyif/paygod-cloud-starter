@@ -2,6 +2,7 @@
 from pathlib import Path
 from html import escape
 import shutil
+from v2.lens import render_lens, render_journey, build_translations_json
 
 ROOT=Path(__file__).parent
 KERNEL="https://github.com/hamadalmunyif/paygod-kernel-mvp"
@@ -74,12 +75,20 @@ def build_page(lang,which):
     t=COPY[lang];dirs='rtl' if lang=="ar" else 'ltr'
     other="ar" if lang=="en" else "en"
     body={"home":hero,"how":how_page,"cases":cases_page,"atlas":atlas_page,"verifier":verifier_page}[which](lang,t)
-    return f'''<!doctype html><html lang="{lang}" dir="{dirs}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#070b0e"><meta name="description" content="PayGod V2 visual exploration of portable decision evidence, canonical Kernel, and independent verification."><title>PayGod V2 — {escape_str(t["nav"][list(ROUTES).index(which)])}</title><link rel="alternate" hreflang="en" href="{url("en",which)}"><link rel="alternate" hreflang="ar" href="{url("ar",which)}"><link rel="stylesheet" href="/v2/assets/style.css"></head><body><a class="skip-link" href="#content">Skip to content</a>{make_nav(lang,which,t)}<main id="content" class="container"><div class="preview-strip"><span class="status-dot"></span>{escape_str(t["preview"])}<a href="{"/ar/home/" if lang=="ar" else "/"}">{escape_str(t["current"])} ↗</a></div>{body}<section class="bottom-banner"><div>{logo()}<p>PORTABLE EVIDENCE <span> / </span> INDEPENDENT VERIFICATION</p></div>{ext(CLAIMS,t["readclaims"])}</section></main><footer><div class="container footer-inner"><a href="{url(lang,"home")}" class="footer-brand">PayGod <span>V2</span></a><p>{escape_str(t["footer"])}</p><a href="{"/ar/home/" if lang=="ar" else "/"}">{escape_str(t["legacylink"])} ↗</a></div></footer><script defer src="/v2/assets/interactions.js"></script></body></html>'''
+    if which == "home":
+        body = body.replace('<section class="section-block">', render_journey(lang) + render_lens(lang) + '<section class="section-block">', 1)
+    elif which == "how":
+        body += render_journey(lang)
+    elif which == "atlas":
+        body += render_lens(lang)
+    return f'''<!doctype html><html lang="{lang}" dir="{dirs}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#070b0e"><meta name="description" content="PayGod V2 visual exploration of portable decision evidence, canonical Kernel, and independent verification."><title>PayGod V2 — {escape_str(t["nav"][list(ROUTES).index(which)])}</title><link rel="alternate" hreflang="en" href="{url("en",which)}"><link rel="alternate" hreflang="ar" href="{url("ar",which)}"><link rel="stylesheet" href="/v2/assets/style.css"><link rel="stylesheet" href="/v2/assets/lens.css"></head><body><a class="skip-link" href="#content">Skip to content</a>{make_nav(lang,which,t)}<main id="content" class="container"><div class="preview-strip"><span class="status-dot"></span>{escape_str(t["preview"])}<a href="{"/ar/home/" if lang=="ar" else "/"}">{escape_str(t["current"])} ↗</a></div>{body}<section class="bottom-banner"><div>{logo()}<p>PORTABLE EVIDENCE <span> / </span> INDEPENDENT VERIFICATION</p></div>{ext(CLAIMS,t["readclaims"])}</section></main><footer><div class="container footer-inner"><a href="{url(lang,"home")}" class="footer-brand">PayGod <span>V2</span></a><p>{escape_str(t["footer"])}</p><a href="{"/ar/home/" if lang=="ar" else "/"}">{escape_str(t["legacylink"])} ↗</a></div></footer><script defer src="/v2/assets/interactions.js"></script><script type="application/json" id="v2-lens-translations">{build_translations_json()}</script><script defer src="/v2/assets/lens.js"></script></body></html>'''
 def build_v2(dist):
     assets=dist/"v2"/"assets"
     assets.mkdir(parents=True,exist_ok=True)
     shutil.copyfile(ROOT/"style.css",assets/"style.css")
     shutil.copyfile(ROOT/"interactions.js",assets/"interactions.js")
+    shutil.copyfile(ROOT/"lens.css",assets/"lens.css")
+    shutil.copyfile(ROOT/"lens.js",assets/"lens.js")
     for lang in ("en","ar"):
         for name,slug in ROUTES.items():
             path=dist/"v2"/("ar" if lang=="ar" else "")/slug/"index.html"
