@@ -122,6 +122,9 @@ for path, html in outputs.items():
 shutil.copyfile(r / 'PILOT_BRIEF.md', dist / 'downloads/paygod-pilot-brief.md')
 shutil.copyfile(r / 'demo' / 'trusted-issuer-demo.json', dist / 'downloads' / 'paygod-demo-trust-store.json')
 
-# V2 is preview-only: generated under /v2/ and never overwrites the live routes.
+# Build V2 editorial surfaces and promote its approved bilingual landing.
+# The original landing is preserved under /legacy/ and /ar/legacy/.
 from v2.site import build_v2
+from v2.primary import promote_primary_home
 build_v2(dist)
+promote_primary_home(dist, production)
