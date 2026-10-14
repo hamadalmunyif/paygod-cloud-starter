@@ -111,7 +111,7 @@ if production:
 (dist / 'robots.txt').write_text('User-agent: *\nDisallow: /verifier/\nDisallow: /downloads/\nSitemap: https://paygod.net/sitemap.xml\n' if production else 'User-agent: *\nDisallow: /\n', encoding='utf-8')
 sitemap = dist / 'sitemap.xml'
 if production:
-    sitemap.write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://paygod.net/</loc></url><url><loc>https://paygod.net/explore/</loc></url><url><loc>https://paygod.net/ar/</loc></url><url><loc>https://paygod.net/use-cases/</loc></url><url><loc>https://paygod.net/ar/use-cases/</loc></url><url><loc>https://paygod.net/ar/home/</loc></url></urlset>', encoding='utf-8')
+    sitemap.write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://paygod.net/</loc></url><url><loc>https://paygod.net/explore/</loc></url><url><loc>https://paygod.net/ar/</loc></url><url><loc>https://paygod.net/use-cases/</loc></url><url><loc>https://paygod.net/ar/use-cases/</loc></url><url><loc>https://paygod.net/ar/home/</loc></url><url><loc>https://paygod.net/developers/</loc></url><url><loc>https://paygod.net/ar/developers/</loc></url></urlset>', encoding='utf-8')
 else:
     sitemap.unlink(missing_ok=True)
 for path, html in outputs.items():
@@ -122,6 +122,6 @@ for path, html in outputs.items():
 shutil.copyfile(r / 'PILOT_BRIEF.md', dist / 'downloads/paygod-pilot-brief.md')
 shutil.copyfile(r / 'demo' / 'trusted-issuer-demo.json', dist / 'downloads' / 'paygod-demo-trust-store.json')
 
-# V2 is preview-only: generated under /v2/ and never overwrites the live routes.
+# V2 builds source-linked preview routes under /v2/ and promotes its bilingual home onto the canonical home routes; the original homepage is archived under /v1/.
 from v2.site import build_v2
 build_v2(dist)

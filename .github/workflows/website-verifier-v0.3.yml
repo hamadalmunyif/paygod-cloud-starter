@@ -46,6 +46,10 @@ jobs:
         working-directory: website
         run: python3 tests/v2.py
 
+      - name: EIK bilingual developer entry and bounded claims
+        working-directory: website
+        run: python3 tests/eik_developers.py
+
       - name: V2 UI script syntax (interaction and Evidence Lens)
         working-directory: website
         run: |
@@ -105,6 +109,7 @@ jobs:
           python3 tests/home_language.py
           python3 tests/use_cases.py
           python3 tests/claims_alignment.py
+          python3 tests/eik_developers.py
 
       - name: Publish built preview artifact
         uses: actions/upload-artifact@v4

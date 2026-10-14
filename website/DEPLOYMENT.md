@@ -1,5 +1,7 @@
 # PayGod review deployment
 
+> **Superseding status, 2026-10-14:** The current production-target Vercel deployment is READY from `website/paygod-production@54e5405f34496bc4a08ade1046bdd6fcdf11fc54`, following Cloud PR #12 and its bilingual V2 homepage promotion. Associated domains include `paygod.net` and `www.paygod.net`; exact live HTTP content has not been confirmed through this review. The EIK developer pages proposed on PR #13 are preview changes, not yet promoted. Earlier release and draft notes below are historical and preserved.
+
 > **2026-10-10 ADDENDUM — CURRENT RELATION TO PRODUCTION:** The live `paygod.net` Vercel alias points to production deployment `dpl_3Jvzccdvx54euUTWBnyPDbFW7Q43` from `website/paygod-production@8532995` (READY). The bilingual Kernel-only website changes exist on draft PR #4 at `website/bilingual-proof-atlas-20261010`; they build as Vercel previews and are **not** promoted to the production domain by this work. Keep review-state and historical October 1/2 entries below for provenance; they are not current publication claims. Do not promote a preview before Kernel PR #102 is accepted and current site tests/content are reviewed.
 
 

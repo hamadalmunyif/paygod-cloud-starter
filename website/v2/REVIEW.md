@@ -1,4 +1,6 @@
-# PayGod V2 — gated design preview
+# PayGod V2 — historical preview review (retained)
+
+**Current status, 2026-10-14:** V2 was subsequently promoted to the canonical EN/AR homepage in Cloud PR #12. The draft/preview-only descriptions below are retained as historical review instructions, not the present publication state. The new EIK developer pages proposed on PR #13 remain subject to separate review, release and live-domain verification.
 
 Status: **design experiment only**. Source branch: `website/v2-gold-evidence-preview-20261011`. PR #10 is a **draft** against `website/paygod-production`. Never merge or promote this revision without explicit visual and technical approval.
 
