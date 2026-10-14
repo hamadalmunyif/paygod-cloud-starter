@@ -1,4 +1,4 @@
-# PayGod landing page — review candidate
+# PayGod.net — bilingual website source and verifier presentation
 
 > **Current website release baseline — 2026-10-11:** English `/` and Arabic `/ar/home/` homepages, EN/AR evidence atlas (`/explore/`, `/ar/`), EN/AR use cases (`/use-cases/`, `/ar/use-cases/`) and unchanged v0.4 verifier. The public implementation source is **only** [paygod-kernel-mvp](https://github.com/hamadalmunyif/paygod-kernel-mvp). The current [claims mapping](CLAIMS_REGISTER_2026-10-10.md) links to the Kernel's pinned [Verified Claims Register](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/docs/CLAIMS_REGISTER.md). Observatory is now **Private** research only, not a shipped feature or anonymously inspectable witness source. Production availability must be verified from the deployment state, not this README. Earlier draft-release notes and dated review files remain historical.
 
