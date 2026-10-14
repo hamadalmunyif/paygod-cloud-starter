@@ -77,7 +77,6 @@ def render(lang: str, production: bool, make_nav, logo, claims_url: str) -> str:
     canonical = "https://paygod.net" + uri
     seo = ('<meta name="robots" content="index,follow"><link rel="canonical" href="' +
            canonical + '">' if production else '<meta name="robots" content="noindex,nofollow">')
-    nav = make_nav(lang, "how", PAGES_NAV[lang]) if False else ""
     # The existing V2 navigation function is supplied as a callable and is used
     # unchanged except for the public developer link included in its nav.
     nav = make_nav(lang)
