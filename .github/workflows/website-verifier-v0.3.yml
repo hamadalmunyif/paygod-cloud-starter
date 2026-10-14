@@ -46,6 +46,10 @@ jobs:
         working-directory: website
         run: python3 tests/v2.py
 
+      - name: EIK bilingual developer entry and bounded claims
+        working-directory: website
+        run: python3 tests/eik_developers.py
+
       - name: V2 UI script syntax (interaction and Evidence Lens)
         working-directory: website
         run: |
