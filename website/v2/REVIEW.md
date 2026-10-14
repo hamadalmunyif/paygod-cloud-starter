@@ -1,4 +1,4 @@
-# PayGod V2 — gated design preview
+# PayGod V2 — historical preview review (retained)
 
 Status: **design experiment only**. Source branch: `website/v2-gold-evidence-preview-20261011`. PR #10 is a **draft** against `website/paygod-production`. Never merge or promote this revision without explicit visual and technical approval.
 
