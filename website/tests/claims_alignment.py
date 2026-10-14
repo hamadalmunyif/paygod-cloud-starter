@@ -14,6 +14,8 @@ ROUTES=[
     "ar/index.html",
     "use-cases/index.html",
     "ar/use-cases/index.html",
+    "developers/index.html",
+    "ar/developers/index.html",
 ]
 
 class Links(HTMLParser):
