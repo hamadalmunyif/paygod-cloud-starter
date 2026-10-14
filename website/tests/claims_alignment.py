@@ -57,7 +57,7 @@ def main():
     assert "does not automatically enforce" in cases.lower()
     for route in ["verifier/index.html","downloads/paygod-verifier.html"]:
         assert (DIST/route).is_file(),route
-    print("PASS: six editorial surfaces source-bound; verifier unaffected")
+    print("PASS: eight editorial surfaces source-bound; verifier unaffected")
 
 if __name__=="__main__":
     main()
