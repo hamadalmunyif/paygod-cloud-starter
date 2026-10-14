@@ -79,7 +79,7 @@ The example pack digest is a synthetic identifier, not a published/verified exec
 
 ## Architecture and deployment
 
-Deliverables: self-contained landing page, recipient verifier and offline verifier, plus a pilot brief, all under `dist/`. No Vinext/React runtime is required. A temporary internal preview shell used during review is intentionally excluded from this branch. Keep the static source separate from kernel semantics. No live APIs, CNAME files or secrets are included. `vercel.json` records the review build configuration and skips builds outside Vercel's Preview environment.
+Deliverables: self-contained landing page, recipient verifier and offline verifier, plus a pilot brief, all under `dist/`. No Vinext/React runtime is required. A temporary internal preview shell used during review is intentionally excluded from this branch. Keep the static source separate from kernel semantics. No live Kernel execution API, CNAME files or secrets are included. `vercel.json` permits previews and a restricted production build for the exact `website/paygod-production` branch; repository content or a READY deployment alone does not establish live domain response.
 
 Hosting path: GitHub source → static build → separate Vercel review project; retain GoDaddy registration and existing DNS provider. The owner authorized a separate preview. Production deployment and domain changes remain subject to final review. Exact DNS values must be obtained from the chosen hosting project's domain configuration and compared to the existing DNS records before any write. `REVIEW_AR.md` is the original September 28 review; `DEPLOYMENT.md` records subsequent setup.
 
