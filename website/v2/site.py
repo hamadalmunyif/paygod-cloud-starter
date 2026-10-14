@@ -44,6 +44,9 @@ def escape_str(s): return escape(str(s))
 def make_nav(lang, current, t):
     labels=t["nav"]; keys=list(ROUTES.keys())
     anchors="".join(f'<a class="{"selected" if current==k else ""}" href="{url(lang,k)}">{escape_str(label)}</a>' for k,label in zip(keys,labels))
+    anchors += ('<a class="' + ('selected' if current == 'developers' else '') +
+                '" href="' + ('/ar/developers/' if lang == 'ar' else '/developers/') +
+                '">' + ('للمطورين' if lang == 'ar' else 'Developers') + '</a>')
     swap="ar" if lang=="en" else "en"
     return f'<header class="site-header"><div class="header-inner"><a class="brand" href="{url(lang,"home")}" aria-label="PayGod home">{logo()}<span>PayGod</span></a><nav aria-label="{"التنقل الرئيسي" if lang=="ar" else "Main navigation"}">{anchors}</nav><div class="header-tools"><a class="lang-switch" lang="{swap}" hreflang="{swap}" href="{url(swap,current)}">{t["language"]}</a><a class="header-cta" href="/verifier/">{escape_str(t["nav"][4])}<span aria-hidden="true"> ↗</span></a></div></div></header>'
 def stage_cards(lang,t):
@@ -80,6 +83,10 @@ def build_page(lang,which):
     body={"home":hero,"how":how_page,"cases":cases_page,"atlas":atlas_page,"verifier":verifier_page}[which](lang,t)
     if which == "home":
         body = body.replace('<section class="section-block">', render_journey(lang) + render_lens(lang) + '<section class="section-block">', 1)
+        eik_link = '/ar/developers/' if lang == 'ar' else '/developers/'
+        eik_title = 'ابنِ Pack خاصًا بك — دليل EIK للمطورين والوكلاء' if lang == 'ar' else 'Build your own Pack — EIK for developers and agents'
+        eik_limit = 'تكامل مرجعي اصطناعي؛ دون ماسح حي أو تفويض نشر.' if lang == 'ar' else 'Synthetic reference only; no live scanner or deployment authorization.'
+        body += '<section class="section-block"><div class="callout"><span>' + escape_str(eik_limit) + '</span><a href="' + eik_link + '">' + escape_str(eik_title) + ' ↗</a></div></section>'
     elif which == "how":
         body += render_journey(lang)
     elif which == "atlas":
@@ -150,8 +157,22 @@ def build_v2(dist):
             path.write_text(markup,encoding="utf-8")
             print("Built V2 "+str(path.relative_to(dist))+" ("+str(len(markup.encode()))+" bytes)")
 
-    # Preserve old homepages and promote V2 without touching verifier, atlas or use-case outputs.
+    # Produce standalone, source-linked bilingual developer guidance from the
+    # same V2 design system. This is an editorial route, not a hosted EIK SDK.
+    from v2.developers import render as render_developer
     production = os.environ.get("VERCEL_ENV") == "production"
+    for language in ("en", "ar"):
+        output = dist / ("ar/developers/index.html" if language == "ar" else "developers/index.html")
+        output.parent.mkdir(parents=True, exist_ok=True)
+        markup = render_developer(
+            language, production,
+            lambda loc: make_nav(loc, "developers", COPY[loc]),
+            logo, CLAIMS,
+        )
+        output.write_text(markup, encoding="utf-8")
+        print("Built EIK developer guide " + str(output.relative_to(dist)))
+
+    # Preserve old homepages and promote V2 without touching verifier, atlas or use-case outputs.
     for lang, live, archive in (
         ("en", "index.html", "v1/index.html"),
         ("ar", "ar/home/index.html", "v1/ar/home/index.html"),
