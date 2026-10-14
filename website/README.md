@@ -2,6 +2,8 @@
 
 > **Current website release baseline — 2026-10-11:** English `/` and Arabic `/ar/home/` homepages, EN/AR evidence atlas (`/explore/`, `/ar/`), EN/AR use cases (`/use-cases/`, `/ar/use-cases/`) and unchanged v0.4 verifier. The public implementation source is **only** [paygod-kernel-mvp](https://github.com/hamadalmunyif/paygod-kernel-mvp). The current [claims mapping](CLAIMS_REGISTER_2026-10-10.md) links to the Kernel's pinned [Verified Claims Register](https://github.com/hamadalmunyif/paygod-kernel-mvp/blob/main/docs/CLAIMS_REGISTER.md). Observatory is now **Private** research only, not a shipped feature or anonymously inspectable witness source. Production availability must be verified from the deployment state, not this README. Earlier draft-release notes and dated review files remain historical.
 
+> **2026-10-14 developer-entry update (branch-scoped until release):** Canonical EN `/developers/` and AR `/ar/developers/` routes are generated from the V2 design system. They link **only** to the public, merged Kernel EIK guide, AGENTS.md, synthetic GitHub Actions reference and dated limitations. They do not perform live Pack runs, authenticate scanners, release deployments or expose the private Observatory. The updated production domain has **not** been observed merely by editing this branch; check the exact deployment commit, route responses, locale/SEO and verifier after the protected release. See [EIK release checklist](EIK_SITE_RELEASE_2026-10-14.md).
+
 A static, bilingual, infrastructure-focused landing with a local **synthetic evidence verification** demonstration. Separate producer/recipient workspaces demonstrate transferred bundle integrity within the documented verifier boundary.
 
 ## Run
