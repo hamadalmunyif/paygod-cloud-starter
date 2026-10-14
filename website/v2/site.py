@@ -48,7 +48,8 @@ def make_nav(lang, current, t):
                 '" href="' + ('/ar/developers/' if lang == 'ar' else '/developers/') +
                 '">' + ('للمطورين' if lang == 'ar' else 'Developers') + '</a>')
     swap="ar" if lang=="en" else "en"
-    return f'<header class="site-header"><div class="header-inner"><a class="brand" href="{url(lang,"home")}" aria-label="PayGod home">{logo()}<span>PayGod</span></a><nav aria-label="{"التنقل الرئيسي" if lang=="ar" else "Main navigation"}">{anchors}</nav><div class="header-tools"><a class="lang-switch" lang="{swap}" hreflang="{swap}" href="{url(swap,current)}">{t["language"]}</a><a class="header-cta" href="/verifier/">{escape_str(t["nav"][4])}<span aria-hidden="true"> ↗</span></a></div></div></header>'
+    swap_link = ("/ar/developers/" if lang == "en" else "/developers/") if current == "developers" else url(swap, current)
+    return f'<header class="site-header"><div class="header-inner"><a class="brand" href="{url(lang,"home")}" aria-label="PayGod home">{logo()}<span>PayGod</span></a><nav aria-label="{"التنقل الرئيسي" if lang=="ar" else "Main navigation"}">{anchors}</nav><div class="header-tools"><a class="lang-switch" lang="{swap}" hreflang="{swap}" href="{swap_link}">{t["language"]}</a><a class="header-cta" href="/verifier/">{escape_str(t["nav"][4])}<span aria-hidden="true"> ↗</span></a></div></div></header>'
 def stage_cards(lang,t):
     dest=[url(lang,"atlas"),url(lang,"atlas"),KERNEL+"/blob/main/packs/core/critical-cve-blocker/pack.yaml",url(lang,"how"),url(lang,"verifier"),"/verifier/"]
     cards=[]
