@@ -1,4 +1,4 @@
-"""Preview-only PayGod V2. Editorial skin; no verifier or Kernel logic lives here."""
+"""PayGod bilingual V2 editorial source: canonical home + V2 routes; no verifier or Kernel logic lives here."""
 from pathlib import Path
 from html import escape
 import shutil
