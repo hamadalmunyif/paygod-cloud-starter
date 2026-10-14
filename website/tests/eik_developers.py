@@ -58,7 +58,7 @@ def main():
         assert all(link in check.links for link in REQUIRED), (lang, "source/claims links missing")
         assert "paygod-workflow-observatory" not in html
         assert ("synthetic" in html.lower() if lang == "en" else "اصطناعي" in html)
-        assert ("deploy" in html.lower() if lang == "en" else "النشر" in html)
+        assert ("deployment" in html.lower() if lang == "en" else "تفويض" in html)
         assert check.alternates["en"] == "https://paygod.net/developers/"
         assert check.alternates["ar"] == "https://paygod.net/ar/developers/"
         assert "/v2/assets/style.css" in html
