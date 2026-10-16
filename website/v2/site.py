@@ -67,7 +67,7 @@ def stage_cards(lang,t):
 def hero(lang,t):
     features="".join(f'<article class="value-card"><span class="value-index">{i+1:02d}</span><h3>{escape_str(name)}</h3><p>{escape_str(desc)}</p></article>' for i,(name,desc) in enumerate(t["features"]))
     cards="".join(f'<a class="case-teaser" href="{url(lang,"cases")}#{code}"><span class="case-overline">{escape_str(k)}</span><h3>{escape_str(name)}</h3><p>{escape_str(desc)}</p><span class="case-open">{escape_str(t["open"])} ↗</span></a>' for k,name,desc,code in t["cases"])
-    return f'''<section class="hero-shell"><div class="hero-copy"><p class="eyebrow"><span class="tiny-gold"></span>{escape_str(t["eyebrow"])}</p><div class="hero-brand">{logo()}<span>PayGod</span></div><h1>{escape_str(t["hero1"])}<br><span>{escape_str(t["hero2"])}</span></h1><p class="hero-desc">{escape_str(t["herodesc"])}</p><div class="actions"><a class="btn btn-primary" href="{url(lang,"how")}">{escape_str(t["herocta"])} <span>↗</span></a><a class="btn btn-ghost" href="/verifier/">{escape_str(t["herocta2"])} <span>↗</span></a></div><div class="hero-pills"><span>{escape_str(t["pill1"])}</span><span>{escape_str(t["pill2"])}</span><span>{escape_str(t["pill3"])}</span></div></div>{stage_cards(lang,t)}</section><section class="section-block"><div class="section-heading"><p class="eyebrow">BOUNDARY PRINCIPLES</p><h2>{escape_str(t["featuretitle"])}</h2></div><div class="value-grid">{features}</div></section><section class="section-block"><div class="section-heading section-heading-row"><div><p class="eyebrow">IMPLEMENTED FIXTURES / NOT DEPLOYED INTEGRATIONS</p><h2>{escape_str(t["casehead"])}</h2><p>{escape_str(t["casetip"])}</p></div><a class="text-action" href="{url(lang,"cases")}">{escape_str(t["open"])} ↗</a></div><div class="teaser-grid">{cards}</div></section>'''
+    return f'''<section class="hero-shell"><div class="hero-copy"><p class="eyebrow"><span class="tiny-gold"></span>{escape_str(t["eyebrow"])}</p><div class="hero-brand">{logo()}<span>PayGod</span></div><h1>{escape_str(t["hero1"])}<br><span>{escape_str(t["hero2"])}</span></h1><p class="hero-desc">{escape_str(t["herodesc"])}</p><div class="actions"><a class="btn btn-primary" href="{url(lang,"how")}">{escape_str(t["herocta"])} <span>↗</span></a><a class="btn btn-ghost" href="/verifier/">{escape_str(t["herocta2"])} <span>↗</span></a></div><div class="hero-pills"><span>{escape_str(t["pill1"])}</span><span>{escape_str(t["pill2"])}</span><span>{escape_str(t["pill3"])}</span></div><a class="hero-lab-entry" href="{"/ar/lab/" if lang=="ar" else "/lab/"}">{escape_str("جرّب مختبر الأدلة: سياسة CVE والتحقق من العبث" if lang=="ar" else "Try Evidence Lab: CVE policy + tamper verification")} <span aria-hidden="true">↗</span></a></div>{stage_cards(lang,t)}</section><section class="section-block"><div class="section-heading"><p class="eyebrow">BOUNDARY PRINCIPLES</p><h2>{escape_str(t["featuretitle"])}</h2></div><div class="value-grid">{features}</div></section><section class="section-block"><div class="section-heading section-heading-row"><div><p class="eyebrow">IMPLEMENTED FIXTURES / NOT DEPLOYED INTEGRATIONS</p><h2>{escape_str(t["casehead"])}</h2><p>{escape_str(t["casetip"])}</p></div><a class="text-action" href="{url(lang,"cases")}">{escape_str(t["open"])} ↗</a></div><div class="teaser-grid">{cards}</div></section>'''
 def how_page(lang,t):
     content="".join(f'<article class="step-panel" id="step-{i+1}"><span class="step-no">{escape_str(code)}</span><div><h2>{escape_str(name)}</h2><p>{escape_str(desc)}</p></div><span class="step-decoration" aria-hidden="true">↗</span></article>' for i,(code,name,desc) in enumerate(t["steps"]))
     return f'<section class="subhero"><p class="eyebrow">{escape_str(t["stagelabel"])}</p><h1>{escape_str(t["stagehead"])}</h1><p>{escape_str(t["herodesc"])}</p></section><div class="steps-layout">{content}</div><div class="callout"><span>{escape_str(t["readclaims"])}</span>{ext(CLAIMS,t["readclaims"])}</div>'
@@ -94,11 +94,19 @@ def build_page(lang,which):
         eik_link = '/ar/developers/' if lang == 'ar' else '/developers/'
         eik_title = 'ابنِ Pack خاصًا بك — دليل EIK للمطورين والوكلاء' if lang == 'ar' else 'Build your own Pack — EIK for developers and agents'
         eik_limit = 'تكامل مرجعي اصطناعي؛ دون ماسح حي أو تفويض نشر.' if lang == 'ar' else 'Synthetic reference only; no live scanner or deployment authorization.'
-        body += '<section class="section-block"><div class="callout"><span>' + escape_str(eik_limit) + '</span><a href="' + eik_link + '">' + escape_str(eik_title) + ' ↗</a></div></section>'
         lab_link = '/ar/lab/' if lang == 'ar' else '/lab/'
         lab_title = 'جرّب مختبر الأدلة التفاعلي' if lang == 'ar' else 'Try the interactive Evidence Lab'
         lab_limit = 'سياسة CVE تعليمية وتحقيق سلامة فعلي لحزمة اصطناعية.' if lang == 'ar' else 'Illustrative CVE policy + real integrity checks on a synthetic bundle.'
-        body += '<section class="section-block"><div class="callout"><span>' + escape_str(lab_limit) + '</span><a href="' + lab_link + '">' + escape_str(lab_title) + ' ↗</a></div></section>'
+        label = 'مسارات المشاركة والتجربة' if lang == 'ar' else 'Explore PayGod'
+        body += (
+            '<section class="section-block entry-strip" aria-label="' + escape_str(label) + '">'
+            '<div class="entry-grid">'
+            '<div class="entry-item"><span class="eyebrow">DEVELOPERS / EIK</span><p>' + escape_str(eik_limit) +
+            '</p><a href="' + eik_link + '">' + escape_str(eik_title) + ' ↗</a></div>'
+            '<div class="entry-item entry-item-lab"><span class="eyebrow">EVIDENCE LAB</span><p>' + escape_str(lab_limit) +
+            '</p><a href="' + lab_link + '">' + escape_str(lab_title) + ' ↗</a></div>'
+            '</div></section>'
+        )
     elif which == "how":
         body += render_journey(lang)
     elif which == "atlas":
