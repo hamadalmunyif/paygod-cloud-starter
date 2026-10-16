@@ -2,6 +2,7 @@
 from html import escape
 from pathlib import Path
 import shutil
+import json
 
 HERE = Path(__file__).parent
 KERNEL = "https://github.com/hamadalmunyif/paygod-kernel-mvp"
@@ -70,6 +71,11 @@ def render(lang, production, nav):
     seo = ('<meta name="robots" content="index,follow"><link rel="canonical" href="https://paygod.net' + uri + '">'
            if production else '<meta name="robots" content="noindex,nofollow">')
     def e(value): return escape(value, quote=True)
+    labels_json = json.dumps(
+        {key: t[key] for key in ("withheld", "withheldwhy", "deny", "denywhy", "flag", "flagwhy",
+                                "allow", "allowwhy", "checking", "verified", "failed", "failure")},
+        ensure_ascii=False,
+    ).replace("<", "\\u003c")
     return f'''<!doctype html>
 <html lang="{lang}" dir="{direction}"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -115,7 +121,7 @@ def render(lang, production, nav):
 <a href="{KERNEL}/blob/main/docs/CLAIMS_REGISTER.md" target="_blank" rel="noopener noreferrer">{e(t["docs"])} ↗</a></div></section>
 <section class="lab-source"><h2>{e(t["source"])}</h2><p>{e(t["sourceText"])}</p></section>
 </main>
-<script type="application/json" id="lab-labels">{__import__("json").dumps({k:t[k] for k in ("withheld","withheldwhy","deny","denywhy","flag","flagwhy","allow","allowwhy","checking","verified","failed","failure")},ensure_ascii=False).replace("<","\\\\u003c")}</script>
+<script type="application/json" id="lab-labels">{labels_json}</script>
 <script type="module" src="/lab/assets/lab.js"></script></body></html>'''
 
 def build(dist, production, nav):
