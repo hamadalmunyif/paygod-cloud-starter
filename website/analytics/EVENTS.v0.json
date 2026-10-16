@@ -1,0 +1,40 @@
+{
+  "schema_version": "0.1-proposed",
+  "status": "not_instrumented",
+  "default_capture_enabled": false,
+  "session_replay_enabled": false,
+  "autocapture_enabled": false,
+  "person_identification_enabled": false,
+  "allowed_properties": [
+    "route_id",
+    "page_locale",
+    "site_release",
+    "surface",
+    "challenge_kind",
+    "integrity_result",
+    "issuer_authenticity",
+    "target_kind",
+    "deployment_env"
+  ],
+  "events": [
+    {"name": "pg_developer_entry_viewed", "surface": "developers", "status": "proposed"},
+    {"name": "pg_eik_guide_opened", "surface": "developers", "status": "proposed"},
+    {"name": "pg_pack_example_opened", "surface": "use_cases", "status": "proposed"},
+    {"name": "pg_lab_challenge_started", "surface": "lab", "status": "proposed"},
+    {"name": "pg_lab_verification_finished", "surface": "lab", "status": "proposed"},
+    {"name": "pg_verifier_downloaded", "surface": "verifier", "status": "proposed"},
+    {"name": "pg_integration_interest_submitted", "surface": "feedback", "status": "reserved_until_form_and_consent_exist"}
+  ],
+  "forbidden_data": [
+    "evidence_bundle_contents",
+    "receipt_or_bundle_digest",
+    "issuer_secret_or_key_identifier",
+    "raw_scanner_findings",
+    "personal_identifiers",
+    "industrial_measurements",
+    "tool_arguments_or_prompts",
+    "full_url_or_querystring",
+    "user_uploaded_filename"
+  ],
+  "event_claim_ceiling": "website_interaction_only_not_evidence_of_kernel_or_user_identity"
+}
