@@ -67,6 +67,12 @@ def audit(path, lang, direction, peer, canonical, verifier):
     assert ("<main class=\"" + ("ar" if lang == "en" else "en") + "\"") not in html
     assert "paygod-workflow-observatory" not in html and "agent-failure-taxonomy" not in html
     assert "SYNTHETIC TESTS" in html
+    # Known v1 Trivy Status=fixed false-allow caveat must be visible in both locales.
+    assert KERNEL + "/issues/116" in p.links, "missing reader-facing v1 safety issue"
+    if lang == "en":
+        assert "SECURITY LIMITATION (v1)" in html and "fix</em>, not necessarily installed" in html
+    else:
+        assert "تحذير أمني (الإصدار v1)" in html and "الإصلاح متاح" in html
     assert "WITHHELD" in html and "NOT RUN" in html
     for folder in ("ghg-scope-1-2-guard", "critical-cve-blocker", "iso27001-policy-review"):
         for fixture in ("pack.yaml", "tests/cases.yaml"):
