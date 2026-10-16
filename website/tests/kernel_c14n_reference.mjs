@@ -4,11 +4,17 @@
 //        main@d347213848f03a6d25554631d0183a682879b11b
 //        spec/test-vectors/canonical-json.json
 import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import assert from "node:assert/strict";
 import { canonical, hash, strictJsonParse } from "../src/verifier.mjs";
 
 const source = new URL("./fixtures/kernel-c14n-reference-20261014.json", import.meta.url);
-const vectors = JSON.parse(readFileSync(source, "utf8"));
+const rawCorpus = readFileSync(source);
+// Pin exact Git blob bytes from Kernel main@d347213: spec/test-vectors/canonical-json.json.
+const gitBlob = createHash("sha1").update(`blob ${rawCorpus.byteLength}\0`).update(rawCorpus).digest("hex");
+assert.equal(gitBlob, "3880d3a45b417ae95cae9a7b8cebb1c8c47722d8",
+  "the frozen Kernel source corpus was silently changed");
+const vectors = JSON.parse(rawCorpus.toString("utf8"));
 
 assert.equal(vectors.length, 11, "expected the exact pinned canonical corpus length");
 let accepted = 0;
