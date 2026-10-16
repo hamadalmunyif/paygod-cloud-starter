@@ -80,6 +80,10 @@ jobs:
         working-directory: website
         run: node tests/kernel_c14n_reference.mjs
 
+      - name: Privacy-first telemetry plan contract (not instrumented)
+        working-directory: website
+        run: python3 tests/telemetry_contract.py
+
       - name: Browser verifier v0.4 regression suite
         working-directory: website
         run: node tests/verify.mjs
