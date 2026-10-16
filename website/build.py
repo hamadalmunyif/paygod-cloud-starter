@@ -111,7 +111,7 @@ if production:
 (dist / 'robots.txt').write_text('User-agent: *\nDisallow: /verifier/\nDisallow: /downloads/\nSitemap: https://paygod.net/sitemap.xml\n' if production else 'User-agent: *\nDisallow: /\n', encoding='utf-8')
 sitemap = dist / 'sitemap.xml'
 if production:
-    sitemap.write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://paygod.net/</loc></url><url><loc>https://paygod.net/explore/</loc></url><url><loc>https://paygod.net/ar/</loc></url><url><loc>https://paygod.net/use-cases/</loc></url><url><loc>https://paygod.net/ar/use-cases/</loc></url><url><loc>https://paygod.net/ar/home/</loc></url><url><loc>https://paygod.net/developers/</loc></url><url><loc>https://paygod.net/ar/developers/</loc></url></urlset>', encoding='utf-8')
+    sitemap.write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://paygod.net/</loc></url><url><loc>https://paygod.net/explore/</loc></url><url><loc>https://paygod.net/ar/</loc></url><url><loc>https://paygod.net/use-cases/</loc></url><url><loc>https://paygod.net/ar/use-cases/</loc></url><url><loc>https://paygod.net/ar/home/</loc></url><url><loc>https://paygod.net/developers/</loc></url><url><loc>https://paygod.net/ar/developers/</loc></url><url><loc>https://paygod.net/lab/</loc></url><url><loc>https://paygod.net/ar/lab/</loc></url></urlset>', encoding='utf-8')
 else:
     sitemap.unlink(missing_ok=True)
 for path, html in outputs.items():

@@ -50,6 +50,18 @@ jobs:
         working-directory: website
         run: python3 tests/eik_developers.py
 
+      - name: Bilingual Evidence Lab route, module provenance and SEO
+        working-directory: website
+        run: python3 tests/evidence_lab.py
+
+      - name: Evidence Lab clean and tampered v0.4 integrity witness
+        working-directory: website
+        run: node tests/evidence_lab.mjs
+
+      - name: Evidence Lab browser module syntax
+        working-directory: website
+        run: node --check v2/lab.js
+
       - name: V2 UI script syntax (interaction and Evidence Lens)
         working-directory: website
         run: |
@@ -110,6 +122,7 @@ jobs:
           python3 tests/use_cases.py
           python3 tests/claims_alignment.py
           python3 tests/eik_developers.py
+          python3 tests/evidence_lab.py
 
       - name: Publish built preview artifact
         uses: actions/upload-artifact@v4
