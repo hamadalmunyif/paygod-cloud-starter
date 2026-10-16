@@ -47,8 +47,15 @@ def make_nav(lang, current, t):
     anchors += ('<a class="' + ('selected' if current == 'developers' else '') +
                 '" href="' + ('/ar/developers/' if lang == 'ar' else '/developers/') +
                 '">' + ('للمطورين' if lang == 'ar' else 'Developers') + '</a>')
+    anchors += ('<a class="' + ('selected' if current == 'lab' else '') +
+                '" href="' + ('/ar/lab/' if lang == 'ar' else '/lab/') +
+                '">' + ('مختبر الأدلة' if lang == 'ar' else 'Evidence Lab') + '</a>')
     swap="ar" if lang=="en" else "en"
-    swap_link = ("/ar/developers/" if lang == "en" else "/developers/") if current == "developers" else url(swap, current)
+    swap_link = (
+        ("/ar/developers/" if lang == "en" else "/developers/") if current == "developers"
+        else ("/ar/lab/" if lang == "en" else "/lab/") if current == "lab"
+        else url(swap, current)
+    )
     return f'<header class="site-header"><div class="header-inner"><a class="brand" href="{url(lang,"home")}" aria-label="PayGod home">{logo()}<span>PayGod</span></a><nav aria-label="{"التنقل الرئيسي" if lang=="ar" else "Main navigation"}">{anchors}</nav><div class="header-tools"><a class="lang-switch" lang="{swap}" hreflang="{swap}" href="{swap_link}">{t["language"]}</a><a class="header-cta" href="/verifier/">{escape_str(t["nav"][4])}<span aria-hidden="true"> ↗</span></a></div></div></header>'
 def stage_cards(lang,t):
     dest=[url(lang,"atlas"),url(lang,"atlas"),KERNEL+"/blob/main/packs/core/critical-cve-blocker/pack.yaml",url(lang,"how"),url(lang,"verifier"),"/verifier/"]
@@ -88,6 +95,10 @@ def build_page(lang,which):
         eik_title = 'ابنِ Pack خاصًا بك — دليل EIK للمطورين والوكلاء' if lang == 'ar' else 'Build your own Pack — EIK for developers and agents'
         eik_limit = 'تكامل مرجعي اصطناعي؛ دون ماسح حي أو تفويض نشر.' if lang == 'ar' else 'Synthetic reference only; no live scanner or deployment authorization.'
         body += '<section class="section-block"><div class="callout"><span>' + escape_str(eik_limit) + '</span><a href="' + eik_link + '">' + escape_str(eik_title) + ' ↗</a></div></section>'
+        lab_link = '/ar/lab/' if lang == 'ar' else '/lab/'
+        lab_title = 'جرّب مختبر الأدلة التفاعلي' if lang == 'ar' else 'Try the interactive Evidence Lab'
+        lab_limit = 'سياسة CVE تعليمية وتحقيق سلامة فعلي لحزمة اصطناعية.' if lang == 'ar' else 'Illustrative CVE policy + real integrity checks on a synthetic bundle.'
+        body += '<section class="section-block"><div class="callout"><span>' + escape_str(lab_limit) + '</span><a href="' + lab_link + '">' + escape_str(lab_title) + ' ↗</a></div></section>'
     elif which == "how":
         body += render_journey(lang)
     elif which == "atlas":
@@ -172,6 +183,10 @@ def build_v2(dist):
         )
         output.write_text(markup, encoding="utf-8")
         print("Built EIK developer guide " + str(output.relative_to(dist)))
+
+    # Educational evidence-lab pages reuse the unmodified browser verifier as a static module.
+    from v2.evidence_lab import build as build_lab
+    build_lab(dist, production, make_nav)
 
     # Preserve old homepages and promote V2 without touching verifier, atlas or use-case outputs.
     for lang, live, archive in (
