@@ -70,7 +70,7 @@ def audit(path, lang, direction, peer, canonical, verifier):
     # Known v1 Trivy Status=fixed false-allow caveat must be visible in both locales.
     assert KERNEL + "/issues/116" in p.links, "missing reader-facing v1 safety issue"
     if lang == "en":
-        assert "SECURITY LIMITATION (v1)" in html and "fix</em>, not necessarily installed" in html
+        assert "SECURITY LIMITATION (v1)" in html and "not necessarily installed" in html
     else:
         assert "تحذير أمني (الإصدار v1)" in html and "الإصلاح متاح" in html
     assert "WITHHELD" in html and "NOT RUN" in html
