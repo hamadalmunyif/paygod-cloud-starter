@@ -186,7 +186,7 @@ def build_v2(dist):
 
     # Educational evidence-lab pages reuse the unmodified browser verifier as a static module.
     from v2.evidence_lab import build as build_lab
-    build_lab(dist, production, make_nav)
+    build_lab(dist, production, lambda loc, current: make_nav(loc, current, COPY[loc]))
 
     # Preserve old homepages and promote V2 without touching verifier, atlas or use-case outputs.
     for lang, live, archive in (
