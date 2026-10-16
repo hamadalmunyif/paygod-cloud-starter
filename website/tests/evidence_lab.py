@@ -54,6 +54,9 @@ def main():
             assert p.robots == "noindex,nofollow" and not p.canonical
         main_home = (DIST / home).read_text(encoding="utf-8")
         assert 'href="' + ("/ar/lab/" if lang == "ar" else "/lab/") + '"' in main_home
+        assert 'class="hero-lab-entry"' in main_home, "Lab must be discoverable near the homepage hero"
+        assert 'class="section-block entry-strip"' in main_home, "Keep developer and lab entries compact"
+        assert main_home.count('class="entry-item') == 2, "Exactly two compact entry cards"
         assert p.alternates["ar" if lang == "en" else "en"] in (page or "")
     for file in ("verifier.mjs", "sha256.mjs"):
         assert (DIST / "lab/assets" / file).read_bytes() == (ROOT / "src" / file).read_bytes(), file
