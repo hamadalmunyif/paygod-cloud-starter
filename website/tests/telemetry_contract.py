@@ -24,12 +24,21 @@ assert all(e["status"] in ("proposed", "reserved_until_form_and_consent_exist")
            for e in events)
 assert len(contract["forbidden_data"]) > 0
 
-# This docs-only proposal must not quietly inject an analytics client into
-# the deployed static JS. A later separately reviewed PR must change this gate.
-for location in ((root / "src"), (root / "v2")):
-    for path in location.glob("*.js"):
-        text = path.read_text(encoding="utf-8").lower()
-        assert "posthog.init(" not in text, path
-        assert "posthog.capture(" not in text, path
+# A disabled-by-default *design* cannot smuggle collection scripts into either
+# editable sources or generated browser output. This is a bounded static gate,
+# not a substitute for reviewing CSP, remote scripts, consent or network traffic.
+for location in (root / "src", root / "v2", root / "dist"):
+    assert location.is_dir(), f"expected website source/build directory: {location}"
+    checked = 0
+    for path in location.rglob("*"):
+        if not path.is_file() or path.suffix not in {".js", ".mjs", ".html"}:
+            continue
+        checked += 1
+        content = path.read_text(encoding="utf-8").lower()
+        for needle in ("posthog.init(", "posthog.capture(", "posthog-js",
+                       "app.posthog.com", "eu.i.posthog.com", "us.i.posthog.com",
+                       "phc_"):
+            assert needle not in content, (path, needle)
+    assert checked > 0, f"no browser files checked at {location}"
 
-print("PASS: proposed taxonomy, privacy defaults, no live PostHog capture in website JS")
+print("PASS: proposed taxonomy; no known PostHog SDK/capture in recursive source and built browser assets")
