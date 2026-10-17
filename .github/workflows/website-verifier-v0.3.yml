@@ -76,9 +76,29 @@ jobs:
         working-directory: website
         run: python3 tests/claims_alignment.py
 
+      - name: Frozen corpus checkout attributes are LF-pinned
+        shell: bash
+        run: |
+          for p in \
+            website/tests/fixtures/kernel-c14n-reference-20261014.json \
+            website/tests/fixtures/kernel-ledger-reference-20261017.json \
+            website/tests/fixtures/kernel-transport-parity-v1.json
+          do
+            attr="$(git check-attr eol -- "$p")"
+            echo "$attr"
+            case "$attr" in
+              *"eol: lf") ;;
+              *) echo "ERROR: $p is not pinned to eol=lf" >&2; exit 1 ;;
+            esac
+          done
+
       - name: Kernel canonical corpus parity (11 shared vectors, scoped)
         working-directory: website
         run: node tests/kernel_c14n_reference.mjs
+
+      - name: Kernel ledger corpus parity (2 shared vectors, scoped)
+        working-directory: website
+        run: node tests/kernel_ledger_reference.mjs
 
       - name: Privacy-first telemetry plan contract (not instrumented)
         working-directory: website
