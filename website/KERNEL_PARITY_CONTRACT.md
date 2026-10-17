@@ -93,7 +93,7 @@ The website currently has three promoted shared-corpus witnesses:
 
 The transport corpus contains ten shared cases covering clean/no-trust, trusted issuer, wrong trust key, payload tamper, unexpected member, receipt substitution, missing ledger, wrong external receipt commitment, coherent rewrite without a pin, and the same rewrite pinned to the original receipt.
 
-At website PR #22 head `576c96a5338938a785bdada19be47c4e9f509e63`, Website Verifier v0.4 run `39064262758` completed SUCCESS with:
+At website PR #22 head `507e2db9592e8dca1a01bff3bd396dd82ea1ffde`, Website Verifier v0.4 completed SUCCESS after the Python fixture materialization was hardened to exact UTF-8 byte writes (no corpus or expected outcome change), with:
 - canonical corpus parity;
 - ledger corpus parity;
 - browser transport corpus parity;
