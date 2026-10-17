@@ -2,7 +2,7 @@
 // DO NOT claim browser v0.5.1 full verifier parity from these 11 JSON cases.
 // Source: hamadalmunyif/paygod-kernel-mvp
 //        corpus blob 3880d3a45b417ae95cae9a7b8cebb1c8c47722d8
-//        observed unchanged at main@203bee9ac5668975bf5248c57f922c214567d415
+//        observed unchanged at main@8e1728dc8467964abef0e32967fea6f1bdf001f4
 //        spec/test-vectors/canonical-json.json
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
