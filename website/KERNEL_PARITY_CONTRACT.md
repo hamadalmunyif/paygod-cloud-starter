@@ -14,7 +14,7 @@ The canonical Kernel repository remains the source of protocol and decision sema
 Observed canonical Kernel source:
 
 - repository: `hamadalmunyif/paygod-kernel-mvp`
-- observed compatible `main`: `203bee9ac5668975bf5248c57f922c214567d415`
+- observed compatible `main`: `8e1728dc8467964abef0e32967fea6f1bdf001f4`
 - source corpus: `spec/test-vectors/canonical-json.json`
 - exact source Git blob: `3880d3a45b417ae95cae9a7b8cebb1c8c47722d8`
 
@@ -93,13 +93,19 @@ The website currently has three promoted shared-corpus witnesses:
 
 The transport corpus contains ten shared cases covering clean/no-trust, trusted issuer, wrong trust key, payload tamper, unexpected member, receipt substitution, missing ledger, wrong external receipt commitment, coherent rewrite without a pin, and the same rewrite pinned to the original receipt.
 
-At website PR #22 head `507e2db9592e8dca1a01bff3bd396dd82ea1ffde`, Website Verifier v0.4 completed SUCCESS after the Python fixture materialization was hardened to exact UTF-8 byte writes (no corpus or expected outcome change), with:
-- canonical corpus parity;
-- ledger corpus parity;
-- browser transport corpus parity;
-- vendored Python transport corpus parity;
-- privacy telemetry contract still not instrumented;
-- existing browser and standalone Python regression suites.
+PR #22 was merged after exact-head Website Verifier and Codex review. The parity/runtime merge established production source SHA `684610b7138f849406679b8d862ce701cc13fe4b` before this documentation PR. At that SHA:
+- `website/paygod-production` pointed to the same SHA;
+- push-triggered Website Verifier run `39068220184` completed SUCCESS;
+- Vercel production deployment `dpl_FQjQhqBDEh9EJcPhKBk7Yovamqka` reported READY for the same Git SHA;
+- canonical corpus parity passed;
+- ledger corpus parity passed;
+- browser transport corpus parity passed;
+- vendored Python transport corpus parity passed;
+- LF checkout enforcement passed;
+- privacy telemetry contract remained not instrumented;
+- existing browser and standalone Python regression suites passed.
+
+This establishes exact-SHA source/CI/deployment correlation for that parity release. A live HTTP/browser smoke witness is still separate and was not established by these metadata/CI facts alone.
 
 This supports bounded statements such as:
 
@@ -119,9 +125,13 @@ A production claim should correlate:
 
 `exact merged GitHub source SHA → push-triggered exact-SHA CI → Vercel production deployment metadata for the same SHA → live smoke`.
 
-PR #19 proposes the post-merge push-triggered exact-SHA website verifier witness. After #19 is merged, website parity PRs must be merged in dependency order and rechecked against the updated production base. Vercel Preview readiness is useful pre-merge evidence but does not substitute for the final production-SHA correlation.
+PR #19 is merged and the post-merge push-triggered exact-SHA verifier gate is active. PR #21 (ledger parity) and PR #22 (transport parity) were then merged in dependency order with fresh exact-head verification after each production-base change.
 
-This contract does not authorize production, configure administrative branch protection, or enable PostHog.
+The last parity/runtime release before this documentation PR correlated GitHub production source, push CI, and Vercel production metadata at SHA `684610b7138f849406679b8d862ce701cc13fe4b`. Live smoke remains a separate required witness.
+
+Merging this documentation PR will itself produce a new production SHA; therefore exact-SHA push CI and Vercel correlation must be checked again after this documentation-only merge before calling that new SHA release-correlated.
+
+The production branch is currently observed as administratively unprotected, so future bypass resistance remains a governance item separate from the technical evidence above. This contract does not enable PostHog or confer production/payment/release authority.
 
 ## Change discipline
 
