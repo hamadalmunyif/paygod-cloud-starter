@@ -8,13 +8,13 @@ on:
       - 'website/**'
       - '.github/workflows/website-verifier-v0.3.yml'
       - '.gitattributes'
-      - '.gitattributes'
   push:
     branches:
       - website/paygod-production
     paths:
       - 'website/**'
       - '.github/workflows/website-verifier-v0.3.yml'
+      - '.gitattributes'
   workflow_dispatch:
 
 permissions:
@@ -107,6 +107,14 @@ jobs:
       - name: Kernel ledger corpus parity (2 shared vectors, scoped)
         working-directory: website
         run: node tests/kernel_ledger_reference.mjs
+
+      - name: Kernel transport parity corpus — browser verifier (10 shared cases, scoped)
+        working-directory: website
+        run: node tests/kernel_transport_reference.mjs
+
+      - name: Kernel transport parity corpus — vendored Python verifier (10 shared cases, scoped)
+        working-directory: website
+        run: python3 tests/kernel_transport_reference.py
 
       - name: Privacy-first telemetry plan contract (not instrumented)
         working-directory: website
