@@ -42,6 +42,10 @@ jobs:
         working-directory: website
         run: python3 build.py
 
+      - name: Deployment source identity matches exact CI SHA
+        working-directory: website
+        run: python3 tests/deployment_source.py
+
       - name: Bilingual evidence atlas static checks
         working-directory: website
         run: python3 tests/atlas.py
