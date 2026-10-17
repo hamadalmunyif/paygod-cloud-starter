@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 import shutil
 import os
 import subprocess
@@ -125,3 +126,30 @@ shutil.copyfile(r / 'demo' / 'trusted-issuer-demo.json', dist / 'downloads' / 'p
 # V2 builds source-linked preview routes under /v2/ and promotes its bilingual home onto the canonical home routes; the original homepage is archived under /v1/.
 from v2.site import build_v2
 build_v2(dist)
+
+# Publish a bounded, non-secret source identity so release smoke can prove that
+# the live Vercel build corresponds to the exact Git SHA that triggered release CI.
+source_sha = os.environ.get("VERCEL_GIT_COMMIT_SHA") or os.environ.get("GITHUB_SHA") or "unknown"
+source_kind = (
+    "vercel:VERCEL_GIT_COMMIT_SHA"
+    if os.environ.get("VERCEL_GIT_COMMIT_SHA")
+    else "github:GITHUB_SHA"
+    if os.environ.get("GITHUB_SHA")
+    else "unknown"
+)
+meta_dir = dist / "meta"
+meta_dir.mkdir(parents=True, exist_ok=True)
+(meta_dir / "deployment-source.json").write_text(
+    json.dumps(
+        {
+            "profile": "paygod-deployment-source-v1",
+            "git_sha": source_sha,
+            "source": source_kind,
+        },
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    + "\n",
+    encoding="utf-8",
+)
+
