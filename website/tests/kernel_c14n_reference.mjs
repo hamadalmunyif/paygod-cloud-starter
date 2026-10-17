@@ -1,7 +1,8 @@
 // Bounded parity probe using the canonical Kernel's pinned test vectors.
 // DO NOT claim browser v0.5.1 full verifier parity from these 11 JSON cases.
 // Source: hamadalmunyif/paygod-kernel-mvp
-//        main@d347213848f03a6d25554631d0183a682879b11b
+//        corpus blob 3880d3a45b417ae95cae9a7b8cebb1c8c47722d8
+//        observed unchanged at main@203bee9ac5668975bf5248c57f922c214567d415
 //        spec/test-vectors/canonical-json.json
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
@@ -10,7 +11,8 @@ import { canonical, hash, strictJsonParse } from "../src/verifier.mjs";
 
 const source = new URL("./fixtures/kernel-c14n-reference-20261014.json", import.meta.url);
 const rawCorpus = readFileSync(source);
-// Pin exact Git blob bytes from Kernel main@d347213: spec/test-vectors/canonical-json.json.
+// Pin exact source corpus bytes by Git blob identity. The branch/commit above is
+// provenance; this blob is the exact shared test-corpus identity.
 const gitBlob = createHash("sha1").update(`blob ${rawCorpus.byteLength}\0`).update(rawCorpus).digest("hex");
 assert.equal(gitBlob, "3880d3a45b417ae95cae9a7b8cebb1c8c47722d8",
   "the frozen Kernel source corpus was silently changed");
