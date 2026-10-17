@@ -7,14 +7,11 @@ on:
     paths:
       - 'website/**'
       - '.github/workflows/website-verifier-v0.3.yml'
+      - '.github/workflows/production-live-smoke.yml'
       - '.gitattributes'
   push:
     branches:
       - website/paygod-production
-    paths:
-      - 'website/**'
-      - '.github/workflows/website-verifier-v0.3.yml'
-      - '.gitattributes'
   workflow_dispatch:
 
 permissions:
@@ -41,6 +38,10 @@ jobs:
       - name: Build website and regenerate signed fixture
         working-directory: website
         run: python3 build.py
+
+      - name: Deployment source identity matches exact CI SHA
+        working-directory: website
+        run: python3 tests/deployment_source.py
 
       - name: Bilingual evidence atlas static checks
         working-directory: website
