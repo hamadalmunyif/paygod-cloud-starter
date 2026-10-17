@@ -7,6 +7,12 @@ on:
     paths:
       - 'website/**'
       - '.github/workflows/website-verifier-v0.3.yml'
+  push:
+    branches:
+      - website/paygod-production
+    paths:
+      - 'website/**'
+      - '.github/workflows/website-verifier-v0.3.yml'
   workflow_dispatch:
 
 permissions:
@@ -151,6 +157,27 @@ jobs:
           python3 tests/claims_alignment.py
           python3 tests/eik_developers.py
           python3 tests/evidence_lab.py
+
+      - name: Record exact tested GitHub source identity
+        shell: bash
+        run: |
+          mkdir -p website/dist/meta
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          payload = {
+              "repository": os.environ["GITHUB_REPOSITORY"],
+              "ref": os.environ["GITHUB_REF"],
+              "sha": os.environ["GITHUB_SHA"],
+              "event": os.environ["GITHUB_EVENT_NAME"],
+              "workflow": os.environ["GITHUB_WORKFLOW"],
+          }
+          Path("website/dist/meta/github-source.json").write_text(
+              json.dumps(payload, sort_keys=True, separators=(",", ":")) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(payload, sort_keys=True))
+          PY
 
       - name: Publish built preview artifact
         uses: actions/upload-artifact@v4
