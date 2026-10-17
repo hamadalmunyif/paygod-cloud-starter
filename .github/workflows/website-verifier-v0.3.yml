@@ -84,6 +84,14 @@ jobs:
         working-directory: website
         run: node tests/kernel_ledger_reference.mjs
 
+      - name: Kernel transport parity corpus — browser verifier (10 shared cases, scoped)
+        working-directory: website
+        run: node tests/kernel_transport_reference.mjs
+
+      - name: Kernel transport parity corpus — vendored Python verifier (10 shared cases, scoped)
+        working-directory: website
+        run: python3 tests/kernel_transport_reference.py
+
       - name: Privacy-first telemetry plan contract (not instrumented)
         working-directory: website
         run: python3 tests/telemetry_contract.py
