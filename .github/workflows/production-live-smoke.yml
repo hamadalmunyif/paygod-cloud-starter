@@ -1,0 +1,141 @@
+name: Production Live Smoke
+
+on:
+  push:
+    branches:
+      - website/paygod-production
+    paths:
+      - 'website/**'
+      - '.github/workflows/website-verifier-v0.3.yml'
+      - '.github/workflows/production-live-smoke.yml'
+      - '.gitattributes'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Exact-SHA production live smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      BASE_URL: https://paygod.net
+      EXPECTED_SHA: ${{ github.sha }}
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Wait for exact deployed SHA and verify public routes
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          import time
+          import urllib.error
+          import urllib.request
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          base = os.environ["BASE_URL"].rstrip("/")
+          expected = os.environ["EXPECTED_SHA"]
+          routes = [
+              ("/", "Portable Evidence"),
+              ("/verifier/", "BROWSER VERIFIER v0.4"),
+              ("/developers/", "Build your own Pack"),
+          ]
+          report_path = Path("release-smoke.json")
+          last_error = None
+
+          def fetch(path, attempt):
+              url = f"{base}{path}?paygod_smoke_sha={expected}&attempt={attempt}"
+              req = urllib.request.Request(
+                  url,
+                  headers={
+                      "User-Agent": "PayGod-Exact-SHA-Release-Smoke/1",
+                      "Cache-Control": "no-cache",
+                  },
+              )
+              with urllib.request.urlopen(req, timeout=15) as response:
+                  body = response.read()
+                  return response.status, body, response.geturl()
+
+          for attempt in range(1, 61):
+              try:
+                  status, raw, source_url = fetch("/meta/deployment-source.json", attempt)
+                  if status != 200:
+                      raise RuntimeError(f"source identity HTTP {status}")
+                  source = json.loads(raw.decode("utf-8"))
+                  if source.get("profile") != "paygod-deployment-source-v1":
+                      raise RuntimeError(f"unexpected source profile: {source!r}")
+                  if source.get("git_sha") != expected:
+                      raise RuntimeError(
+                          f"live SHA {source.get('git_sha')} != expected {expected}"
+                      )
+
+                  route_results = []
+                  for path, marker in routes:
+                      route_status, body, final_url = fetch(path, attempt)
+                      text = body.decode("utf-8", errors="replace")
+                      if route_status != 200:
+                          raise RuntimeError(f"{path} HTTP {route_status}")
+                      if marker not in text:
+                          raise RuntimeError(f"{path} missing marker {marker!r}")
+                      route_results.append(
+                          {
+                              "path": path,
+                              "status": route_status,
+                              "marker": marker,
+                              "final_url": final_url,
+                              "body_sha256": hashlib.sha256(body).hexdigest(),
+                          }
+                      )
+
+                  report = {
+                      "profile": "paygod-production-live-smoke-v1",
+                      "expected_git_sha": expected,
+                      "live_git_sha": source["git_sha"],
+                      "source_identity_url": source_url,
+                      "routes": route_results,
+                      "checked_at": datetime.now(timezone.utc).isoformat(),
+                      "attempt": attempt,
+                  }
+                  report_path.write_text(
+                      json.dumps(report, sort_keys=True, indent=2) + "\n",
+                      encoding="utf-8",
+                  )
+                  print(json.dumps(report, sort_keys=True))
+                  raise SystemExit(0)
+              except Exception as exc:
+                  last_error = str(exc)
+                  print(f"attempt {attempt}/60: {last_error}")
+                  time.sleep(5)
+
+          report_path.write_text(
+              json.dumps(
+                  {
+                      "profile": "paygod-production-live-smoke-v1",
+                      "expected_git_sha": expected,
+                      "status": "failed",
+                      "last_error": last_error,
+                      "checked_at": datetime.now(timezone.utc).isoformat(),
+                  },
+                  sort_keys=True,
+                  indent=2,
+              )
+              + "\n",
+              encoding="utf-8",
+          )
+          raise SystemExit(f"production live smoke failed: {last_error}")
+          PY
+
+      - name: Publish live-smoke evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paygod-production-live-smoke-${{ github.sha }}
+          path: release-smoke.json
+          retention-days: 30
