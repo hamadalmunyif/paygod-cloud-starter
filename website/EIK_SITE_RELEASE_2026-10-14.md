@@ -31,3 +31,15 @@ The pages are editorial **not** runtime tooling, MCP/A2A endpoints, interactive 
 
 ## External acceptance remains open
 Ask an unfamiliar developer or coding agent to reproduce [the EIK example](https://github.com/hamadalmunyif/paygod-kernel-mvp/tree/main/examples/eik-github-actions) without project-author assistance; test an authorized genuine scanner report; compare with GitHub-native controls and direct CLI; obtain a genuinely independently recorded recipient review. These activities are **not** completed by publishing a bilingual page.
+
+
+## Exact-SHA production release gate — 2026-10-17 addendum
+
+The website verifier workflow must run in two distinct places:
+
+1. **PR candidate gate:** on every pull request targeting `website/paygod-production`, before merge.
+2. **Merged release-SHA witness:** on every matching push to `website/paygod-production`, so the exact commit that Vercel can deploy has its own GitHub Actions result rather than inheriting confidence from a pre-merge PR head.
+
+The workflow records `GITHUB_REPOSITORY`, `GITHUB_REF`, `GITHUB_SHA`, event and workflow name as `website/dist/meta/github-source.json` in the uploaded CI artifact. This is bounded build provenance only. It does **not** prove that a Vercel alias serves the artifact, that production smoke passed, or that the browser verifier is fully parity-complete with Kernel issue #74.
+
+A release may be described as exact-SHA CI verified only when the production-branch push run for that same SHA completed successfully. Vercel `READY` remains a separate deployment fact and must be correlated to the same SHA. Administrative branch protection / required-check enforcement is also separate and should be enabled at repository settings when available; this source change does not claim to configure it.
