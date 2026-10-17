@@ -93,19 +93,21 @@ The website currently has three promoted shared-corpus witnesses:
 
 The transport corpus contains ten shared cases covering clean/no-trust, trusted issuer, wrong trust key, payload tamper, unexpected member, receipt substitution, missing ledger, wrong external receipt commitment, coherent rewrite without a pin, and the same rewrite pinned to the original receipt.
 
-PR #22 was merged after exact-head Website Verifier and Codex review. The parity/runtime merge established production source SHA `684610b7138f849406679b8d862ce701cc13fe4b` before this documentation PR. At that SHA:
-- `website/paygod-production` pointed to the same SHA;
-- push-triggered Website Verifier run `39068220184` completed SUCCESS;
-- Vercel production deployment `dpl_FQjQhqBDEh9EJcPhKBk7Yovamqka` reported READY for the same Git SHA;
+PR #22 was merged after exact-head Website Verifier and Codex review, establishing the canonical + ledger + transport parity implementation on the production branch. PR #23 then added an exact-SHA deployment-source identity and a production live-smoke workflow that runs on every production push.
+
+At the current pre-documentation production SHA `31c21ac0a227abbec527812087b9cbe810270cdb`:
 - canonical corpus parity passed;
 - ledger corpus parity passed;
 - browser transport corpus parity passed;
 - vendored Python transport corpus parity passed;
 - LF checkout enforcement passed;
 - privacy telemetry contract remained not instrumented;
-- existing browser and standalone Python regression suites passed.
+- existing browser and standalone Python regression suites passed;
+- push Website Verifier completed SUCCESS;
+- Vercel production metadata reported the same SHA;
+- live smoke completed SUCCESS after confirming the public deployment-source identity matched that exact SHA.
 
-This establishes exact-SHA source/CI/deployment correlation for that parity release. A live HTTP/browser smoke witness is still separate and was not established by these metadata/CI facts alone.
+This establishes bounded exact-SHA source/CI/deployment/live-route correlation for that release.
 
 This supports bounded statements such as:
 
@@ -127,9 +129,16 @@ A production claim should correlate:
 
 PR #19 is merged and the post-merge push-triggered exact-SHA verifier gate is active. PR #21 (ledger parity) and PR #22 (transport parity) were then merged in dependency order with fresh exact-head verification after each production-base change.
 
-The last parity/runtime release before this documentation PR correlated GitHub production source, push CI, and Vercel production metadata at SHA `684610b7138f849406679b8d862ce701cc13fe4b`. Live smoke remains a separate required witness.
+The current release-evidence baseline before this documentation PR is `31c21ac0a227abbec527812087b9cbe810270cdb`. For that exact SHA:
+- `website/paygod-production` points to the same SHA;
+- Website Verifier push run `39069255851` completed SUCCESS;
+- Vercel production deployment `dpl_5r9n9SmA3D44CxFN3jF43gvyiCTe` reported READY with the same Git SHA;
+- Production Live Smoke run `39069255912` completed SUCCESS only after the public `/meta/deployment-source.json` reported the same SHA, then checked `/`, `/verifier/` and `/developers/`;
+- smoke artifact `paygod-production-live-smoke-31c21ac0a227abbec527812087b9cbe810270cdb` was published as artifact ID `12113993351` with digest `sha256:d3c6f2cf152c3430563a44e9217412ea91d254b923f20a62716541cc6830fe18`.
 
-Merging this documentation PR will itself produce a new production SHA; therefore exact-SHA push CI and Vercel correlation must be checked again after this documentation-only merge before calling that new SHA release-correlated.
+This closes F-005D for that bounded release: merged source, exact-SHA push verification, Vercel production metadata and live public-route smoke all refer to the same SHA.
+
+Merging this documentation PR will itself produce a new production SHA. The merged #23 release workflows now run Website Verifier and Production Live Smoke on **every** production-branch push, so this documentation-only merge must again produce exact-SHA Website Verifier, matching Vercel production metadata and live smoke before the new SHA is recorded as release-correlated.
 
 The production branch is currently observed as administratively unprotected, so future bypass resistance remains a governance item separate from the technical evidence above. This contract does not enable PostHog or confer production/payment/release authority.
 
