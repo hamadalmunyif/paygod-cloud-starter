@@ -1,0 +1,4 @@
+# Preserve frozen verifier corpus bytes across OSes and core.autocrlf settings.
+website/tests/fixtures/kernel-c14n-reference-20261014.json text eol=lf
+website/tests/fixtures/kernel-ledger-reference-20261017.json text eol=lf
+website/tests/fixtures/kernel-transport-parity-v1.json text eol=lf
