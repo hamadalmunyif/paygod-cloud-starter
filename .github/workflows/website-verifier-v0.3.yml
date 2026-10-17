@@ -12,11 +12,6 @@ on:
   push:
     branches:
       - website/paygod-production
-    paths:
-      - 'website/**'
-      - '.github/workflows/website-verifier-v0.3.yml'
-      - '.github/workflows/production-live-smoke.yml'
-      - '.gitattributes'
   workflow_dispatch:
 
 permissions:
