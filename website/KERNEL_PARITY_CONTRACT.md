@@ -55,7 +55,7 @@ This is **scoped canonicalization parity**. It is not full Kernel parity.
 
 Tests include clean and mutation cases in the browser implementation and a standalone Python verifier.
 
-These tests are valuable independent implementation evidence, but most are **website-local regression cases today**, not yet a single frozen cross-runtime corpus exported from the Kernel.
+Canonical, ledger and transport parity are now separated explicitly. Website-local regressions remain valuable, but the promoted parity claims below require exact frozen Kernel corpus identities rather than local cases alone.
 
 ## Verification dimensions
 
@@ -83,31 +83,33 @@ The browser must not infer these from canonical or transport integrity:
 - independent trusted timestamp;
 - independent replay when no replay happened.
 
-## Current limitation
+## Current bounded parity state
 
-The canonical shared corpus has 11 Kernel vectors. This supports a bounded statement such as:
+The website currently has three promoted shared-corpus witnesses:
 
-> “The website verifier matches the pinned Kernel canonical corpus under the tested vectors.”
+1. **Canonical JSON parity** — Kernel/website fixture blob `3880d3a45b417ae95cae9a7b8cebb1c8c47722d8`.
+2. **Ledger canonical/hash parity** — Kernel/website fixture blob `ac16a235641f22101dab93187af0eb992f010987`.
+3. **Portable transport verifier parity** — Kernel/website fixture blob `d3e682cb7f4f82cc88c4b8fd3ec7fb99d53357da`.
 
-It does **not** justify:
+The transport corpus contains ten shared cases covering clean/no-trust, trusted issuer, wrong trust key, payload tamper, unexpected member, receipt substitution, missing ledger, wrong external receipt commitment, coherent rewrite without a pin, and the same rewrite pinned to the original receipt.
+
+At website PR #22 head `576c96a5338938a785bdada19be47c4e9f509e63`, Website Verifier v0.4 run `39064262758` completed SUCCESS with:
+- canonical corpus parity;
+- ledger corpus parity;
+- browser transport corpus parity;
+- vendored Python transport corpus parity;
+- privacy telemetry contract still not instrumented;
+- existing browser and standalone Python regression suites.
+
+This supports bounded statements such as:
+
+> “The website verifier matches the pinned Kernel canonical, ledger and portable-transport corpora under the tested cases.”
+
+It still does **not** justify:
 
 > “The website fully implements the Kernel.”
 
-The next promotion step is a versioned Full Parity Corpus shared unchanged across Kernel/.NET or reference tooling, standalone Python and browser JavaScript.
-
-## Full Parity Corpus target
-
-Promote independently:
-
-1. canonical JSON;
-2. ledger chaining;
-3. manifest + bundle digest;
-4. receipt binding;
-5. external receipt commitment / coherent rewrite;
-6. issuer signature + recipient trust-store cases;
-7. negative transport mutations.
-
-Keep replay, time authority, policy evaluation, evidence admission and mandate/authorization as separate dimensions rather than hiding them behind one `VALID` label.
+Keep replay execution, trusted time, policy evaluation, evidence admission, scanner/source truth and mandate/authorization as separate dimensions rather than hiding them behind one `VALID` label.
 
 ## Deployment evidence is separate
 
@@ -115,9 +117,11 @@ GitHub test parity and Vercel delivery are different facts.
 
 A production claim should correlate:
 
-`exact GitHub source SHA → exact-SHA CI → Vercel deployment metadata → live smoke`.
+`exact merged GitHub source SHA → push-triggered exact-SHA CI → Vercel production deployment metadata for the same SHA → live smoke`.
 
-PR #19 proposes adding a post-merge push-triggered exact-SHA website verifier witness. That PR does not itself authorize production, configure administrative branch protection, or enable PostHog.
+PR #19 proposes the post-merge push-triggered exact-SHA website verifier witness. After #19 is merged, website parity PRs must be merged in dependency order and rechecked against the updated production base. Vercel Preview readiness is useful pre-merge evidence but does not substitute for the final production-SHA correlation.
+
+This contract does not authorize production, configure administrative branch protection, or enable PostHog.
 
 ## Change discipline
 
