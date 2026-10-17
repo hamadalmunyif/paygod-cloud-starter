@@ -7,6 +7,8 @@ on:
     paths:
       - 'website/**'
       - '.github/workflows/website-verifier-v0.3.yml'
+      - '.gitattributes'
+      - '.gitattributes'
   push:
     branches:
       - website/paygod-production
