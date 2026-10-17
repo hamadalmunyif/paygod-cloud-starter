@@ -29,7 +29,7 @@ def materialize(root: Path, fixture_name: str) -> Path:
     bundle = root / "bundle"
     bundle.mkdir()
     for name, content in corpus["fixtures"][fixture_name]["files"].items():
-        (bundle / name).write_text(content, encoding="utf-8")
+        (bundle / name).write_bytes(content.encode("utf-8"))
     return bundle
 
 
@@ -40,8 +40,8 @@ for case in corpus["cases"]:
 
         if "set_file" in case:
             mutation = case["set_file"]
-            (bundle / mutation["name"]).write_text(
-                mutation["content"], encoding="utf-8"
+            (bundle / mutation["name"]).write_bytes(
+                mutation["content"].encode("utf-8")
             )
         if "remove_file" in case:
             (bundle / case["remove_file"]).unlink()
