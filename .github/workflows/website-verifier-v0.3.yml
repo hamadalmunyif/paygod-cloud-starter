@@ -7,6 +7,11 @@ on:
     paths:
       - 'website/**'
       - '.github/workflows/website-verifier-v0.3.yml'
+      - '.github/workflows/production-live-smoke.yml'
+      - '.gitattributes'
+  push:
+    branches:
+      - website/paygod-production
   workflow_dispatch:
 
 permissions:
@@ -33,6 +38,10 @@ jobs:
       - name: Build website and regenerate signed fixture
         working-directory: website
         run: python3 build.py
+
+      - name: Deployment source identity matches exact CI SHA
+        working-directory: website
+        run: python3 tests/deployment_source.py
 
       - name: Bilingual evidence atlas static checks
         working-directory: website
@@ -76,9 +85,37 @@ jobs:
         working-directory: website
         run: python3 tests/claims_alignment.py
 
+      - name: Frozen corpus checkout attributes are LF-pinned
+        shell: bash
+        run: |
+          for p in \
+            website/tests/fixtures/kernel-c14n-reference-20261014.json \
+            website/tests/fixtures/kernel-ledger-reference-20261017.json \
+            website/tests/fixtures/kernel-transport-parity-v1.json
+          do
+            attr="$(git check-attr eol -- "$p")"
+            echo "$attr"
+            case "$attr" in
+              *"eol: lf") ;;
+              *) echo "ERROR: $p is not pinned to eol=lf" >&2; exit 1 ;;
+            esac
+          done
+
       - name: Kernel canonical corpus parity (11 shared vectors, scoped)
         working-directory: website
         run: node tests/kernel_c14n_reference.mjs
+
+      - name: Kernel ledger corpus parity (2 shared vectors, scoped)
+        working-directory: website
+        run: node tests/kernel_ledger_reference.mjs
+
+      - name: Kernel transport parity corpus — browser verifier (10 shared cases, scoped)
+        working-directory: website
+        run: node tests/kernel_transport_reference.mjs
+
+      - name: Kernel transport parity corpus — vendored Python verifier (10 shared cases, scoped)
+        working-directory: website
+        run: python3 tests/kernel_transport_reference.py
 
       - name: Privacy-first telemetry plan contract (not instrumented)
         working-directory: website
@@ -131,6 +168,27 @@ jobs:
           python3 tests/claims_alignment.py
           python3 tests/eik_developers.py
           python3 tests/evidence_lab.py
+
+      - name: Record exact tested GitHub source identity
+        shell: bash
+        run: |
+          mkdir -p website/dist/meta
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          payload = {
+              "repository": os.environ["GITHUB_REPOSITORY"],
+              "ref": os.environ["GITHUB_REF"],
+              "sha": os.environ["GITHUB_SHA"],
+              "event": os.environ["GITHUB_EVENT_NAME"],
+              "workflow": os.environ["GITHUB_WORKFLOW"],
+          }
+          Path("website/dist/meta/github-source.json").write_text(
+              json.dumps(payload, sort_keys=True, separators=(",", ":")) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(payload, sort_keys=True))
+          PY
 
       - name: Publish built preview artifact
         uses: actions/upload-artifact@v4
