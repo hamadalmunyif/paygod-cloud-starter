@@ -3,6 +3,8 @@ on:
   push:
     paths:
       - 'website/tools/**'
+      - 'website/src/site-tour.html'
+      - 'website/build.py'
       - 'website/docs/journey-demo-contract-v1.md'
       - '.github/workflows/journey-demo-contract.yml'
   pull_request:
@@ -23,6 +25,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Build preview routes
+        run: cd website && python3 build.py
       - name: Python positive and negative tests
         run: python3 -m unittest discover -s website/tools -p 'test_*.py' -v
       - name: Cross-language fixtures and negative mutations
