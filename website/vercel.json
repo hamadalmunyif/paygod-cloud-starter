@@ -67,6 +67,15 @@
           "value": "noindex, nofollow"
         }
       ]
+    },
+    {
+      "source": "/journey-check/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
     }
   ],
   "redirects": [
