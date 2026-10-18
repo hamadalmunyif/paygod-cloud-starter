@@ -36,8 +36,11 @@ def render(source, recipient=False, offline=False):
 dist = r / 'dist'
 for sub in ('verifier', 'downloads'):
     (dist / sub).mkdir(parents=True, exist_ok=True)
+# Standalone, dependency-free Trust Factory prototype; no verifier/runtime mutation.
+# The route is a simulation until wired to an independently verified result.
 outputs = {
     'index.html': render('page.html'),
+    'lab/index.html': (r / 'src/trust-factory.html').read_text(encoding='utf-8'),
     'ar/home/index.html': render('home_ar.html'),
     'verifier/index.html': render('standalone.html', True),
     'downloads/paygod-verifier.html': render('standalone.html', True, True),
