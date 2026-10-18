@@ -143,6 +143,9 @@ if not production:
     journey_route = dist / 'journey' / 'index.html'
     journey_route.parent.mkdir(parents=True, exist_ok=True)
     journey_route.write_text((r / 'src/evidence-journey.html').read_text(encoding='utf-8'), encoding='utf-8')
+    checker_route = dist / 'journey-check' / 'index.html'
+    checker_route.parent.mkdir(parents=True, exist_ok=True)
+    checker_route.write_text((r / 'src/journey-check.html').read_text(encoding='utf-8'), encoding='utf-8')
 
 # Publish a bounded, non-secret source identity so release smoke can prove that
 # the live Vercel build corresponds to the exact Git SHA that triggered release CI.
