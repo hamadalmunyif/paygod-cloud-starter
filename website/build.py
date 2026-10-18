@@ -130,6 +130,14 @@ shutil.copyfile(r / 'demo' / 'trusted-issuer-demo.json', dist / 'downloads' / 'p
 from v2.site import build_v2
 build_v2(dist)
 
+# Preserve the isolated Living Machinery preview: V2 generates /lab/ too,
+# so publish this explicit experimental route only after the V2 build.
+# Do not replace V2's canonical Evidence Lab in production.
+if not production:
+    machine_route = dist / 'machinery' / 'index.html'
+    machine_route.parent.mkdir(parents=True, exist_ok=True)
+    machine_route.write_text((r / 'src/trust-factory.html').read_text(encoding='utf-8'), encoding='utf-8')
+
 # Publish a bounded, non-secret source identity so release smoke can prove that
 # the live Vercel build corresponds to the exact Git SHA that triggered release CI.
 source_sha = os.environ.get("VERCEL_GIT_COMMIT_SHA") or os.environ.get("GITHUB_SHA") or "unknown"
