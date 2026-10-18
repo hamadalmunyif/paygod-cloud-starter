@@ -1,0 +1,29 @@
+name: Journey Demo Contract
+on:
+  push:
+    paths:
+      - 'website/tools/**'
+      - 'website/docs/journey-demo-contract-v1.md'
+      - '.github/workflows/journey-demo-contract.yml'
+  pull_request:
+    paths:
+      - 'website/tools/**'
+      - 'website/docs/journey-demo-contract-v1.md'
+      - '.github/workflows/journey-demo-contract.yml'
+permissions:
+  contents: read
+jobs:
+  verify-demo-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Python positive and negative tests
+        run: python3 -m unittest discover -s website/tools -p 'test_verify_journey_demo.py' -v
+      - name: Cross-language fixtures and negative mutations
+        run: node website/tools/crosscheck_journey_demo.mjs
