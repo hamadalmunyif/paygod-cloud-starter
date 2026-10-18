@@ -6,7 +6,7 @@ import {join} from 'node:path';
 const source=readFileSync(new URL('../src/trust-factory.html',import.meta.url),'utf8');
 const config=JSON.parse(readFileSync(new URL('../vercel.json',import.meta.url),'utf8'));
 const build=readFileSync(new URL('../build.py',import.meta.url),'utf8');
-assert.match(build,/['"]lab\/index\.html['"]:\s*\(r\s*\/\s*['"]src\/trust-factory\.html['"]\)/);
+assert.ok(build.includes("machine_route = dist / 'machinery' / 'index.html'"));
 for(const id of ['language','scenario','run','reset','machine','meter','output','status']){
   assert.match(source,new RegExp('id="'+id+'"'));
 }
