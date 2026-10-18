@@ -137,6 +137,9 @@ if not production:
     machine_route = dist / 'machinery' / 'index.html'
     machine_route.parent.mkdir(parents=True, exist_ok=True)
     machine_route.write_text((r / 'src/trust-factory.html').read_text(encoding='utf-8'), encoding='utf-8')
+    authority_route = dist / 'authority-gate' / 'index.html'
+    authority_route.parent.mkdir(parents=True, exist_ok=True)
+    authority_route.write_text((r / 'src/authority-gate.html').read_text(encoding='utf-8'), encoding='utf-8')
 
 # Publish a bounded, non-secret source identity so release smoke can prove that
 # the live Vercel build corresponds to the exact Git SHA that triggered release CI.
